@@ -427,6 +427,106 @@ func (x *UserInfo) GetAvatar() string {
 	return ""
 }
 
+type User struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                            // 用户ID
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`                 // 用户名
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`                       // 邮箱
+	Mobile        string                 `protobuf:"bytes,4,opt,name=mobile,proto3" json:"mobile,omitempty"`                     // 手机号
+	RealName      string                 `protobuf:"bytes,5,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"` // 真实姓名
+	Gender        int32                  `protobuf:"varint,6,opt,name=gender,proto3" json:"gender,omitempty"`                    // 性别 (0-未知, 1-男, 2-女)
+	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`                    // 状态 (0-禁用, 1-正常)
+	Avatar        string                 `protobuf:"bytes,8,opt,name=avatar,proto3" json:"avatar,omitempty"`                     // 头像
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *User) Reset() {
+	*x = User{}
+	mi := &file_rpc_sys_sys_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *User) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*User) ProtoMessage() {}
+
+func (x *User) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_sys_sys_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use User.ProtoReflect.Descriptor instead.
+func (*User) Descriptor() ([]byte, []int) {
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *User) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *User) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *User) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *User) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *User) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
+func (x *User) GetGender() int32 {
+	if x != nil {
+		return x.Gender
+	}
+	return 0
+}
+
+func (x *User) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *User) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
 // 角色信息
 type Role struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -439,7 +539,7 @@ type Role struct {
 
 func (x *Role) Reset() {
 	*x = Role{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[6]
+	mi := &file_rpc_sys_sys_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -451,7 +551,7 @@ func (x *Role) String() string {
 func (*Role) ProtoMessage() {}
 
 func (x *Role) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[6]
+	mi := &file_rpc_sys_sys_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -464,7 +564,7 @@ func (x *Role) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Role.ProtoReflect.Descriptor instead.
 func (*Role) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{6}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Role) GetId() int64 {
@@ -496,7 +596,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[7]
+	mi := &file_rpc_sys_sys_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -508,7 +608,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[7]
+	mi := &file_rpc_sys_sys_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -521,7 +621,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{7}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{8}
 }
 
 type Int64Value struct {
@@ -533,7 +633,7 @@ type Int64Value struct {
 
 func (x *Int64Value) Reset() {
 	*x = Int64Value{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[8]
+	mi := &file_rpc_sys_sys_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -545,7 +645,7 @@ func (x *Int64Value) String() string {
 func (*Int64Value) ProtoMessage() {}
 
 func (x *Int64Value) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[8]
+	mi := &file_rpc_sys_sys_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -558,7 +658,7 @@ func (x *Int64Value) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Int64Value.ProtoReflect.Descriptor instead.
 func (*Int64Value) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{8}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Int64Value) GetValue() int64 {
@@ -580,7 +680,7 @@ type PageRequest struct {
 
 func (x *PageRequest) Reset() {
 	*x = PageRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[9]
+	mi := &file_rpc_sys_sys_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -592,7 +692,7 @@ func (x *PageRequest) String() string {
 func (*PageRequest) ProtoMessage() {}
 
 func (x *PageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[9]
+	mi := &file_rpc_sys_sys_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -605,7 +705,7 @@ func (x *PageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PageRequest.ProtoReflect.Descriptor instead.
 func (*PageRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{9}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *PageRequest) GetPage() int32 {
@@ -642,7 +742,7 @@ type PageResponse struct {
 
 func (x *PageResponse) Reset() {
 	*x = PageResponse{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[10]
+	mi := &file_rpc_sys_sys_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -654,7 +754,7 @@ func (x *PageResponse) String() string {
 func (*PageResponse) ProtoMessage() {}
 
 func (x *PageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[10]
+	mi := &file_rpc_sys_sys_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -667,7 +767,7 @@ func (x *PageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PageResponse.ProtoReflect.Descriptor instead.
 func (*PageResponse) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{10}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PageResponse) GetTotal() int32 {
@@ -724,7 +824,7 @@ type Menu struct {
 
 func (x *Menu) Reset() {
 	*x = Menu{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[11]
+	mi := &file_rpc_sys_sys_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -736,7 +836,7 @@ func (x *Menu) String() string {
 func (*Menu) ProtoMessage() {}
 
 func (x *Menu) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[11]
+	mi := &file_rpc_sys_sys_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -749,7 +849,7 @@ func (x *Menu) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Menu.ProtoReflect.Descriptor instead.
 func (*Menu) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{11}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Menu) GetId() int64 {
@@ -885,7 +985,7 @@ type Scope struct {
 
 func (x *Scope) Reset() {
 	*x = Scope{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[12]
+	mi := &file_rpc_sys_sys_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -897,7 +997,7 @@ func (x *Scope) String() string {
 func (*Scope) ProtoMessage() {}
 
 func (x *Scope) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[12]
+	mi := &file_rpc_sys_sys_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -910,7 +1010,7 @@ func (x *Scope) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Scope.ProtoReflect.Descriptor instead.
 func (*Scope) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{12}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Scope) GetId() int64 {
@@ -960,7 +1060,7 @@ type UserListRequest struct {
 
 func (x *UserListRequest) Reset() {
 	*x = UserListRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[13]
+	mi := &file_rpc_sys_sys_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -972,7 +1072,7 @@ func (x *UserListRequest) String() string {
 func (*UserListRequest) ProtoMessage() {}
 
 func (x *UserListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[13]
+	mi := &file_rpc_sys_sys_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -985,7 +1085,7 @@ func (x *UserListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserListRequest.ProtoReflect.Descriptor instead.
 func (*UserListRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{13}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UserListRequest) GetPageRequest() *PageRequest {
@@ -1020,7 +1120,7 @@ type UserListResponse struct {
 
 func (x *UserListResponse) Reset() {
 	*x = UserListResponse{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[14]
+	mi := &file_rpc_sys_sys_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1032,7 +1132,7 @@ func (x *UserListResponse) String() string {
 func (*UserListResponse) ProtoMessage() {}
 
 func (x *UserListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[14]
+	mi := &file_rpc_sys_sys_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1045,7 +1145,7 @@ func (x *UserListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserListResponse.ProtoReflect.Descriptor instead.
 func (*UserListResponse) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{14}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UserListResponse) GetPageResponse() *PageResponse {
@@ -1065,21 +1165,22 @@ func (x *UserListResponse) GetUsers() []*UserInfo {
 // 创建用户请求
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`                      // 用户名
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`                      // 密码
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`                            // 邮箱
-	Mobile        string                 `protobuf:"bytes,4,opt,name=mobile,proto3" json:"mobile,omitempty"`                          // 手机号
-	RealName      string                 `protobuf:"bytes,5,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`      // 真实姓名
-	Gender        int32                  `protobuf:"varint,6,opt,name=gender,proto3" json:"gender,omitempty"`                         // 性别 (0-未知, 1-男, 2-女)
-	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`                         // 状态 (0-禁用, 1-正常)
-	RoleIds       []int64                `protobuf:"varint,8,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"` // 角色ID列表
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`                        // 用户名
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`                        // 密码
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`                              // 邮箱
+	Mobile        string                 `protobuf:"bytes,4,opt,name=mobile,proto3" json:"mobile,omitempty"`                            // 手机号
+	RealName      string                 `protobuf:"bytes,5,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`        // 真实姓名
+	Gender        int32                  `protobuf:"varint,6,opt,name=gender,proto3" json:"gender,omitempty"`                           // 性别 (0-未知, 1-男, 2-女)
+	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`                           // 状态 (0-禁用, 1-正常)
+	RoleIds       []int64                `protobuf:"varint,8,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`   // 角色ID列表
+	OperatorId    int64                  `protobuf:"varint,9,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[15]
+	mi := &file_rpc_sys_sys_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1091,7 +1192,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[15]
+	mi := &file_rpc_sys_sys_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1104,7 +1205,7 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{15}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CreateUserRequest) GetUsername() string {
@@ -1163,24 +1264,32 @@ func (x *CreateUserRequest) GetRoleIds() []int64 {
 	return nil
 }
 
+func (x *CreateUserRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 更新用户请求
 type UpdateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                 // 用户ID
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`                            // 邮箱
-	Mobile        string                 `protobuf:"bytes,3,opt,name=mobile,proto3" json:"mobile,omitempty"`                          // 手机号
-	RealName      string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`      // 真实姓名
-	Gender        int32                  `protobuf:"varint,5,opt,name=gender,proto3" json:"gender,omitempty"`                         // 性别 (0-未知, 1-男, 2-女)
-	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`                         // 状态 (0-禁用, 1-正常)
-	RoleIds       []int64                `protobuf:"varint,7,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"` // 角色ID列表
-	Avatar        string                 `protobuf:"bytes,8,opt,name=avatar,proto3" json:"avatar,omitempty"`                          // 头像URL
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 用户ID
+	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`                              // 邮箱
+	Mobile        string                 `protobuf:"bytes,3,opt,name=mobile,proto3" json:"mobile,omitempty"`                            // 手机号
+	RealName      string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`        // 真实姓名
+	Gender        int32                  `protobuf:"varint,5,opt,name=gender,proto3" json:"gender,omitempty"`                           // 性别 (0-未知, 1-男, 2-女)
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`                           // 状态 (0-禁用, 1-正常)
+	RoleIds       []int64                `protobuf:"varint,7,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`   // 角色ID列表
+	Avatar        string                 `protobuf:"bytes,8,opt,name=avatar,proto3" json:"avatar,omitempty"`                            // 头像URL
+	OperatorId    int64                  `protobuf:"varint,9,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateUserRequest) Reset() {
 	*x = UpdateUserRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[16]
+	mi := &file_rpc_sys_sys_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1192,7 +1301,7 @@ func (x *UpdateUserRequest) String() string {
 func (*UpdateUserRequest) ProtoMessage() {}
 
 func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[16]
+	mi := &file_rpc_sys_sys_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1205,7 +1314,7 @@ func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{16}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateUserRequest) GetId() int64 {
@@ -1264,17 +1373,25 @@ func (x *UpdateUserRequest) GetAvatar() string {
 	return ""
 }
 
+func (x *UpdateUserRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 删除用户请求
 type DeleteUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 用户ID
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 用户ID
+	OperatorId    int64                  `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteUserRequest) Reset() {
 	*x = DeleteUserRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[17]
+	mi := &file_rpc_sys_sys_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1286,7 +1403,7 @@ func (x *DeleteUserRequest) String() string {
 func (*DeleteUserRequest) ProtoMessage() {}
 
 func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[17]
+	mi := &file_rpc_sys_sys_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1299,12 +1416,19 @@ func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{17}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DeleteUserRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteUserRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
 	}
 	return 0
 }
@@ -1315,13 +1439,14 @@ type UpdateUserPasswordRequest struct {
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`               // 用户ID
 	OldPassword   string                 `protobuf:"bytes,2,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"` // 旧密码
 	NewPassword   string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"` // 新密码
+	OperatorId    int64                  `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`   // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateUserPasswordRequest) Reset() {
 	*x = UpdateUserPasswordRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[18]
+	mi := &file_rpc_sys_sys_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1333,7 +1458,7 @@ func (x *UpdateUserPasswordRequest) String() string {
 func (*UpdateUserPasswordRequest) ProtoMessage() {}
 
 func (x *UpdateUserPasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[18]
+	mi := &file_rpc_sys_sys_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1346,7 +1471,7 @@ func (x *UpdateUserPasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserPasswordRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserPasswordRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{18}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *UpdateUserPasswordRequest) GetUserId() int64 {
@@ -1370,6 +1495,13 @@ func (x *UpdateUserPasswordRequest) GetNewPassword() string {
 	return ""
 }
 
+func (x *UpdateUserPasswordRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 角色列表请求
 type RoleListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1381,7 +1513,7 @@ type RoleListRequest struct {
 
 func (x *RoleListRequest) Reset() {
 	*x = RoleListRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[19]
+	mi := &file_rpc_sys_sys_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1393,7 +1525,7 @@ func (x *RoleListRequest) String() string {
 func (*RoleListRequest) ProtoMessage() {}
 
 func (x *RoleListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[19]
+	mi := &file_rpc_sys_sys_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1406,7 +1538,7 @@ func (x *RoleListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleListRequest.ProtoReflect.Descriptor instead.
 func (*RoleListRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{19}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *RoleListRequest) GetPageRequest() *PageRequest {
@@ -1434,7 +1566,7 @@ type RoleListResponse struct {
 
 func (x *RoleListResponse) Reset() {
 	*x = RoleListResponse{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[20]
+	mi := &file_rpc_sys_sys_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1446,7 +1578,7 @@ func (x *RoleListResponse) String() string {
 func (*RoleListResponse) ProtoMessage() {}
 
 func (x *RoleListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[20]
+	mi := &file_rpc_sys_sys_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1459,7 +1591,7 @@ func (x *RoleListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleListResponse.ProtoReflect.Descriptor instead.
 func (*RoleListResponse) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{20}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *RoleListResponse) GetPageResponse() *PageResponse {
@@ -1479,20 +1611,20 @@ func (x *RoleListResponse) GetRoles() []*RoleInfo {
 // 角色信息
 type RoleInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                    // 角色ID
-	RoleName      string                 `protobuf:"bytes,2,opt,name=role_name,json=roleName,proto3" json:"role_name,omitempty"`         // 角色名称
-	RoleCode      string                 `protobuf:"bytes,3,opt,name=role_code,json=roleCode,proto3" json:"role_code,omitempty"`         // 角色编码
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                   // 角色描述
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`                            // 状态 (0-禁用, 1-正常)
-	MenuIds       []int64                `protobuf:"varint,6,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`    // 菜单ID列表
-	ScopeIds      []int64                `protobuf:"varint,7,rep,packed,name=scope_ids,json=scopeIds,proto3" json:"scope_ids,omitempty"` // 安全范围ID列表
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                            // 角色ID
+	RoleName      string                 `protobuf:"bytes,2,opt,name=role_name,json=roleName,proto3" json:"role_name,omitempty"` // 角色名称
+	RoleCode      string                 `protobuf:"bytes,3,opt,name=role_code,json=roleCode,proto3" json:"role_code,omitempty"` // 角色编码
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`           // 角色描述
+	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`                    // 状态 (0-禁用, 1-正常)
+	Menus         []*Menu                `protobuf:"bytes,6,rep,name=menus,proto3" json:"menus,omitempty"`                       // 菜单列表
+	Scopes        []*Scope               `protobuf:"bytes,7,rep,name=scopes,proto3" json:"scopes,omitempty"`                     // 安全范围列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RoleInfo) Reset() {
 	*x = RoleInfo{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[21]
+	mi := &file_rpc_sys_sys_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1504,7 +1636,7 @@ func (x *RoleInfo) String() string {
 func (*RoleInfo) ProtoMessage() {}
 
 func (x *RoleInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[21]
+	mi := &file_rpc_sys_sys_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1517,7 +1649,7 @@ func (x *RoleInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleInfo.ProtoReflect.Descriptor instead.
 func (*RoleInfo) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{21}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *RoleInfo) GetId() int64 {
@@ -1555,16 +1687,16 @@ func (x *RoleInfo) GetStatus() int32 {
 	return 0
 }
 
-func (x *RoleInfo) GetMenuIds() []int64 {
+func (x *RoleInfo) GetMenus() []*Menu {
 	if x != nil {
-		return x.MenuIds
+		return x.Menus
 	}
 	return nil
 }
 
-func (x *RoleInfo) GetScopeIds() []int64 {
+func (x *RoleInfo) GetScopes() []*Scope {
 	if x != nil {
-		return x.ScopeIds
+		return x.Scopes
 	}
 	return nil
 }
@@ -1578,13 +1710,14 @@ type CreateRoleRequest struct {
 	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                            // 状态 (0-禁用, 1-正常)
 	MenuIds       []int64                `protobuf:"varint,5,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`    // 菜单ID列表
 	ScopeIds      []int64                `protobuf:"varint,6,rep,packed,name=scope_ids,json=scopeIds,proto3" json:"scope_ids,omitempty"` // 安全范围ID列表
+	OperatorId    int64                  `protobuf:"varint,7,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`  // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateRoleRequest) Reset() {
 	*x = CreateRoleRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[22]
+	mi := &file_rpc_sys_sys_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1596,7 +1729,7 @@ func (x *CreateRoleRequest) String() string {
 func (*CreateRoleRequest) ProtoMessage() {}
 
 func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[22]
+	mi := &file_rpc_sys_sys_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1609,7 +1742,7 @@ func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRoleRequest.ProtoReflect.Descriptor instead.
 func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{22}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *CreateRoleRequest) GetRoleName() string {
@@ -1654,6 +1787,13 @@ func (x *CreateRoleRequest) GetScopeIds() []int64 {
 	return nil
 }
 
+func (x *CreateRoleRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 更新角色请求
 type UpdateRoleRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1664,13 +1804,14 @@ type UpdateRoleRequest struct {
 	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`                            // 状态 (0-禁用, 1-正常)
 	MenuIds       []int64                `protobuf:"varint,6,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`    // 菜单ID列表
 	ScopeIds      []int64                `protobuf:"varint,7,rep,packed,name=scope_ids,json=scopeIds,proto3" json:"scope_ids,omitempty"` // 安全范围ID列表
+	OperatorId    int64                  `protobuf:"varint,8,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`  // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateRoleRequest) Reset() {
 	*x = UpdateRoleRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[23]
+	mi := &file_rpc_sys_sys_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1682,7 +1823,7 @@ func (x *UpdateRoleRequest) String() string {
 func (*UpdateRoleRequest) ProtoMessage() {}
 
 func (x *UpdateRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[23]
+	mi := &file_rpc_sys_sys_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1695,7 +1836,7 @@ func (x *UpdateRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRoleRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{23}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *UpdateRoleRequest) GetId() int64 {
@@ -1747,17 +1888,25 @@ func (x *UpdateRoleRequest) GetScopeIds() []int64 {
 	return nil
 }
 
+func (x *UpdateRoleRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 删除角色请求
 type DeleteRoleRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 角色ID
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 角色ID
+	OperatorId    int64                  `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteRoleRequest) Reset() {
 	*x = DeleteRoleRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[24]
+	mi := &file_rpc_sys_sys_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1769,7 +1918,7 @@ func (x *DeleteRoleRequest) String() string {
 func (*DeleteRoleRequest) ProtoMessage() {}
 
 func (x *DeleteRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[24]
+	mi := &file_rpc_sys_sys_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1782,12 +1931,19 @@ func (x *DeleteRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRoleRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRoleRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{24}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *DeleteRoleRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteRoleRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
 	}
 	return 0
 }
@@ -1803,7 +1959,7 @@ type MenuListRequest struct {
 
 func (x *MenuListRequest) Reset() {
 	*x = MenuListRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[25]
+	mi := &file_rpc_sys_sys_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1815,7 +1971,7 @@ func (x *MenuListRequest) String() string {
 func (*MenuListRequest) ProtoMessage() {}
 
 func (x *MenuListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[25]
+	mi := &file_rpc_sys_sys_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1828,7 +1984,7 @@ func (x *MenuListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuListRequest.ProtoReflect.Descriptor instead.
 func (*MenuListRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{25}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *MenuListRequest) GetWithButton() bool {
@@ -1855,7 +2011,7 @@ type MenuTreeResponse struct {
 
 func (x *MenuTreeResponse) Reset() {
 	*x = MenuTreeResponse{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[26]
+	mi := &file_rpc_sys_sys_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1867,7 +2023,7 @@ func (x *MenuTreeResponse) String() string {
 func (*MenuTreeResponse) ProtoMessage() {}
 
 func (x *MenuTreeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[26]
+	mi := &file_rpc_sys_sys_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1880,7 +2036,7 @@ func (x *MenuTreeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuTreeResponse.ProtoReflect.Descriptor instead.
 func (*MenuTreeResponse) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{26}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *MenuTreeResponse) GetMenus() []*Menu {
@@ -1901,7 +2057,7 @@ type CreateMenuRequest struct {
 
 func (x *CreateMenuRequest) Reset() {
 	*x = CreateMenuRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[27]
+	mi := &file_rpc_sys_sys_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1913,7 +2069,7 @@ func (x *CreateMenuRequest) String() string {
 func (*CreateMenuRequest) ProtoMessage() {}
 
 func (x *CreateMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[27]
+	mi := &file_rpc_sys_sys_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1926,7 +2082,7 @@ func (x *CreateMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMenuRequest.ProtoReflect.Descriptor instead.
 func (*CreateMenuRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{27}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *CreateMenuRequest) GetMenu() *Menu {
@@ -1954,7 +2110,7 @@ type UpdateMenuRequest struct {
 
 func (x *UpdateMenuRequest) Reset() {
 	*x = UpdateMenuRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[28]
+	mi := &file_rpc_sys_sys_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1966,7 +2122,7 @@ func (x *UpdateMenuRequest) String() string {
 func (*UpdateMenuRequest) ProtoMessage() {}
 
 func (x *UpdateMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[28]
+	mi := &file_rpc_sys_sys_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1979,7 +2135,7 @@ func (x *UpdateMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuRequest.ProtoReflect.Descriptor instead.
 func (*UpdateMenuRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{28}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *UpdateMenuRequest) GetMenu() *Menu {
@@ -2007,7 +2163,7 @@ type DeleteMenuRequest struct {
 
 func (x *DeleteMenuRequest) Reset() {
 	*x = DeleteMenuRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[29]
+	mi := &file_rpc_sys_sys_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2019,7 +2175,7 @@ func (x *DeleteMenuRequest) String() string {
 func (*DeleteMenuRequest) ProtoMessage() {}
 
 func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[29]
+	mi := &file_rpc_sys_sys_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2032,7 +2188,7 @@ func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMenuRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{29}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *DeleteMenuRequest) GetId() int64 {
@@ -2049,6 +2205,90 @@ func (x *DeleteMenuRequest) GetOperatorId() int64 {
 	return 0
 }
 
+type ScopeInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                               // 范围ID
+	ScopeName     string                 `protobuf:"bytes,2,opt,name=scope_name,json=scopeName,proto3" json:"scope_name,omitempty"` // 范围名称
+	ScopeCode     string                 `protobuf:"bytes,3,opt,name=scope_code,json=scopeCode,proto3" json:"scope_code,omitempty"` // 范围编码
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`              // 范围描述
+	Sort          int32                  `protobuf:"varint,5,opt,name=sort,proto3" json:"sort,omitempty"`                           // 排序
+	Menus         []*Menu                `protobuf:"bytes,6,rep,name=menus,proto3" json:"menus,omitempty"`                          // 菜单
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ScopeInfo) Reset() {
+	*x = ScopeInfo{}
+	mi := &file_rpc_sys_sys_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScopeInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScopeInfo) ProtoMessage() {}
+
+func (x *ScopeInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_sys_sys_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScopeInfo.ProtoReflect.Descriptor instead.
+func (*ScopeInfo) Descriptor() ([]byte, []int) {
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *ScopeInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *ScopeInfo) GetScopeName() string {
+	if x != nil {
+		return x.ScopeName
+	}
+	return ""
+}
+
+func (x *ScopeInfo) GetScopeCode() string {
+	if x != nil {
+		return x.ScopeCode
+	}
+	return ""
+}
+
+func (x *ScopeInfo) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ScopeInfo) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+func (x *ScopeInfo) GetMenus() []*Menu {
+	if x != nil {
+		return x.Menus
+	}
+	return nil
+}
+
 // 安全范围列表请求
 type ScopeListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2059,7 +2299,7 @@ type ScopeListRequest struct {
 
 func (x *ScopeListRequest) Reset() {
 	*x = ScopeListRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[30]
+	mi := &file_rpc_sys_sys_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2071,7 +2311,7 @@ func (x *ScopeListRequest) String() string {
 func (*ScopeListRequest) ProtoMessage() {}
 
 func (x *ScopeListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[30]
+	mi := &file_rpc_sys_sys_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2084,7 +2324,7 @@ func (x *ScopeListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScopeListRequest.ProtoReflect.Descriptor instead.
 func (*ScopeListRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{30}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ScopeListRequest) GetPageRequest() *PageRequest {
@@ -2098,14 +2338,14 @@ func (x *ScopeListRequest) GetPageRequest() *PageRequest {
 type ScopeListResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PageResponse  *PageResponse          `protobuf:"bytes,1,opt,name=page_response,json=pageResponse,proto3" json:"page_response,omitempty"`
-	Scopes        []*Scope               `protobuf:"bytes,2,rep,name=scopes,proto3" json:"scopes,omitempty"`
+	Scopes        []*ScopeInfo           `protobuf:"bytes,2,rep,name=scopes,proto3" json:"scopes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ScopeListResponse) Reset() {
 	*x = ScopeListResponse{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[31]
+	mi := &file_rpc_sys_sys_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2117,7 +2357,7 @@ func (x *ScopeListResponse) String() string {
 func (*ScopeListResponse) ProtoMessage() {}
 
 func (x *ScopeListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[31]
+	mi := &file_rpc_sys_sys_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2130,7 +2370,7 @@ func (x *ScopeListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScopeListResponse.ProtoReflect.Descriptor instead.
 func (*ScopeListResponse) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{31}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ScopeListResponse) GetPageResponse() *PageResponse {
@@ -2140,7 +2380,7 @@ func (x *ScopeListResponse) GetPageResponse() *PageResponse {
 	return nil
 }
 
-func (x *ScopeListResponse) GetScopes() []*Scope {
+func (x *ScopeListResponse) GetScopes() []*ScopeInfo {
 	if x != nil {
 		return x.Scopes
 	}
@@ -2150,17 +2390,18 @@ func (x *ScopeListResponse) GetScopes() []*Scope {
 // 创建安全范围请求
 type CreateScopeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScopeName     string                 `protobuf:"bytes,1,opt,name=scope_name,json=scopeName,proto3" json:"scope_name,omitempty"` // 范围名称
-	ScopeCode     string                 `protobuf:"bytes,2,opt,name=scope_code,json=scopeCode,proto3" json:"scope_code,omitempty"` // 范围编码
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`              // 范围描述
-	Sort          int32                  `protobuf:"varint,4,opt,name=sort,proto3" json:"sort,omitempty"`                           // 排序
+	ScopeName     string                 `protobuf:"bytes,1,opt,name=scope_name,json=scopeName,proto3" json:"scope_name,omitempty"`     // 范围名称
+	ScopeCode     string                 `protobuf:"bytes,2,opt,name=scope_code,json=scopeCode,proto3" json:"scope_code,omitempty"`     // 范围编码
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                  // 范围描述
+	Sort          int32                  `protobuf:"varint,4,opt,name=sort,proto3" json:"sort,omitempty"`                               // 排序
+	OperatorId    int64                  `protobuf:"varint,5,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateScopeRequest) Reset() {
 	*x = CreateScopeRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[32]
+	mi := &file_rpc_sys_sys_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2172,7 +2413,7 @@ func (x *CreateScopeRequest) String() string {
 func (*CreateScopeRequest) ProtoMessage() {}
 
 func (x *CreateScopeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[32]
+	mi := &file_rpc_sys_sys_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2185,7 +2426,7 @@ func (x *CreateScopeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateScopeRequest.ProtoReflect.Descriptor instead.
 func (*CreateScopeRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{32}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *CreateScopeRequest) GetScopeName() string {
@@ -2216,21 +2457,29 @@ func (x *CreateScopeRequest) GetSort() int32 {
 	return 0
 }
 
+func (x *CreateScopeRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 更新安全范围请求
 type UpdateScopeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                               // 范围ID
-	ScopeName     string                 `protobuf:"bytes,2,opt,name=scope_name,json=scopeName,proto3" json:"scope_name,omitempty"` // 范围名称
-	ScopeCode     string                 `protobuf:"bytes,3,opt,name=scope_code,json=scopeCode,proto3" json:"scope_code,omitempty"` // 范围编码
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`              // 范围描述
-	Sort          int32                  `protobuf:"varint,5,opt,name=sort,proto3" json:"sort,omitempty"`                           // 排序
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 范围ID
+	ScopeName     string                 `protobuf:"bytes,2,opt,name=scope_name,json=scopeName,proto3" json:"scope_name,omitempty"`     // 范围名称
+	ScopeCode     string                 `protobuf:"bytes,3,opt,name=scope_code,json=scopeCode,proto3" json:"scope_code,omitempty"`     // 范围编码
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                  // 范围描述
+	Sort          int32                  `protobuf:"varint,5,opt,name=sort,proto3" json:"sort,omitempty"`                               // 排序
+	OperatorId    int64                  `protobuf:"varint,6,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateScopeRequest) Reset() {
 	*x = UpdateScopeRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[33]
+	mi := &file_rpc_sys_sys_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2242,7 +2491,7 @@ func (x *UpdateScopeRequest) String() string {
 func (*UpdateScopeRequest) ProtoMessage() {}
 
 func (x *UpdateScopeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[33]
+	mi := &file_rpc_sys_sys_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2255,7 +2504,7 @@ func (x *UpdateScopeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateScopeRequest.ProtoReflect.Descriptor instead.
 func (*UpdateScopeRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{33}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *UpdateScopeRequest) GetId() int64 {
@@ -2293,17 +2542,25 @@ func (x *UpdateScopeRequest) GetSort() int32 {
 	return 0
 }
 
+func (x *UpdateScopeRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
+	}
+	return 0
+}
+
 // 删除安全范围请求
 type DeleteScopeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 范围ID
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 范围ID
+	OperatorId    int64                  `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteScopeRequest) Reset() {
 	*x = DeleteScopeRequest{}
-	mi := &file_rpc_sys_sys_proto_msgTypes[34]
+	mi := &file_rpc_sys_sys_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2315,7 +2572,7 @@ func (x *DeleteScopeRequest) String() string {
 func (*DeleteScopeRequest) ProtoMessage() {}
 
 func (x *DeleteScopeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rpc_sys_sys_proto_msgTypes[34]
+	mi := &file_rpc_sys_sys_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2328,12 +2585,19 @@ func (x *DeleteScopeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteScopeRequest.ProtoReflect.Descriptor instead.
 func (*DeleteScopeRequest) Descriptor() ([]byte, []int) {
-	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{34}
+	return file_rpc_sys_sys_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *DeleteScopeRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
+	}
+	return 0
+}
+
+func (x *DeleteScopeRequest) GetOperatorId() int64 {
+	if x != nil {
+		return x.OperatorId
 	}
 	return 0
 }
@@ -2373,7 +2637,16 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\x05roles\x18\b \x03(\v2\x0f.sysclient.RoleR\x05roles\x12,\n" +
 	"\tmenu_tree\x18\t \x03(\v2\x0f.sysclient.MenuR\bmenuTree\x12\x16\n" +
 	"\x06avatar\x18\n" +
-	" \x01(\tR\x06avatar\"P\n" +
+	" \x01(\tR\x06avatar\"\xc5\x01\n" +
+	"\x04User\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x16\n" +
+	"\x06mobile\x18\x04 \x01(\tR\x06mobile\x12\x1b\n" +
+	"\treal_name\x18\x05 \x01(\tR\brealName\x12\x16\n" +
+	"\x06gender\x18\x06 \x01(\x05R\x06gender\x12\x16\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\x12\x16\n" +
+	"\x06avatar\x18\b \x01(\tR\x06avatar\"P\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\trole_name\x18\x02 \x01(\tR\broleName\x12\x1b\n" +
@@ -2425,7 +2698,7 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\adept_id\x18\x03 \x01(\x03R\x06deptId\"{\n" +
 	"\x10UserListResponse\x12<\n" +
 	"\rpage_response\x18\x01 \x01(\v2\x17.sysclient.PageResponseR\fpageResponse\x12)\n" +
-	"\x05users\x18\x02 \x03(\v2\x13.sysclient.UserInfoR\x05users\"\xe1\x01\n" +
+	"\x05users\x18\x02 \x03(\v2\x13.sysclient.UserInfoR\x05users\"\x82\x02\n" +
 	"\x11CreateUserRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
@@ -2434,7 +2707,9 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\treal_name\x18\x05 \x01(\tR\brealName\x12\x16\n" +
 	"\x06gender\x18\x06 \x01(\x05R\x06gender\x12\x16\n" +
 	"\x06status\x18\a \x01(\x05R\x06status\x12\x19\n" +
-	"\brole_ids\x18\b \x03(\x03R\aroleIds\"\xd1\x01\n" +
+	"\brole_ids\x18\b \x03(\x03R\aroleIds\x12\x1f\n" +
+	"\voperator_id\x18\t \x01(\x03R\n" +
+	"operatorId\"\xf2\x01\n" +
 	"\x11UpdateUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x16\n" +
@@ -2443,34 +2718,42 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\x06gender\x18\x05 \x01(\x05R\x06gender\x12\x16\n" +
 	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x19\n" +
 	"\brole_ids\x18\a \x03(\x03R\aroleIds\x12\x16\n" +
-	"\x06avatar\x18\b \x01(\tR\x06avatar\"#\n" +
+	"\x06avatar\x18\b \x01(\tR\x06avatar\x12\x1f\n" +
+	"\voperator_id\x18\t \x01(\x03R\n" +
+	"operatorId\"D\n" +
 	"\x11DeleteUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"z\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
+	"\voperator_id\x18\x02 \x01(\x03R\n" +
+	"operatorId\"\x9b\x01\n" +
 	"\x19UpdateUserPasswordRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
 	"\fold_password\x18\x02 \x01(\tR\voldPassword\x12!\n" +
-	"\fnew_password\x18\x03 \x01(\tR\vnewPassword\"d\n" +
+	"\fnew_password\x18\x03 \x01(\tR\vnewPassword\x12\x1f\n" +
+	"\voperator_id\x18\x04 \x01(\x03R\n" +
+	"operatorId\"d\n" +
 	"\x0fRoleListRequest\x129\n" +
 	"\fpage_request\x18\x01 \x01(\v2\x16.sysclient.PageRequestR\vpageRequest\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x05R\x06status\"{\n" +
 	"\x10RoleListResponse\x12<\n" +
 	"\rpage_response\x18\x01 \x01(\v2\x17.sysclient.PageResponseR\fpageResponse\x12)\n" +
-	"\x05roles\x18\x02 \x03(\v2\x13.sysclient.RoleInfoR\x05roles\"\xc6\x01\n" +
+	"\x05roles\x18\x02 \x03(\v2\x13.sysclient.RoleInfoR\x05roles\"\xdf\x01\n" +
 	"\bRoleInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\trole_name\x18\x02 \x01(\tR\broleName\x12\x1b\n" +
 	"\trole_code\x18\x03 \x01(\tR\broleCode\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\x12\x19\n" +
-	"\bmenu_ids\x18\x06 \x03(\x03R\amenuIds\x12\x1b\n" +
-	"\tscope_ids\x18\a \x03(\x03R\bscopeIds\"\xbf\x01\n" +
+	"\x06status\x18\x05 \x01(\x05R\x06status\x12%\n" +
+	"\x05menus\x18\x06 \x03(\v2\x0f.sysclient.MenuR\x05menus\x12(\n" +
+	"\x06scopes\x18\a \x03(\v2\x10.sysclient.ScopeR\x06scopes\"\xe0\x01\n" +
 	"\x11CreateRoleRequest\x12\x1b\n" +
 	"\trole_name\x18\x01 \x01(\tR\broleName\x12\x1b\n" +
 	"\trole_code\x18\x02 \x01(\tR\broleCode\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x19\n" +
 	"\bmenu_ids\x18\x05 \x03(\x03R\amenuIds\x12\x1b\n" +
-	"\tscope_ids\x18\x06 \x03(\x03R\bscopeIds\"\xcf\x01\n" +
+	"\tscope_ids\x18\x06 \x03(\x03R\bscopeIds\x12\x1f\n" +
+	"\voperator_id\x18\a \x01(\x03R\n" +
+	"operatorId\"\xf0\x01\n" +
 	"\x11UpdateRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\trole_name\x18\x02 \x01(\tR\broleName\x12\x1b\n" +
@@ -2478,9 +2761,13 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\x05R\x06status\x12\x19\n" +
 	"\bmenu_ids\x18\x06 \x03(\x03R\amenuIds\x12\x1b\n" +
-	"\tscope_ids\x18\a \x03(\x03R\bscopeIds\"#\n" +
+	"\tscope_ids\x18\a \x03(\x03R\bscopeIds\x12\x1f\n" +
+	"\voperator_id\x18\b \x01(\x03R\n" +
+	"operatorId\"D\n" +
 	"\x11DeleteRoleRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"J\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
+	"\voperator_id\x18\x02 \x01(\x03R\n" +
+	"operatorId\"J\n" +
 	"\x0fMenuListRequest\x12\x1f\n" +
 	"\vwith_button\x18\x01 \x01(\bR\n" +
 	"withButton\x12\x16\n" +
@@ -2498,19 +2785,30 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\x11DeleteMenuRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x03R\n" +
-	"operatorId\"M\n" +
+	"operatorId\"\xb6\x01\n" +
+	"\tScopeInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
+	"\n" +
+	"scope_name\x18\x02 \x01(\tR\tscopeName\x12\x1d\n" +
+	"\n" +
+	"scope_code\x18\x03 \x01(\tR\tscopeCode\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04sort\x18\x05 \x01(\x05R\x04sort\x12%\n" +
+	"\x05menus\x18\x06 \x03(\v2\x0f.sysclient.MenuR\x05menus\"M\n" +
 	"\x10ScopeListRequest\x129\n" +
-	"\fpage_request\x18\x01 \x01(\v2\x16.sysclient.PageRequestR\vpageRequest\"{\n" +
+	"\fpage_request\x18\x01 \x01(\v2\x16.sysclient.PageRequestR\vpageRequest\"\x7f\n" +
 	"\x11ScopeListResponse\x12<\n" +
-	"\rpage_response\x18\x01 \x01(\v2\x17.sysclient.PageResponseR\fpageResponse\x12(\n" +
-	"\x06scopes\x18\x02 \x03(\v2\x10.sysclient.ScopeR\x06scopes\"\x88\x01\n" +
+	"\rpage_response\x18\x01 \x01(\v2\x17.sysclient.PageResponseR\fpageResponse\x12,\n" +
+	"\x06scopes\x18\x02 \x03(\v2\x14.sysclient.ScopeInfoR\x06scopes\"\xa9\x01\n" +
 	"\x12CreateScopeRequest\x12\x1d\n" +
 	"\n" +
 	"scope_name\x18\x01 \x01(\tR\tscopeName\x12\x1d\n" +
 	"\n" +
 	"scope_code\x18\x02 \x01(\tR\tscopeCode\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x12\n" +
-	"\x04sort\x18\x04 \x01(\x05R\x04sort\"\x98\x01\n" +
+	"\x04sort\x18\x04 \x01(\x05R\x04sort\x12\x1f\n" +
+	"\voperator_id\x18\x05 \x01(\x03R\n" +
+	"operatorId\"\xb9\x01\n" +
 	"\x12UpdateScopeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
 	"\n" +
@@ -2518,13 +2816,17 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"\n" +
 	"scope_code\x18\x03 \x01(\tR\tscopeCode\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x12\n" +
-	"\x04sort\x18\x05 \x01(\x05R\x04sort\"$\n" +
+	"\x04sort\x18\x05 \x01(\x05R\x04sort\x12\x1f\n" +
+	"\voperator_id\x18\x06 \x01(\x03R\n" +
+	"operatorId\"E\n" +
 	"\x12DeleteScopeRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id2\xe3\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
+	"\voperator_id\x18\x02 \x01(\x03R\n" +
+	"operatorId2\xe3\x01\n" +
 	"\vAuthService\x12:\n" +
 	"\x05Login\x12\x17.sysclient.LoginRequest\x1a\x18.sysclient.LoginResponse\x12O\n" +
 	"\fRefreshToken\x12\x1e.sysclient.RefreshTokenRequest\x1a\x1f.sysclient.RefreshTokenResponse\x12G\n" +
-	"\x0eGetCurrentUser\x12 .sysclient.GetCurrentUserRequest\x1a\x13.sysclient.UserInfo2\xe2\n" +
+	"\x0eGetCurrentUser\x12 .sysclient.GetCurrentUserRequest\x1a\x13.sysclient.UserInfo2\xee\n" +
 	"\n" +
 	"\x11PermissionService\x12F\n" +
 	"\vGetUserList\x12\x1a.sysclient.UserListRequest\x1a\x1b.sysclient.UserListResponse\x129\n" +
@@ -2552,10 +2854,10 @@ const file_rpc_sys_sys_proto_rawDesc = "" +
 	"UpdateMenu\x12\x1c.sysclient.UpdateMenuRequest\x1a\x0f.sysclient.Menu\x12<\n" +
 	"\n" +
 	"DeleteMenu\x12\x1c.sysclient.DeleteMenuRequest\x1a\x10.sysclient.Empty\x12I\n" +
-	"\fGetScopeList\x12\x1b.sysclient.ScopeListRequest\x1a\x1c.sysclient.ScopeListResponse\x127\n" +
-	"\fGetScopeById\x12\x15.sysclient.Int64Value\x1a\x10.sysclient.Scope\x12>\n" +
-	"\vCreateScope\x12\x1d.sysclient.CreateScopeRequest\x1a\x10.sysclient.Scope\x12>\n" +
-	"\vUpdateScope\x12\x1d.sysclient.UpdateScopeRequest\x1a\x10.sysclient.Scope\x12>\n" +
+	"\fGetScopeList\x12\x1b.sysclient.ScopeListRequest\x1a\x1c.sysclient.ScopeListResponse\x12;\n" +
+	"\fGetScopeById\x12\x15.sysclient.Int64Value\x1a\x14.sysclient.ScopeInfo\x12B\n" +
+	"\vCreateScope\x12\x1d.sysclient.CreateScopeRequest\x1a\x14.sysclient.ScopeInfo\x12B\n" +
+	"\vUpdateScope\x12\x1d.sysclient.UpdateScopeRequest\x1a\x14.sysclient.ScopeInfo\x12>\n" +
 	"\vDeleteScope\x12\x1d.sysclient.DeleteScopeRequest\x1a\x10.sysclient.EmptyB\rZ\v./sysclientb\x06proto3"
 
 var (
@@ -2570,7 +2872,7 @@ func file_rpc_sys_sys_proto_rawDescGZIP() []byte {
 	return file_rpc_sys_sys_proto_rawDescData
 }
 
-var file_rpc_sys_sys_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
+var file_rpc_sys_sys_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_rpc_sys_sys_proto_goTypes = []any{
 	(*LoginRequest)(nil),              // 0: sysclient.LoginRequest
 	(*LoginResponse)(nil),             // 1: sysclient.LoginResponse
@@ -2578,105 +2880,110 @@ var file_rpc_sys_sys_proto_goTypes = []any{
 	(*RefreshTokenResponse)(nil),      // 3: sysclient.RefreshTokenResponse
 	(*GetCurrentUserRequest)(nil),     // 4: sysclient.GetCurrentUserRequest
 	(*UserInfo)(nil),                  // 5: sysclient.UserInfo
-	(*Role)(nil),                      // 6: sysclient.Role
-	(*Empty)(nil),                     // 7: sysclient.Empty
-	(*Int64Value)(nil),                // 8: sysclient.Int64Value
-	(*PageRequest)(nil),               // 9: sysclient.PageRequest
-	(*PageResponse)(nil),              // 10: sysclient.PageResponse
-	(*Menu)(nil),                      // 11: sysclient.Menu
-	(*Scope)(nil),                     // 12: sysclient.Scope
-	(*UserListRequest)(nil),           // 13: sysclient.UserListRequest
-	(*UserListResponse)(nil),          // 14: sysclient.UserListResponse
-	(*CreateUserRequest)(nil),         // 15: sysclient.CreateUserRequest
-	(*UpdateUserRequest)(nil),         // 16: sysclient.UpdateUserRequest
-	(*DeleteUserRequest)(nil),         // 17: sysclient.DeleteUserRequest
-	(*UpdateUserPasswordRequest)(nil), // 18: sysclient.UpdateUserPasswordRequest
-	(*RoleListRequest)(nil),           // 19: sysclient.RoleListRequest
-	(*RoleListResponse)(nil),          // 20: sysclient.RoleListResponse
-	(*RoleInfo)(nil),                  // 21: sysclient.RoleInfo
-	(*CreateRoleRequest)(nil),         // 22: sysclient.CreateRoleRequest
-	(*UpdateRoleRequest)(nil),         // 23: sysclient.UpdateRoleRequest
-	(*DeleteRoleRequest)(nil),         // 24: sysclient.DeleteRoleRequest
-	(*MenuListRequest)(nil),           // 25: sysclient.MenuListRequest
-	(*MenuTreeResponse)(nil),          // 26: sysclient.MenuTreeResponse
-	(*CreateMenuRequest)(nil),         // 27: sysclient.CreateMenuRequest
-	(*UpdateMenuRequest)(nil),         // 28: sysclient.UpdateMenuRequest
-	(*DeleteMenuRequest)(nil),         // 29: sysclient.DeleteMenuRequest
-	(*ScopeListRequest)(nil),          // 30: sysclient.ScopeListRequest
-	(*ScopeListResponse)(nil),         // 31: sysclient.ScopeListResponse
-	(*CreateScopeRequest)(nil),        // 32: sysclient.CreateScopeRequest
-	(*UpdateScopeRequest)(nil),        // 33: sysclient.UpdateScopeRequest
-	(*DeleteScopeRequest)(nil),        // 34: sysclient.DeleteScopeRequest
+	(*User)(nil),                      // 6: sysclient.User
+	(*Role)(nil),                      // 7: sysclient.Role
+	(*Empty)(nil),                     // 8: sysclient.Empty
+	(*Int64Value)(nil),                // 9: sysclient.Int64Value
+	(*PageRequest)(nil),               // 10: sysclient.PageRequest
+	(*PageResponse)(nil),              // 11: sysclient.PageResponse
+	(*Menu)(nil),                      // 12: sysclient.Menu
+	(*Scope)(nil),                     // 13: sysclient.Scope
+	(*UserListRequest)(nil),           // 14: sysclient.UserListRequest
+	(*UserListResponse)(nil),          // 15: sysclient.UserListResponse
+	(*CreateUserRequest)(nil),         // 16: sysclient.CreateUserRequest
+	(*UpdateUserRequest)(nil),         // 17: sysclient.UpdateUserRequest
+	(*DeleteUserRequest)(nil),         // 18: sysclient.DeleteUserRequest
+	(*UpdateUserPasswordRequest)(nil), // 19: sysclient.UpdateUserPasswordRequest
+	(*RoleListRequest)(nil),           // 20: sysclient.RoleListRequest
+	(*RoleListResponse)(nil),          // 21: sysclient.RoleListResponse
+	(*RoleInfo)(nil),                  // 22: sysclient.RoleInfo
+	(*CreateRoleRequest)(nil),         // 23: sysclient.CreateRoleRequest
+	(*UpdateRoleRequest)(nil),         // 24: sysclient.UpdateRoleRequest
+	(*DeleteRoleRequest)(nil),         // 25: sysclient.DeleteRoleRequest
+	(*MenuListRequest)(nil),           // 26: sysclient.MenuListRequest
+	(*MenuTreeResponse)(nil),          // 27: sysclient.MenuTreeResponse
+	(*CreateMenuRequest)(nil),         // 28: sysclient.CreateMenuRequest
+	(*UpdateMenuRequest)(nil),         // 29: sysclient.UpdateMenuRequest
+	(*DeleteMenuRequest)(nil),         // 30: sysclient.DeleteMenuRequest
+	(*ScopeInfo)(nil),                 // 31: sysclient.ScopeInfo
+	(*ScopeListRequest)(nil),          // 32: sysclient.ScopeListRequest
+	(*ScopeListResponse)(nil),         // 33: sysclient.ScopeListResponse
+	(*CreateScopeRequest)(nil),        // 34: sysclient.CreateScopeRequest
+	(*UpdateScopeRequest)(nil),        // 35: sysclient.UpdateScopeRequest
+	(*DeleteScopeRequest)(nil),        // 36: sysclient.DeleteScopeRequest
 }
 var file_rpc_sys_sys_proto_depIdxs = []int32{
-	6,  // 0: sysclient.UserInfo.roles:type_name -> sysclient.Role
-	11, // 1: sysclient.UserInfo.menu_tree:type_name -> sysclient.Menu
-	11, // 2: sysclient.Menu.children:type_name -> sysclient.Menu
-	9,  // 3: sysclient.UserListRequest.page_request:type_name -> sysclient.PageRequest
-	10, // 4: sysclient.UserListResponse.page_response:type_name -> sysclient.PageResponse
+	7,  // 0: sysclient.UserInfo.roles:type_name -> sysclient.Role
+	12, // 1: sysclient.UserInfo.menu_tree:type_name -> sysclient.Menu
+	12, // 2: sysclient.Menu.children:type_name -> sysclient.Menu
+	10, // 3: sysclient.UserListRequest.page_request:type_name -> sysclient.PageRequest
+	11, // 4: sysclient.UserListResponse.page_response:type_name -> sysclient.PageResponse
 	5,  // 5: sysclient.UserListResponse.users:type_name -> sysclient.UserInfo
-	9,  // 6: sysclient.RoleListRequest.page_request:type_name -> sysclient.PageRequest
-	10, // 7: sysclient.RoleListResponse.page_response:type_name -> sysclient.PageResponse
-	21, // 8: sysclient.RoleListResponse.roles:type_name -> sysclient.RoleInfo
-	11, // 9: sysclient.MenuTreeResponse.menus:type_name -> sysclient.Menu
-	11, // 10: sysclient.CreateMenuRequest.menu:type_name -> sysclient.Menu
-	11, // 11: sysclient.UpdateMenuRequest.menu:type_name -> sysclient.Menu
-	9,  // 12: sysclient.ScopeListRequest.page_request:type_name -> sysclient.PageRequest
-	10, // 13: sysclient.ScopeListResponse.page_response:type_name -> sysclient.PageResponse
-	12, // 14: sysclient.ScopeListResponse.scopes:type_name -> sysclient.Scope
-	0,  // 15: sysclient.AuthService.Login:input_type -> sysclient.LoginRequest
-	2,  // 16: sysclient.AuthService.RefreshToken:input_type -> sysclient.RefreshTokenRequest
-	4,  // 17: sysclient.AuthService.GetCurrentUser:input_type -> sysclient.GetCurrentUserRequest
-	13, // 18: sysclient.PermissionService.GetUserList:input_type -> sysclient.UserListRequest
-	8,  // 19: sysclient.PermissionService.GetUserById:input_type -> sysclient.Int64Value
-	15, // 20: sysclient.PermissionService.CreateUser:input_type -> sysclient.CreateUserRequest
-	16, // 21: sysclient.PermissionService.UpdateUser:input_type -> sysclient.UpdateUserRequest
-	17, // 22: sysclient.PermissionService.DeleteUser:input_type -> sysclient.DeleteUserRequest
-	18, // 23: sysclient.PermissionService.UpdateUserPassword:input_type -> sysclient.UpdateUserPasswordRequest
-	19, // 24: sysclient.PermissionService.GetRoleList:input_type -> sysclient.RoleListRequest
-	8,  // 25: sysclient.PermissionService.GetRoleById:input_type -> sysclient.Int64Value
-	22, // 26: sysclient.PermissionService.CreateRole:input_type -> sysclient.CreateRoleRequest
-	23, // 27: sysclient.PermissionService.UpdateRole:input_type -> sysclient.UpdateRoleRequest
-	24, // 28: sysclient.PermissionService.DeleteRole:input_type -> sysclient.DeleteRoleRequest
-	25, // 29: sysclient.PermissionService.GetMenuTree:input_type -> sysclient.MenuListRequest
-	8,  // 30: sysclient.PermissionService.GetMenuById:input_type -> sysclient.Int64Value
-	27, // 31: sysclient.PermissionService.CreateMenu:input_type -> sysclient.CreateMenuRequest
-	28, // 32: sysclient.PermissionService.UpdateMenu:input_type -> sysclient.UpdateMenuRequest
-	29, // 33: sysclient.PermissionService.DeleteMenu:input_type -> sysclient.DeleteMenuRequest
-	30, // 34: sysclient.PermissionService.GetScopeList:input_type -> sysclient.ScopeListRequest
-	8,  // 35: sysclient.PermissionService.GetScopeById:input_type -> sysclient.Int64Value
-	32, // 36: sysclient.PermissionService.CreateScope:input_type -> sysclient.CreateScopeRequest
-	33, // 37: sysclient.PermissionService.UpdateScope:input_type -> sysclient.UpdateScopeRequest
-	34, // 38: sysclient.PermissionService.DeleteScope:input_type -> sysclient.DeleteScopeRequest
-	1,  // 39: sysclient.AuthService.Login:output_type -> sysclient.LoginResponse
-	3,  // 40: sysclient.AuthService.RefreshToken:output_type -> sysclient.RefreshTokenResponse
-	5,  // 41: sysclient.AuthService.GetCurrentUser:output_type -> sysclient.UserInfo
-	14, // 42: sysclient.PermissionService.GetUserList:output_type -> sysclient.UserListResponse
-	5,  // 43: sysclient.PermissionService.GetUserById:output_type -> sysclient.UserInfo
-	5,  // 44: sysclient.PermissionService.CreateUser:output_type -> sysclient.UserInfo
-	5,  // 45: sysclient.PermissionService.UpdateUser:output_type -> sysclient.UserInfo
-	7,  // 46: sysclient.PermissionService.DeleteUser:output_type -> sysclient.Empty
-	7,  // 47: sysclient.PermissionService.UpdateUserPassword:output_type -> sysclient.Empty
-	20, // 48: sysclient.PermissionService.GetRoleList:output_type -> sysclient.RoleListResponse
-	21, // 49: sysclient.PermissionService.GetRoleById:output_type -> sysclient.RoleInfo
-	21, // 50: sysclient.PermissionService.CreateRole:output_type -> sysclient.RoleInfo
-	21, // 51: sysclient.PermissionService.UpdateRole:output_type -> sysclient.RoleInfo
-	7,  // 52: sysclient.PermissionService.DeleteRole:output_type -> sysclient.Empty
-	26, // 53: sysclient.PermissionService.GetMenuTree:output_type -> sysclient.MenuTreeResponse
-	11, // 54: sysclient.PermissionService.GetMenuById:output_type -> sysclient.Menu
-	11, // 55: sysclient.PermissionService.CreateMenu:output_type -> sysclient.Menu
-	11, // 56: sysclient.PermissionService.UpdateMenu:output_type -> sysclient.Menu
-	7,  // 57: sysclient.PermissionService.DeleteMenu:output_type -> sysclient.Empty
-	31, // 58: sysclient.PermissionService.GetScopeList:output_type -> sysclient.ScopeListResponse
-	12, // 59: sysclient.PermissionService.GetScopeById:output_type -> sysclient.Scope
-	12, // 60: sysclient.PermissionService.CreateScope:output_type -> sysclient.Scope
-	12, // 61: sysclient.PermissionService.UpdateScope:output_type -> sysclient.Scope
-	7,  // 62: sysclient.PermissionService.DeleteScope:output_type -> sysclient.Empty
-	39, // [39:63] is the sub-list for method output_type
-	15, // [15:39] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	10, // 6: sysclient.RoleListRequest.page_request:type_name -> sysclient.PageRequest
+	11, // 7: sysclient.RoleListResponse.page_response:type_name -> sysclient.PageResponse
+	22, // 8: sysclient.RoleListResponse.roles:type_name -> sysclient.RoleInfo
+	12, // 9: sysclient.RoleInfo.menus:type_name -> sysclient.Menu
+	13, // 10: sysclient.RoleInfo.scopes:type_name -> sysclient.Scope
+	12, // 11: sysclient.MenuTreeResponse.menus:type_name -> sysclient.Menu
+	12, // 12: sysclient.CreateMenuRequest.menu:type_name -> sysclient.Menu
+	12, // 13: sysclient.UpdateMenuRequest.menu:type_name -> sysclient.Menu
+	12, // 14: sysclient.ScopeInfo.menus:type_name -> sysclient.Menu
+	10, // 15: sysclient.ScopeListRequest.page_request:type_name -> sysclient.PageRequest
+	11, // 16: sysclient.ScopeListResponse.page_response:type_name -> sysclient.PageResponse
+	31, // 17: sysclient.ScopeListResponse.scopes:type_name -> sysclient.ScopeInfo
+	0,  // 18: sysclient.AuthService.Login:input_type -> sysclient.LoginRequest
+	2,  // 19: sysclient.AuthService.RefreshToken:input_type -> sysclient.RefreshTokenRequest
+	4,  // 20: sysclient.AuthService.GetCurrentUser:input_type -> sysclient.GetCurrentUserRequest
+	14, // 21: sysclient.PermissionService.GetUserList:input_type -> sysclient.UserListRequest
+	9,  // 22: sysclient.PermissionService.GetUserById:input_type -> sysclient.Int64Value
+	16, // 23: sysclient.PermissionService.CreateUser:input_type -> sysclient.CreateUserRequest
+	17, // 24: sysclient.PermissionService.UpdateUser:input_type -> sysclient.UpdateUserRequest
+	18, // 25: sysclient.PermissionService.DeleteUser:input_type -> sysclient.DeleteUserRequest
+	19, // 26: sysclient.PermissionService.UpdateUserPassword:input_type -> sysclient.UpdateUserPasswordRequest
+	20, // 27: sysclient.PermissionService.GetRoleList:input_type -> sysclient.RoleListRequest
+	9,  // 28: sysclient.PermissionService.GetRoleById:input_type -> sysclient.Int64Value
+	23, // 29: sysclient.PermissionService.CreateRole:input_type -> sysclient.CreateRoleRequest
+	24, // 30: sysclient.PermissionService.UpdateRole:input_type -> sysclient.UpdateRoleRequest
+	25, // 31: sysclient.PermissionService.DeleteRole:input_type -> sysclient.DeleteRoleRequest
+	26, // 32: sysclient.PermissionService.GetMenuTree:input_type -> sysclient.MenuListRequest
+	9,  // 33: sysclient.PermissionService.GetMenuById:input_type -> sysclient.Int64Value
+	28, // 34: sysclient.PermissionService.CreateMenu:input_type -> sysclient.CreateMenuRequest
+	29, // 35: sysclient.PermissionService.UpdateMenu:input_type -> sysclient.UpdateMenuRequest
+	30, // 36: sysclient.PermissionService.DeleteMenu:input_type -> sysclient.DeleteMenuRequest
+	32, // 37: sysclient.PermissionService.GetScopeList:input_type -> sysclient.ScopeListRequest
+	9,  // 38: sysclient.PermissionService.GetScopeById:input_type -> sysclient.Int64Value
+	34, // 39: sysclient.PermissionService.CreateScope:input_type -> sysclient.CreateScopeRequest
+	35, // 40: sysclient.PermissionService.UpdateScope:input_type -> sysclient.UpdateScopeRequest
+	36, // 41: sysclient.PermissionService.DeleteScope:input_type -> sysclient.DeleteScopeRequest
+	1,  // 42: sysclient.AuthService.Login:output_type -> sysclient.LoginResponse
+	3,  // 43: sysclient.AuthService.RefreshToken:output_type -> sysclient.RefreshTokenResponse
+	5,  // 44: sysclient.AuthService.GetCurrentUser:output_type -> sysclient.UserInfo
+	15, // 45: sysclient.PermissionService.GetUserList:output_type -> sysclient.UserListResponse
+	5,  // 46: sysclient.PermissionService.GetUserById:output_type -> sysclient.UserInfo
+	5,  // 47: sysclient.PermissionService.CreateUser:output_type -> sysclient.UserInfo
+	5,  // 48: sysclient.PermissionService.UpdateUser:output_type -> sysclient.UserInfo
+	8,  // 49: sysclient.PermissionService.DeleteUser:output_type -> sysclient.Empty
+	8,  // 50: sysclient.PermissionService.UpdateUserPassword:output_type -> sysclient.Empty
+	21, // 51: sysclient.PermissionService.GetRoleList:output_type -> sysclient.RoleListResponse
+	22, // 52: sysclient.PermissionService.GetRoleById:output_type -> sysclient.RoleInfo
+	22, // 53: sysclient.PermissionService.CreateRole:output_type -> sysclient.RoleInfo
+	22, // 54: sysclient.PermissionService.UpdateRole:output_type -> sysclient.RoleInfo
+	8,  // 55: sysclient.PermissionService.DeleteRole:output_type -> sysclient.Empty
+	27, // 56: sysclient.PermissionService.GetMenuTree:output_type -> sysclient.MenuTreeResponse
+	12, // 57: sysclient.PermissionService.GetMenuById:output_type -> sysclient.Menu
+	12, // 58: sysclient.PermissionService.CreateMenu:output_type -> sysclient.Menu
+	12, // 59: sysclient.PermissionService.UpdateMenu:output_type -> sysclient.Menu
+	8,  // 60: sysclient.PermissionService.DeleteMenu:output_type -> sysclient.Empty
+	33, // 61: sysclient.PermissionService.GetScopeList:output_type -> sysclient.ScopeListResponse
+	31, // 62: sysclient.PermissionService.GetScopeById:output_type -> sysclient.ScopeInfo
+	31, // 63: sysclient.PermissionService.CreateScope:output_type -> sysclient.ScopeInfo
+	31, // 64: sysclient.PermissionService.UpdateScope:output_type -> sysclient.ScopeInfo
+	8,  // 65: sysclient.PermissionService.DeleteScope:output_type -> sysclient.Empty
+	42, // [42:66] is the sub-list for method output_type
+	18, // [18:42] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_rpc_sys_sys_proto_init() }
@@ -2690,7 +2997,7 @@ func file_rpc_sys_sys_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_rpc_sys_sys_proto_rawDesc), len(file_rpc_sys_sys_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   35,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

@@ -112,17 +112,17 @@ func (s *PermissionServiceServer) GetScopeList(ctx context.Context, in *sysclien
 	return l.GetScopeList(in)
 }
 
-func (s *PermissionServiceServer) GetScopeById(ctx context.Context, in *sysclient.Int64Value) (*sysclient.Scope, error) {
+func (s *PermissionServiceServer) GetScopeById(ctx context.Context, in *sysclient.Int64Value) (*sysclient.ScopeInfo, error) {
 	l := permissionservicelogic.NewGetScopeByIdLogic(ctx, s.svcCtx)
 	return l.GetScopeById(in)
 }
 
-func (s *PermissionServiceServer) CreateScope(ctx context.Context, in *sysclient.CreateScopeRequest) (*sysclient.Scope, error) {
+func (s *PermissionServiceServer) CreateScope(ctx context.Context, in *sysclient.CreateScopeRequest) (*sysclient.ScopeInfo, error) {
 	l := permissionservicelogic.NewCreateScopeLogic(ctx, s.svcCtx)
 	return l.CreateScope(in)
 }
 
-func (s *PermissionServiceServer) UpdateScope(ctx context.Context, in *sysclient.UpdateScopeRequest) (*sysclient.Scope, error) {
+func (s *PermissionServiceServer) UpdateScope(ctx context.Context, in *sysclient.UpdateScopeRequest) (*sysclient.ScopeInfo, error) {
 	l := permissionservicelogic.NewUpdateScopeLogic(ctx, s.svcCtx)
 	return l.UpdateScope(in)
 }

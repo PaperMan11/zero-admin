@@ -2,7 +2,12 @@ package permissionservicelogic
 
 import (
 	"context"
-
+	"github.com/zeromicro/go-zero/core/logc"
+	bcryptUtil "zero-admin/pkg/bcrypt"
+	"zero-admin/pkg/convert"
+	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/db/mysql/model"
+	authservicelogic "zero-admin/rpc/sys/internal/logic/authservice"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -24,7 +29,22 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateUserLogic) CreateUser(in *sysclient.CreateUserRequest) (*sysclient.UserInfo, error) {
-	// todo: add your logic here and delete this line
-
-	return &sysclient.UserInfo{}, nil
+	operator := convert.ToString(in.GetOperatorId())
+	userID, err := l.svcCtx.DB.CreateUser(l.ctx, model.SysUser{
+		Username: in.Username,
+		Password: bcryptUtil.HashPassword(in.Password),
+		Email:    in.Email,
+		Mobile:   in.Mobile,
+		RealName: in.RealName,
+		Gender:   in.Gender,
+		Status:   in.Status,
+		Creator:  operator,
+		Updater:  operator,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "创建用户失败, 参数：%+v, 错误：%s", in, err.Error())
+		return nil, xerr.NewErrCode(xerr.ErrorCreateUser)
+	}
+	user, _ := authservicelogic.NewGetCurrentUserLogic(l.ctx, l.svcCtx).GetCurrentUser(&sysclient.GetCurrentUserRequest{UserId: userID})
+	return user, nil
 }

@@ -255,9 +255,9 @@ type PermissionServiceClient interface {
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error)
 	// 安全范围管理
 	GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error)
-	GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Scope, error)
-	CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*Scope, error)
-	UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*Scope, error)
+	GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error)
+	CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
+	UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 	DeleteScope(ctx context.Context, in *DeleteScopeRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
@@ -439,9 +439,9 @@ func (c *permissionServiceClient) GetScopeList(ctx context.Context, in *ScopeLis
 	return out, nil
 }
 
-func (c *permissionServiceClient) GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Scope, error) {
+func (c *permissionServiceClient) GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Scope)
+	out := new(ScopeInfo)
 	err := c.cc.Invoke(ctx, PermissionService_GetScopeById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -449,9 +449,9 @@ func (c *permissionServiceClient) GetScopeById(ctx context.Context, in *Int64Val
 	return out, nil
 }
 
-func (c *permissionServiceClient) CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*Scope, error) {
+func (c *permissionServiceClient) CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Scope)
+	out := new(ScopeInfo)
 	err := c.cc.Invoke(ctx, PermissionService_CreateScope_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -459,9 +459,9 @@ func (c *permissionServiceClient) CreateScope(ctx context.Context, in *CreateSco
 	return out, nil
 }
 
-func (c *permissionServiceClient) UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*Scope, error) {
+func (c *permissionServiceClient) UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Scope)
+	out := new(ScopeInfo)
 	err := c.cc.Invoke(ctx, PermissionService_UpdateScope_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -504,9 +504,9 @@ type PermissionServiceServer interface {
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error)
 	// 安全范围管理
 	GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error)
-	GetScopeById(context.Context, *Int64Value) (*Scope, error)
-	CreateScope(context.Context, *CreateScopeRequest) (*Scope, error)
-	UpdateScope(context.Context, *UpdateScopeRequest) (*Scope, error)
+	GetScopeById(context.Context, *Int64Value) (*ScopeInfo, error)
+	CreateScope(context.Context, *CreateScopeRequest) (*ScopeInfo, error)
+	UpdateScope(context.Context, *UpdateScopeRequest) (*ScopeInfo, error)
 	DeleteScope(context.Context, *DeleteScopeRequest) (*Empty, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
@@ -569,13 +569,13 @@ func (UnimplementedPermissionServiceServer) DeleteMenu(context.Context, *DeleteM
 func (UnimplementedPermissionServiceServer) GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScopeList not implemented")
 }
-func (UnimplementedPermissionServiceServer) GetScopeById(context.Context, *Int64Value) (*Scope, error) {
+func (UnimplementedPermissionServiceServer) GetScopeById(context.Context, *Int64Value) (*ScopeInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScopeById not implemented")
 }
-func (UnimplementedPermissionServiceServer) CreateScope(context.Context, *CreateScopeRequest) (*Scope, error) {
+func (UnimplementedPermissionServiceServer) CreateScope(context.Context, *CreateScopeRequest) (*ScopeInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateScope not implemented")
 }
-func (UnimplementedPermissionServiceServer) UpdateScope(context.Context, *UpdateScopeRequest) (*Scope, error) {
+func (UnimplementedPermissionServiceServer) UpdateScope(context.Context, *UpdateScopeRequest) (*ScopeInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateScope not implemented")
 }
 func (UnimplementedPermissionServiceServer) DeleteScope(context.Context, *DeleteScopeRequest) (*Empty, error) {

@@ -49,7 +49,18 @@ message UserInfo {
   int32 status = 7;       // 状态 (0-禁用, 1-正常)
   repeated Role roles = 8; // 角色列表
   repeated Menu menu_tree = 9; // 菜单列表
-  string avatar = 10;     // 头像
+  string avatar = 10; // 头像
+}
+
+message User {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string email = 3;       // 邮箱
+  string mobile = 4;      // 手机号
+  string real_name = 5;   // 真实姓名
+  int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 7;       // 状态 (0-禁用, 1-正常)
+  string avatar = 8;     // 头像
 }
 
 // 角色信息
@@ -151,6 +162,7 @@ message CreateUserRequest {
   int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
   int32 status = 7;       // 状态 (0-禁用, 1-正常)
   repeated int64 role_ids = 8; // 角色ID列表
+  int64 operator_id = 9;  // 操作者
 }
 
 // 更新用户请求
@@ -163,11 +175,13 @@ message UpdateUserRequest {
   int32 status = 6;       // 状态 (0-禁用, 1-正常)
   repeated int64 role_ids = 7; // 角色ID列表
   string avatar = 8;      // 头像URL
+  int64 operator_id = 9;  // 操作者
 }
 
 // 删除用户请求
 message DeleteUserRequest {
   int64 id = 1;           // 用户ID
+  int64 operator_id = 2;  // 操作者
 }
 
 // 更新用户密码请求
@@ -175,6 +189,7 @@ message UpdateUserPasswordRequest {
   int64 user_id = 1;      // 用户ID
   string old_password = 2; // 旧密码
   string new_password = 3; // 新密码
+  int64 operator_id = 4;  // 操作者
 }
 
 // ========== 角色管理 ==========
@@ -198,8 +213,8 @@ message RoleInfo {
   string role_code = 3;   // 角色编码
   string description = 4; // 角色描述
   int32 status = 5;       // 状态 (0-禁用, 1-正常)
-  repeated int64 menu_ids = 6; // 菜单ID列表
-  repeated int64 scope_ids = 7; // 安全范围ID列表
+  repeated Menu menus = 6; // 菜单列表
+  repeated Scope scopes = 7; // 安全范围列表
 }
 
 // 创建角色请求
@@ -210,6 +225,7 @@ message CreateRoleRequest {
   int32 status = 4;       // 状态 (0-禁用, 1-正常)
   repeated int64 menu_ids = 5; // 菜单ID列表
   repeated int64 scope_ids = 6; // 安全范围ID列表
+  int64 operator_id = 7;  // 操作者
 }
 
 // 更新角色请求
@@ -221,11 +237,13 @@ message UpdateRoleRequest {
   int32 status = 5;       // 状态 (0-禁用, 1-正常)
   repeated int64 menu_ids = 6; // 菜单ID列表
   repeated int64 scope_ids = 7; // 安全范围ID列表
+  int64 operator_id = 8;  // 操作者
 }
 
 // 删除角色请求
 message DeleteRoleRequest {
   int64 id = 1;           // 角色ID
+  int64 operator_id = 2;  // 操作者
 }
 
 // ========== 菜单管理 ==========
@@ -261,6 +279,16 @@ message DeleteMenuRequest {
 
 // ========== 安全范围管理 ==========
 
+message ScopeInfo {
+  int64 id = 1;           // 范围ID
+  string scope_name = 2;  // 范围名称
+  string scope_code = 3;  // 范围编码
+  string description = 4; // 范围描述
+  int32 sort = 5;         // 排序
+  repeated Menu menus = 6; // 菜单
+}
+
+
 // 安全范围列表请求
 message ScopeListRequest {
   PageRequest page_request = 1;
@@ -269,7 +297,7 @@ message ScopeListRequest {
 // 安全范围列表响应
 message ScopeListResponse {
   PageResponse page_response = 1;
-  repeated Scope scopes = 2;
+  repeated ScopeInfo scopes = 2;
 }
 
 // 创建安全范围请求
@@ -278,6 +306,7 @@ message CreateScopeRequest {
   string scope_code = 2;  // 范围编码
   string description = 3; // 范围描述
   int32 sort = 4;         // 排序
+  int64 operator_id = 5;  // 操作者
 }
 
 // 更新安全范围请求
@@ -287,11 +316,13 @@ message UpdateScopeRequest {
   string scope_code = 3;  // 范围编码
   string description = 4; // 范围描述
   int32 sort = 5;         // 排序
+  int64 operator_id = 6;  // 操作者
 }
 
 // 删除安全范围请求
 message DeleteScopeRequest {
   int64 id = 1;           // 范围ID
+  int64 operator_id = 2;  // 操作者
 }
 
 // ========== 权限服务 ==========
@@ -321,8 +352,8 @@ service PermissionService {
 
   // 安全范围管理
   rpc GetScopeList(ScopeListRequest) returns (ScopeListResponse);
-  rpc GetScopeById(Int64Value) returns (Scope);
-  rpc CreateScope(CreateScopeRequest) returns (Scope);
-  rpc UpdateScope(UpdateScopeRequest) returns (Scope);
+  rpc GetScopeById(Int64Value) returns (ScopeInfo);
+  rpc CreateScope(CreateScopeRequest) returns (ScopeInfo);
+  rpc UpdateScope(UpdateScopeRequest) returns (ScopeInfo);
   rpc DeleteScope(DeleteScopeRequest) returns (Empty);
 }

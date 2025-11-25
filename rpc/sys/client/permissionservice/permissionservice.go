@@ -39,6 +39,7 @@ type (
 	RoleListRequest           = sysclient.RoleListRequest
 	RoleListResponse          = sysclient.RoleListResponse
 	Scope                     = sysclient.Scope
+	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
@@ -46,6 +47,7 @@ type (
 	UpdateScopeRequest        = sysclient.UpdateScopeRequest
 	UpdateUserPasswordRequest = sysclient.UpdateUserPasswordRequest
 	UpdateUserRequest         = sysclient.UpdateUserRequest
+	User                      = sysclient.User
 	UserInfo                  = sysclient.UserInfo
 	UserListRequest           = sysclient.UserListRequest
 	UserListResponse          = sysclient.UserListResponse
@@ -72,9 +74,9 @@ type (
 		DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error)
 		// 安全范围管理
 		GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error)
-		GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Scope, error)
-		CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*Scope, error)
-		UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*Scope, error)
+		GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error)
+		CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
+		UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 		DeleteScope(ctx context.Context, in *DeleteScopeRequest, opts ...grpc.CallOption) (*Empty, error)
 	}
 
@@ -178,17 +180,17 @@ func (m *defaultPermissionService) GetScopeList(ctx context.Context, in *ScopeLi
 	return client.GetScopeList(ctx, in, opts...)
 }
 
-func (m *defaultPermissionService) GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Scope, error) {
+func (m *defaultPermissionService) GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error) {
 	client := sysclient.NewPermissionServiceClient(m.cli.Conn())
 	return client.GetScopeById(ctx, in, opts...)
 }
 
-func (m *defaultPermissionService) CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*Scope, error) {
+func (m *defaultPermissionService) CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
 	client := sysclient.NewPermissionServiceClient(m.cli.Conn())
 	return client.CreateScope(ctx, in, opts...)
 }
 
-func (m *defaultPermissionService) UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*Scope, error) {
+func (m *defaultPermissionService) UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
 	client := sysclient.NewPermissionServiceClient(m.cli.Conn())
 	return client.UpdateScope(ctx, in, opts...)
 }

@@ -18,10 +18,6 @@ fi; \
 )
 
 
-mergerpc: ## 合并rpc代码
-	$(GOCMD) run rpc/sys/db/mysql/generator.go
-
-
 gen:	## 生成所有模块代码
 	# 合并rpc代码 & 生成sys-rpc代码
 	$(GOCMD) run rpc/sys/proto/main.go

@@ -15,18 +15,8 @@ const (
 	ErrorDb                   uint32 = 100006
 	ErrorDbUpdateAffectedZero uint32 = 100007
 	ErrorPermissionDenied     uint32 = 100008
-)
-
-// sys 模块
-const (
-	ErrorInvalidInput uint32 = 200001
-	ErrorRegister     uint32 = 200004
-	ErrorUserExist    uint32 = 200003
-	ErrorUserNotExist uint32 = 200005
-	ErrorOldPassword  uint32 = 200006
-	ErrorCaptcha      uint32 = 200007
-	ErrorUserPassword uint32 = 200008
-	ErrorRepeatName   uint32 = 200009
+	ErrorInvalidInput         uint32 = 100009
+	ErrorCaptcha              uint32 = 100010
 )
 
 // sys_base 模块
@@ -43,14 +33,47 @@ const (
 	ErrorCommentNotExist = 400002
 )
 
+// -----------------------------------后台管理系统----------------------------------
+
+// user
+const (
+	ErrorRegister     uint32 = 200004
+	ErrorUserExist    uint32 = 200003
+	ErrorUserNotExist uint32 = 200005
+	ErrorOldPassword  uint32 = 200006
+	ErrorUserPassword uint32 = 200008
+	ErrorRepeatName   uint32 = 200009
+	ErrorCreateUser   uint32 = 200010
+	ErrorUpdateUser   uint32 = 200011
+	ErrorDeleteUser   uint32 = 200012
+)
+
 // menu
 const (
-	ErrorCreateMenuFailed      = 500001
-	ErrorUpdateMenuFailed      = 500002
-	ErrorDeleteMenuFailed      = 500003
-	ErrorGetMenuFailed         = 500004
-	ErrorGetMenuListFailed     = 500005
-	ErrorGetMenuTreeFailed     = 500006
-	ErrorGetMenuRoleListFailed = 500007
-	ErrorGetMenuRoleTreeFailed = 500008
+	ErrorCreateMenu      = 500001
+	ErrorUpdateMenu      = 500002
+	ErrorDeleteMenu      = 500003
+	ErrorGetMenu         = 500004
+	ErrorGetMenuList     = 500005
+	ErrorGetMenuTree     = 500006
+	ErrorGetMenuRoleList = 500007
+	ErrorGetMenuRoleTree = 500008
+)
+
+// role
+const (
+	ErrorCreateRole  = 600001
+	ErrorUpdateRole  = 600002
+	ErrorDeleteRole  = 600003
+	ErrorGetRole     = 600004
+	ErrorGetRoleList = 600005
+)
+
+// scope
+const (
+	ErrorCreateScope  = 700001
+	ErrorUpdateScope  = 700002
+	ErrorDeleteScope  = 700003
+	ErrorGetScope     = 700004
+	ErrorGetScopeList = 700005
 )

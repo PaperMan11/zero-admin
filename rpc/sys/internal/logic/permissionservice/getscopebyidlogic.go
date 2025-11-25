@@ -23,8 +23,8 @@ func NewGetScopeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetS
 	}
 }
 
-func (l *GetScopeByIdLogic) GetScopeById(in *sysclient.Int64Value) (*sysclient.Scope, error) {
+func (l *GetScopeByIdLogic) GetScopeById(in *sysclient.Int64Value) (*sysclient.ScopeInfo, error) {
 	// todo: add your logic here and delete this line
 
-	return &sysclient.Scope{}, nil
+	return &sysclient.ScopeInfo{}, nil
 }

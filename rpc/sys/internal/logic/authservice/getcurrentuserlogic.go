@@ -6,8 +6,9 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/db"
 	"zero-admin/rpc/sys/db/mysql/model"
-	permLogic "zero-admin/rpc/sys/internal/logic/permissionservice"
+	"zero-admin/rpc/sys/internal/logic"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -30,7 +31,7 @@ func NewGetCurrentUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 // 获取当前用户信息
 func (l *GetCurrentUserLogic) GetCurrentUser(in *sysclient.GetCurrentUserRequest) (*sysclient.UserInfo, error) {
-	userWithRoles, err := l.svcCtx.DB.GetUserWithRole(l.ctx, in.UserId)
+	user, err := l.svcCtx.DB.GetUserByID(l.ctx, in.UserId)
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		return nil, xerr.NewErrCode(xerr.ErrorUserNotExist)
@@ -39,48 +40,31 @@ func (l *GetCurrentUserLogic) GetCurrentUser(in *sysclient.GetCurrentUserRequest
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
 
-	roleCodes := make([]string, 0, len(userWithRoles.Roles))
-	for _, role := range userWithRoles.Roles {
-		roleCodes = append(roleCodes, role.RoleCode)
-	}
+	// 用户角色信息
+	userRoles, roleCodes := GetUserRoles(l.ctx, l.svcCtx.DB, user.ID)
 	// menus
-	menus, _ := l.svcCtx.DB.GetMenusByRole(l.ctx, roleCodes)
+	menus, _ := l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
 
 	resp := &sysclient.UserInfo{
-		Id:       userWithRoles.ID,
-		Username: userWithRoles.Username,
-		Status:   userWithRoles.Status,
-		Roles:    buildRoles(userWithRoles.Roles),
-		MenuTree: buildMenuTree(menus, 0),
-		Email:    userWithRoles.Email,
-		Mobile:   userWithRoles.Mobile,
-		RealName: userWithRoles.RealName,
-		Gender:   userWithRoles.Gender,
-		Avatar:   userWithRoles.Avatar,
+		Id:       user.ID,
+		Username: user.Username,
+		Status:   user.Status,
+		Roles:    logic.ConvertToRpcRoles(userRoles),
+		MenuTree: logic.BuildMenuTree(menus, 0),
+		Email:    user.Email,
+		Mobile:   user.Mobile,
+		RealName: user.RealName,
+		Gender:   user.Gender,
+		Avatar:   user.Avatar,
 	}
 	return resp, nil
 }
 
-func buildRoles(roles []model.SysRole) (res []*sysclient.Role) {
-	res = make([]*sysclient.Role, 0, len(roles))
+func GetUserRoles(ctx context.Context, db db.DB, userID int64) (roles []model.SysRole, roleCodes []string) {
+	roles, _ = db.GetRolesByUserID(ctx, userID)
+	roleCodes = make([]string, 0, len(roles))
 	for _, role := range roles {
-		res = append(res, &sysclient.Role{
-			Id:       role.ID,
-			RoleName: role.RoleName,
-			RoleCode: role.RoleCode,
-		})
-	}
-	return
-}
-
-func buildMenuTree(menus []model.SysMenu, parentID int64) (menuTree []*sysclient.Menu) {
-	menuTree = make([]*sysclient.Menu, 0)
-	for _, menu := range menus {
-		if menu.ParentID == parentID && menu.Status == 1 {
-			m := permLogic.ConvertToRpcMenu(&menu)
-			menuTree = append(menuTree, m)
-			m.Children = buildMenuTree(menus, menu.ID)
-		}
+		roleCodes = append(roleCodes, role.RoleCode)
 	}
 	return
 }

@@ -5,41 +5,50 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"zero-admin/pkg/orm"
+	"zero-admin/rpc/sys/db/mockdb"
 	mysqlCli "zero-admin/rpc/sys/db/mysql/client"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/db/mysql/query"
 )
 
-type UserWithRoleInfo struct {
-	model.SysUser
-	Roles []model.SysRole
-}
-
 type DB interface {
 	// ---------------------用户 & 角色---------------------
 	// 添加用户
-	CreateUser(ctx context.Context, user model.SysUser) error
+	CreateUser(ctx context.Context, user model.SysUser) (int64, error)
 	// 根据用户名查询用户
-	GetUserByUsername(ctx context.Context, username string) (*model.SysUser, error)
-	// 获取用户及角色
-	GetUserWithRole(ctx context.Context, userID int64) (UserWithRoleInfo, error)
-	GetUserWithRoleByUsername(ctx context.Context, username string) (UserWithRoleInfo, error)
+	GetUserByUsername(ctx context.Context, username string) (model.SysUser, error)
+	// 根据用户ID查询用户
+	GetUserByID(ctx context.Context, userID int64) (model.SysUser, error)
 	// 更新用户
 	UpdateUserByID(ctx context.Context, userID int64, updates interface{}) error
+	// 创建角色
+	CreateRole(ctx context.Context, role model.SysRole) (int64, error)
+	// 根据ID获取角色
+	GetRoleByID(ctx context.Context, roleID int64) (model.SysRole, error)
+	// 获取用户角色
+	GetRolesByUserID(ctx context.Context, userID int64) ([]model.SysRole, error)
 
 	// ---------------------菜单 & 权限---------------------
 	// 获取所有的菜单
-	GetMenus(ctx context.Context) ([]model.SysMenu, error)
+	GetMenus(ctx context.Context, page, pageSize int) ([]model.SysMenu, error)
 	// 根据id获取菜单
-	GetMenuByID(ctx context.Context, menuID int64) (*model.SysMenu, error)
+	GetMenuByID(ctx context.Context, menuID int64) (model.SysMenu, error)
 	// 根据角色获取有权限的菜单
-	GetMenusByRole(ctx context.Context, roleCodes []string) ([]model.SysMenu, error)
+	GetMenusByRoles(ctx context.Context, roleCodes []string) ([]model.SysMenu, error)
 	// 创建菜单
 	CreateMenus(ctx context.Context, menu []model.SysMenu) (int64, error)
 	// 删除菜单
 	DeleteMenu(ctx context.Context, menuID int64) error
 	// 修改菜单
 	UpdateMenu(ctx context.Context, menuID int64, updates interface{}) error
+	GetMenusByRoleID(ctx context.Context, roleID int64) ([]model.SysMenu, error)
+	GetMenusByScopeID(ctx context.Context, scopeID int64) ([]model.SysMenu, error)
+
+	// 创建安全范围
+	CreateScope(ctx context.Context, scope model.SysScope) (int64, error)
+	// 获取安全范围
+	GetScopeByID(ctx context.Context, scopeID int64) (model.SysScope, error)
+	GetScopesByRoleID(ctx context.Context, roleID int64) ([]model.SysScope, error)
 
 	// ---------------------登录日志---------------------
 	// 添加登录日志
@@ -47,6 +56,7 @@ type DB interface {
 }
 
 const (
+	DB_MOCK  = "mockdb"
 	DB_MYSQL = "mysql"
 )
 
@@ -74,6 +84,8 @@ func NewDB(dbType string, dbConfig interface{}) (DB, error) {
 		}
 		q := query.Use(dbCli)
 		return mysqlCli.NewMysqlDB(q)
+	case DB_MOCK:
+		return mockdb.NewMockDB()
 	}
 	return nil, ErrDBTypeNotSupport
 }

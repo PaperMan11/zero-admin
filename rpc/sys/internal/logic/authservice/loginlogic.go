@@ -33,7 +33,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 // 用户登录
 func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse, error) {
-	user, err := l.svcCtx.DB.GetUserWithRoleByUsername(l.ctx, in.Username)
+	user, err := l.svcCtx.DB.GetUserByUsername(l.ctx, in.Username)
 	// 1.判断用户是否存在
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
@@ -53,11 +53,9 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	}
 
 	// 3.生成token
-	roles := make([]string, 0, len(user.Roles))
-	for _, role := range user.Roles {
-		roles = append(roles, role.RoleCode)
-	}
-	accessToken, refreshToken, err := GenerateToken(user.ID, roles, l.svcCtx.Config.Name,
+	// 用户角色信息
+	_, roleCodes := GetUserRoles(l.ctx, l.svcCtx.DB, user.ID)
+	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, l.svcCtx.Config.Name,
 		l.svcCtx.Config.Jwt.AccessSecret, l.svcCtx.Config.Jwt.AccessExpire,
 		l.svcCtx.Config.Jwt.RefreshSecret, l.svcCtx.Config.Jwt.RefreshExpire)
 	if err != nil {

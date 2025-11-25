@@ -44,7 +44,7 @@ func (l *RefreshTokenLogic) RefreshToken(in *sysclient.RefreshTokenRequest) (*sy
 	}
 	userID := convert.ToInt64(userIDStr)
 
-	user, err := l.svcCtx.DB.GetUserWithRole(l.ctx, userID)
+	user, err := l.svcCtx.DB.GetUserByID(l.ctx, userID)
 	// 判断用户是否存在
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
@@ -55,11 +55,9 @@ func (l *RefreshTokenLogic) RefreshToken(in *sysclient.RefreshTokenRequest) (*sy
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
 
-	roles := make([]string, 0, len(user.Roles))
-	for _, role := range user.Roles {
-		roles = append(roles, role.RoleCode)
-	}
-	accessToken, refreshToken, err := GenerateToken(user.ID, roles, issuer, accessSecret, accessExpire, refreshSecret, refreshExpire)
+	// 用户角色信息
+	_, roleCodes := GetUserRoles(l.ctx, l.svcCtx.DB, user.ID)
+	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, issuer, accessSecret, accessExpire, refreshSecret, refreshExpire)
 	if err != nil {
 		logc.Errorf(l.ctx, "生成token异常, 用户id：%+v, 错误：%s", user.ID, err.Error())
 		return nil, xerr.NewErrCode(xerr.ErrorTokenGenerate)

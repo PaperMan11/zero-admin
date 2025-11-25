@@ -1,4 +1,4 @@
-package authservicelogic
+package logic
 
 import (
 	"testing"
@@ -106,7 +106,7 @@ func TestBuildMenuTree(t *testing.T) {
 	// 执行测试用例
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := buildMenuTree(tt.menus, tt.parentID)
+			got := BuildMenuTree(tt.menus, tt.parentID)
 
 			// 基本数量验证
 			if len(got) != tt.wantCount {
@@ -167,7 +167,7 @@ func TestBuildMenuTree_Recursive(t *testing.T) {
 		{ID: 5, ParentID: 4, MenuName: "Level4-GreatGrandChild", Status: 1},
 	}
 
-	result := buildMenuTree(menus, 0)
+	result := BuildMenuTree(menus, 0)
 
 	// 验证根节点
 	if len(result) != 1 {
@@ -228,7 +228,7 @@ func TestBuildMenuTree_EdgeCases(t *testing.T) {
 				}
 			}()
 
-			got := buildMenuTree(tt.menus, tt.parentID)
+			got := BuildMenuTree(tt.menus, tt.parentID)
 			if len(got) == 0 && len(tt.menus) > 0 && tt.menus[0].Status == 1 {
 				t.Errorf("%s: 应该返回非空结果", tt.name)
 			}
@@ -255,6 +255,6 @@ func BenchmarkBuildMenuTree(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		buildMenuTree(menus, 0)
+		BuildMenuTree(menus, 0)
 	}
 }
