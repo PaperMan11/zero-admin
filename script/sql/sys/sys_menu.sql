@@ -1,0 +1,28 @@
+-- 创建系统菜单表
+CREATE TABLE `sys_menu` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
+    `scope_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '安全范围ID',
+    `parent_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '父菜单ID (0表示根菜单)',
+    `menu_name` varchar(50) NOT NULL COMMENT '菜单名称',
+    `menu_type` char(1) NOT NULL COMMENT '菜单类型 (M-目录, C-菜单, F-按钮)',
+    `path` varchar(255) NOT NULL DEFAULT '' COMMENT '路由路径',
+    `component` varchar(255) NOT NULL DEFAULT '' COMMENT '组件路径',
+    `redirect` varchar(255) NOT NULL DEFAULT '' COMMENT '重定向路径',
+    `icon` varchar(50) NOT NULL DEFAULT '' COMMENT '菜单图标',
+    `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
+    `no_cache` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否缓存 (0-缓存, 1-不缓存)',
+    `affix` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否固定在标签栏 (0-否, 1-是)',
+    `external` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否外部链接 (0-否, 1-是)',
+    `hidden` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否隐藏 (0-显示, 1-隐藏)',
+    `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态 (0-禁用, 1-正常)',
+    `creator` varchar(50) NOT NULL DEFAULT '' COMMENT '创建人',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater` varchar(50) NOT NULL DEFAULT '' COMMENT '更新人',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `del_flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除标记 (0-未删除, 1-已删除)',
+    `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (`id`),
+    KEY `idx_parent_id` (`parent_id`),
+    KEY `idx_menu_type` (`menu_type`),
+    KEY `idx_scope_id` (`scope_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COMMENT='系统菜单表';

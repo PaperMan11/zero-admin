@@ -1,0 +1,328 @@
+syntax = "proto3";
+
+package sysclient;
+
+option go_package = "./sysclient";
+
+
+// 用户登录请求
+message LoginRequest {
+  string username = 1;  // 用户名
+  string password = 2;  // 密码
+  string ip_address = 3;  // IP地址
+  string os = 4; // 操作系统
+  string browser = 5; // 浏览器
+}
+
+// 用户登录响应
+message LoginResponse {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string token = 3;       // JWT令牌
+  string refresh_token = 4; // 刷新令牌
+}
+
+// 刷新令牌请求
+message RefreshTokenRequest {
+  string refresh_token = 1; // 刷新令牌
+}
+
+// 刷新令牌响应
+message RefreshTokenResponse {
+  string token = 1;       // 新的JWT令牌
+  string refresh_token = 2; // 新的刷新令牌
+}
+
+// 获取当前用户信息请求
+message GetCurrentUserRequest {
+  int64 user_id = 1;
+}
+
+// 用户信息
+message UserInfo {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string email = 3;       // 邮箱
+  string mobile = 4;      // 手机号
+  string real_name = 5;   // 真实姓名
+  int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 7;       // 状态 (0-禁用, 1-正常)
+  repeated Role roles = 8; // 角色列表
+  repeated Menu menu_tree = 9; // 菜单列表
+  string avatar = 10;     // 头像
+}
+
+// 角色信息
+message Role {
+  int64 id = 1;           // 角色ID
+  string role_name = 2;   // 角色名称
+  string role_code = 3;   // 角色编码
+}
+
+// 认证服务
+service AuthService {
+  // 用户登录
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  // 刷新令牌
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+
+  // 获取当前用户信息
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserInfo);
+}
+
+
+// ========== 通用消息类型 ==========
+
+
+message Empty {}
+message Int64Value {
+  int64 value = 1;
+}
+
+// 分页请求
+message PageRequest {
+  int32 page = 1;        // 页码，从1开始
+  int32 page_size = 2;   // 每页大小
+  string keyword = 3;    // 搜索关键字
+}
+
+// 分页响应
+message PageResponse {
+  int32 total = 1;       // 总记录数
+  int32 page = 2;        // 当前页码
+  int32 page_size = 3;   // 每页大小
+  int32 total_page = 4;  // 总页数
+}
+
+// 菜单信息
+message Menu {
+  int64 id = 1;                 // 菜单ID
+  int64 parent_id = 2;          // 父菜单ID
+  string menu_name = 3;         // 菜单名称
+  string menu_type = 4;         // 菜单类型 (M-目录, C-菜单, F-按钮)
+  string path = 5;              // 路由路径
+  string component = 6;         // 组件路径
+  string redirect = 7;          // 重定向路径
+  string icon = 8;              // 菜单图标
+  int32 sort = 9;               // 排序
+  bool no_cache = 10;           // 是否缓存
+  bool affix = 11;              // 是否固定在标签栏
+  bool external = 12;           // 是否外部链接
+  bool hidden = 13;             // 是否隐藏
+  int32 status = 14;            // 状态 (0-禁用, 1-正常)
+  repeated Menu children = 15;  // 子菜单列表
+  int64 scope_id = 16;          // 权限范围ID
+  string remark = 17;           // 备注
+}
+
+// 安全范围信息
+message Scope {
+  int64 id = 1;           // 范围ID
+  string scope_name = 2;  // 范围名称
+  string scope_code = 3;  // 范围编码
+  string description = 4; // 范围描述
+  int32 sort = 5;         // 排序
+}
+
+// ========== 用户管理 ==========
+
+// 用户列表请求
+message UserListRequest {
+  PageRequest page_request = 1;
+  int32 status = 2;       // 状态过滤
+  int64 dept_id = 3;      // 部门ID过滤 (预留)
+}
+
+// 用户列表响应
+message UserListResponse {
+  PageResponse page_response = 1;
+  repeated UserInfo users = 2;
+}
+
+
+// 创建用户请求
+message CreateUserRequest {
+  string username = 1;    // 用户名
+  string password = 2;    // 密码
+  string email = 3;       // 邮箱
+  string mobile = 4;      // 手机号
+  string real_name = 5;   // 真实姓名
+  int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 7;       // 状态 (0-禁用, 1-正常)
+  repeated int64 role_ids = 8; // 角色ID列表
+}
+
+// 更新用户请求
+message UpdateUserRequest {
+  int64 id = 1;           // 用户ID
+  string email = 2;       // 邮箱
+  string mobile = 3;      // 手机号
+  string real_name = 4;   // 真实姓名
+  int32 gender = 5;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 6;       // 状态 (0-禁用, 1-正常)
+  repeated int64 role_ids = 7; // 角色ID列表
+  string avatar = 8;      // 头像URL
+}
+
+// 删除用户请求
+message DeleteUserRequest {
+  int64 id = 1;           // 用户ID
+}
+
+// 更新用户密码请求
+message UpdateUserPasswordRequest {
+  int64 user_id = 1;      // 用户ID
+  string old_password = 2; // 旧密码
+  string new_password = 3; // 新密码
+}
+
+// ========== 角色管理 ==========
+
+// 角色列表请求
+message RoleListRequest {
+  PageRequest page_request = 1;
+  int32 status = 2;       // 状态过滤
+}
+
+// 角色列表响应
+message RoleListResponse {
+  PageResponse page_response = 1;
+  repeated RoleInfo roles = 2;
+}
+
+// 角色信息
+message RoleInfo {
+  int64 id = 1;           // 角色ID
+  string role_name = 2;   // 角色名称
+  string role_code = 3;   // 角色编码
+  string description = 4; // 角色描述
+  int32 status = 5;       // 状态 (0-禁用, 1-正常)
+  repeated int64 menu_ids = 6; // 菜单ID列表
+  repeated int64 scope_ids = 7; // 安全范围ID列表
+}
+
+// 创建角色请求
+message CreateRoleRequest {
+  string role_name = 1;   // 角色名称
+  string role_code = 2;   // 角色编码
+  string description = 3; // 角色描述
+  int32 status = 4;       // 状态 (0-禁用, 1-正常)
+  repeated int64 menu_ids = 5; // 菜单ID列表
+  repeated int64 scope_ids = 6; // 安全范围ID列表
+}
+
+// 更新角色请求
+message UpdateRoleRequest {
+  int64 id = 1;           // 角色ID
+  string role_name = 2;   // 角色名称
+  string role_code = 3;   // 角色编码
+  string description = 4; // 角色描述
+  int32 status = 5;       // 状态 (0-禁用, 1-正常)
+  repeated int64 menu_ids = 6; // 菜单ID列表
+  repeated int64 scope_ids = 7; // 安全范围ID列表
+}
+
+// 删除角色请求
+message DeleteRoleRequest {
+  int64 id = 1;           // 角色ID
+}
+
+// ========== 菜单管理 ==========
+
+// 菜单列表请求
+message MenuListRequest {
+  bool with_button = 1;   // 是否包含按钮
+  int32 status = 2;       // 状态过滤
+}
+
+// 菜单列表响应 (树形结构)
+message MenuTreeResponse {
+  repeated Menu menus = 1;
+}
+
+// 创建菜单请求
+message CreateMenuRequest {
+  Menu menu = 1;
+  int64 operator_id = 2;
+}
+
+// 更新菜单请求
+message UpdateMenuRequest {
+  Menu menu = 1;
+  int64 operator_id = 2;
+}
+
+// 删除菜单请求
+message DeleteMenuRequest {
+  int64 id = 1;           // 菜单ID
+  int64 operator_id = 2;
+}
+
+// ========== 安全范围管理 ==========
+
+// 安全范围列表请求
+message ScopeListRequest {
+  PageRequest page_request = 1;
+}
+
+// 安全范围列表响应
+message ScopeListResponse {
+  PageResponse page_response = 1;
+  repeated Scope scopes = 2;
+}
+
+// 创建安全范围请求
+message CreateScopeRequest {
+  string scope_name = 1;  // 范围名称
+  string scope_code = 2;  // 范围编码
+  string description = 3; // 范围描述
+  int32 sort = 4;         // 排序
+}
+
+// 更新安全范围请求
+message UpdateScopeRequest {
+  int64 id = 1;           // 范围ID
+  string scope_name = 2;  // 范围名称
+  string scope_code = 3;  // 范围编码
+  string description = 4; // 范围描述
+  int32 sort = 5;         // 排序
+}
+
+// 删除安全范围请求
+message DeleteScopeRequest {
+  int64 id = 1;           // 范围ID
+}
+
+// ========== 权限服务 ==========
+
+service PermissionService {
+  // 用户管理
+  rpc GetUserList(UserListRequest) returns (UserListResponse);
+  rpc GetUserById(Int64Value) returns (UserInfo);
+  rpc CreateUser(CreateUserRequest) returns (UserInfo);
+  rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
+  rpc DeleteUser(DeleteUserRequest) returns (Empty);
+  rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (Empty);
+
+  // 角色管理
+  rpc GetRoleList(RoleListRequest) returns (RoleListResponse);
+  rpc GetRoleById(Int64Value) returns (RoleInfo);
+  rpc CreateRole(CreateRoleRequest) returns (RoleInfo);
+  rpc UpdateRole(UpdateRoleRequest) returns (RoleInfo);
+  rpc DeleteRole(DeleteRoleRequest) returns (Empty);
+
+  // 菜单管理
+  rpc GetMenuTree(MenuListRequest) returns (MenuTreeResponse);
+  rpc GetMenuById(Int64Value) returns (Menu);
+  rpc CreateMenu(CreateMenuRequest) returns (Menu);
+  rpc UpdateMenu(UpdateMenuRequest) returns (Menu);
+  rpc DeleteMenu(DeleteMenuRequest) returns (Empty);
+
+  // 安全范围管理
+  rpc GetScopeList(ScopeListRequest) returns (ScopeListResponse);
+  rpc GetScopeById(Int64Value) returns (Scope);
+  rpc CreateScope(CreateScopeRequest) returns (Scope);
+  rpc UpdateScope(UpdateScopeRequest) returns (Scope);
+  rpc DeleteScope(DeleteScopeRequest) returns (Empty);
+}
