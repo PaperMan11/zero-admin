@@ -43,8 +43,8 @@ func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclien
 		return nil, xerr.NewErrCode(xerr.ErrorCreateRole)
 	}
 	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, roleID)
-	scopes, _ := l.svcCtx.DB.GetScopesByRoleID(l.ctx, roleID)
-	menus, _ := l.svcCtx.DB.GetMenusByRoleID(l.ctx, roleID)
+	scopes, _ := l.svcCtx.DB.GetScopesByRoleCode(l.ctx, role.RoleCode)
+	menus, _ := l.svcCtx.DB.GetMenusByRoleCode(l.ctx, role.RoleCode)
 	return &sysclient.RoleInfo{
 		Id:          role.ID,
 		RoleName:    role.RoleName,

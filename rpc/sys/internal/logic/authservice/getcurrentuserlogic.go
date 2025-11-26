@@ -6,8 +6,6 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
-	"zero-admin/rpc/sys/db"
-	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/logic"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -41,7 +39,11 @@ func (l *GetCurrentUserLogic) GetCurrentUser(in *sysclient.GetCurrentUserRequest
 	}
 
 	// 用户角色信息
-	userRoles, roleCodes := GetUserRoles(l.ctx, l.svcCtx.DB, user.ID)
+	userRoles, _ := l.svcCtx.DB.GetRolesByUserID(l.ctx, user.ID)
+	roleCodes := make([]string, 0, len(userRoles))
+	for _, role := range userRoles {
+		roleCodes = append(roleCodes, role.RoleCode)
+	}
 	// menus
 	menus, _ := l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
 
@@ -58,13 +60,4 @@ func (l *GetCurrentUserLogic) GetCurrentUser(in *sysclient.GetCurrentUserRequest
 		Avatar:   user.Avatar,
 	}
 	return resp, nil
-}
-
-func GetUserRoles(ctx context.Context, db db.DB, userID int64) (roles []model.SysRole, roleCodes []string) {
-	roles, _ = db.GetRolesByUserID(ctx, userID)
-	roleCodes = make([]string, 0, len(roles))
-	for _, role := range roles {
-		roleCodes = append(roleCodes, role.RoleCode)
-	}
-	return
 }

@@ -13,8 +13,8 @@ const TableNameSysRoleScope = "sys_role_scope"
 // SysRoleScope 系统角色-安全范围关联表
 type SysRoleScope struct {
 	ID         int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:关联ID" json:"id"`                        // 关联ID
-	RoleID     int64     `gorm:"column:role_id;not null;comment:角色ID" json:"role_id"`                                   // 角色ID
-	ScopeID    int64     `gorm:"column:scope_id;not null;comment:范围ID" json:"scope_id"`                                 // 范围ID
+	RoleCode   string    `gorm:"column:role_code;not null;comment:角色" json:"role_code"`                                 // 角色
+	ScopeCode  string    `gorm:"column:scope_code;not null;comment:范围" json:"scope_code"`                               // 范围
 	Perm       int32     `gorm:"column:perm;not null;comment:权限（0-无权限，1-读，2-写，4-创建，8-删除）" json:"perm"`                  // 权限（0-无权限，1-读，2-写，4-创建，8-删除）
 	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
 }

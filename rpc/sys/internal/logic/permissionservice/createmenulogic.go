@@ -34,5 +34,5 @@ func (l *CreateMenuLogic) CreateMenu(in *sysclient.CreateMenuRequest) (*sysclien
 		return nil, xerr.NewErrCode(xerr.ErrorCreateMenu)
 	}
 	menu, _ := l.svcCtx.DB.GetMenuByID(l.ctx, menuID)
-	return logic.ConvertToRpcMenu(menu), nil
+	return logic.ConvertToRpcMenu(&menu), nil
 }

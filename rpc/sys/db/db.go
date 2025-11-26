@@ -27,6 +27,8 @@ type DB interface {
 	GetRoleByID(ctx context.Context, roleID int64) (model.SysRole, error)
 	// 获取用户角色
 	GetRolesByUserID(ctx context.Context, userID int64) ([]model.SysRole, error)
+	// 获取用户角色code
+	GetUserRoleCodes(ctx context.Context, userID int64) ([]string, error)
 
 	// ---------------------菜单 & 权限---------------------
 	// 获取所有的菜单
@@ -41,14 +43,16 @@ type DB interface {
 	DeleteMenu(ctx context.Context, menuID int64) error
 	// 修改菜单
 	UpdateMenu(ctx context.Context, menuID int64, updates interface{}) error
-	GetMenusByRoleID(ctx context.Context, roleID int64) ([]model.SysMenu, error)
+	GetMenusByRoleCode(ctx context.Context, roleCode string) ([]model.SysMenu, error)
 	GetMenusByScopeID(ctx context.Context, scopeID int64) ([]model.SysMenu, error)
 
 	// 创建安全范围
 	CreateScope(ctx context.Context, scope model.SysScope) (int64, error)
 	// 获取安全范围
 	GetScopeByID(ctx context.Context, scopeID int64) (model.SysScope, error)
-	GetScopesByRoleID(ctx context.Context, roleID int64) ([]model.SysScope, error)
+	GetScopesByRoleCode(ctx context.Context, roleCode string) ([]model.SysScope, error)
+	GetRoleScopesPerm(ctx context.Context, roleCode string) ([]model.SysRoleScope, error)
+	GetRolesScopesPerm(ctx context.Context, roleCode []string) ([]model.SysRoleScope, error)
 
 	// ---------------------登录日志---------------------
 	// 添加登录日志

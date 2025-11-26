@@ -54,7 +54,7 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 
 	// 3.生成token
 	// 用户角色信息
-	_, roleCodes := GetUserRoles(l.ctx, l.svcCtx.DB, user.ID)
+	roleCodes, _ := l.svcCtx.DB.GetUserRoleCodes(l.ctx, user.ID)
 	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, l.svcCtx.Config.Name,
 		l.svcCtx.Config.Jwt.AccessSecret, l.svcCtx.Config.Jwt.AccessExpire,
 		l.svcCtx.Config.Jwt.RefreshSecret, l.svcCtx.Config.Jwt.RefreshExpire)

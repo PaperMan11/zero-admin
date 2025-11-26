@@ -14,7 +14,7 @@ const TableNameSysUserRole = "sys_user_role"
 type SysUserRole struct {
 	ID         int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:关联ID" json:"id"`                        // 关联ID
 	UserID     int64     `gorm:"column:user_id;not null;comment:用户ID" json:"user_id"`                                   // 用户ID
-	RoleID     int64     `gorm:"column:role_id;not null;comment:角色ID" json:"role_id"`                                   // 角色ID
+	RoleCode   string    `gorm:"column:role_code;not null;comment:角色" json:"role_code"`                                 // 角色
 	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
 }
 

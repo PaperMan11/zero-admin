@@ -30,7 +30,7 @@ func newSysUserRole(db *gorm.DB, opts ...gen.DOOption) sysUserRole {
 	_sysUserRole.ALL = field.NewAsterisk(tableName)
 	_sysUserRole.ID = field.NewInt64(tableName, "id")
 	_sysUserRole.UserID = field.NewInt64(tableName, "user_id")
-	_sysUserRole.RoleID = field.NewInt64(tableName, "role_id")
+	_sysUserRole.RoleCode = field.NewString(tableName, "role_code")
 	_sysUserRole.CreateTime = field.NewTime(tableName, "create_time")
 
 	_sysUserRole.fillFieldMap()
@@ -43,10 +43,10 @@ type sysUserRole struct {
 	sysUserRoleDo sysUserRoleDo
 
 	ALL        field.Asterisk
-	ID         field.Int64 // 关联ID
-	UserID     field.Int64 // 用户ID
-	RoleID     field.Int64 // 角色ID
-	CreateTime field.Time  // 创建时间
+	ID         field.Int64  // 关联ID
+	UserID     field.Int64  // 用户ID
+	RoleCode   field.String // 角色
+	CreateTime field.Time   // 创建时间
 
 	fieldMap map[string]field.Expr
 }
@@ -65,7 +65,7 @@ func (s *sysUserRole) updateTableName(table string) *sysUserRole {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt64(table, "id")
 	s.UserID = field.NewInt64(table, "user_id")
-	s.RoleID = field.NewInt64(table, "role_id")
+	s.RoleCode = field.NewString(table, "role_code")
 	s.CreateTime = field.NewTime(table, "create_time")
 
 	s.fillFieldMap()
@@ -96,7 +96,7 @@ func (s *sysUserRole) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 4)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["user_id"] = s.UserID
-	s.fieldMap["role_id"] = s.RoleID
+	s.fieldMap["role_code"] = s.RoleCode
 	s.fieldMap["create_time"] = s.CreateTime
 }
 

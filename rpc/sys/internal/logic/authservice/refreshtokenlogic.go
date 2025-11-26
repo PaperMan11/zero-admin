@@ -56,7 +56,7 @@ func (l *RefreshTokenLogic) RefreshToken(in *sysclient.RefreshTokenRequest) (*sy
 	}
 
 	// 用户角色信息
-	_, roleCodes := GetUserRoles(l.ctx, l.svcCtx.DB, user.ID)
+	roleCodes, _ := l.svcCtx.DB.GetUserRoleCodes(l.ctx, user.ID)
 	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, issuer, accessSecret, accessExpire, refreshSecret, refreshExpire)
 	if err != nil {
 		logc.Errorf(l.ctx, "生成token异常, 用户id：%+v, 错误：%s", user.ID, err.Error())

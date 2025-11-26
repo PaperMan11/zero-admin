@@ -29,8 +29,8 @@ func newSysRoleScope(db *gorm.DB, opts ...gen.DOOption) sysRoleScope {
 	tableName := _sysRoleScope.sysRoleScopeDo.TableName()
 	_sysRoleScope.ALL = field.NewAsterisk(tableName)
 	_sysRoleScope.ID = field.NewInt64(tableName, "id")
-	_sysRoleScope.RoleID = field.NewInt64(tableName, "role_id")
-	_sysRoleScope.ScopeID = field.NewInt64(tableName, "scope_id")
+	_sysRoleScope.RoleCode = field.NewString(tableName, "role_code")
+	_sysRoleScope.ScopeCode = field.NewString(tableName, "scope_code")
 	_sysRoleScope.Perm = field.NewInt32(tableName, "perm")
 	_sysRoleScope.CreateTime = field.NewTime(tableName, "create_time")
 
@@ -44,11 +44,11 @@ type sysRoleScope struct {
 	sysRoleScopeDo sysRoleScopeDo
 
 	ALL        field.Asterisk
-	ID         field.Int64 // 关联ID
-	RoleID     field.Int64 // 角色ID
-	ScopeID    field.Int64 // 范围ID
-	Perm       field.Int32 // 权限（0-无权限，1-读，2-写，4-创建，8-删除）
-	CreateTime field.Time  // 创建时间
+	ID         field.Int64  // 关联ID
+	RoleCode   field.String // 角色
+	ScopeCode  field.String // 范围
+	Perm       field.Int32  // 权限（0-无权限，1-读，2-写，4-创建，8-删除）
+	CreateTime field.Time   // 创建时间
 
 	fieldMap map[string]field.Expr
 }
@@ -66,8 +66,8 @@ func (s sysRoleScope) As(alias string) *sysRoleScope {
 func (s *sysRoleScope) updateTableName(table string) *sysRoleScope {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt64(table, "id")
-	s.RoleID = field.NewInt64(table, "role_id")
-	s.ScopeID = field.NewInt64(table, "scope_id")
+	s.RoleCode = field.NewString(table, "role_code")
+	s.ScopeCode = field.NewString(table, "scope_code")
 	s.Perm = field.NewInt32(table, "perm")
 	s.CreateTime = field.NewTime(table, "create_time")
 
@@ -100,8 +100,8 @@ func (s *sysRoleScope) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 func (s *sysRoleScope) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 5)
 	s.fieldMap["id"] = s.ID
-	s.fieldMap["role_id"] = s.RoleID
-	s.fieldMap["scope_id"] = s.ScopeID
+	s.fieldMap["role_code"] = s.RoleCode
+	s.fieldMap["scope_code"] = s.ScopeCode
 	s.fieldMap["perm"] = s.Perm
 	s.fieldMap["create_time"] = s.CreateTime
 }

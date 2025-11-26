@@ -8,7 +8,8 @@ import (
 type Config struct {
 	zrpc.RpcServerConf
 
-	Mysql orm.Config
+	DbMode string `json:",default=mockdb"` // 数据库模式 mysql, mockdb
+	Mysql  orm.Config
 
 	Jwt struct {
 		AccessSecret string
