@@ -23,10 +23,16 @@ type DB interface {
 	UpdateUserByID(ctx context.Context, userID int64, updates interface{}) error
 	// 创建角色
 	CreateRole(ctx context.Context, role model.SysRole) (int64, error)
+	// 删除角色及关联数据
+	DeleteRoleTx(ctx context.Context, roleID int64) error
 	// 根据ID获取角色
 	GetRoleByID(ctx context.Context, roleID int64) (model.SysRole, error)
 	// 获取用户角色
 	GetRolesByUserID(ctx context.Context, userID int64) ([]model.SysRole, error)
+	// 分页查询角色
+	GetRolesPagination(ctx context.Context, status int32, page, pageSize int) ([]model.SysRole, error)
+	// 角色总数量
+	CountRoles(ctx context.Context) (int64, error)
 	// 获取用户角色code
 	GetUserRoleCodes(ctx context.Context, userID int64) ([]string, error)
 

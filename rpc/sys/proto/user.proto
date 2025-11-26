@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package main;
+
+option go_package = "./proto";
+
+
+
+/// 用户列表请求
+message UserListRequest {
+  PageRequest page_request = 1;
+  int32 status = 2;       // 状态过滤
+  int64 dept_id = 3;      // 部门ID过滤 (预留)
+}
+
+// 用户列表响应
+message UserListResponse {
+  PageResponse page_response = 1;
+  repeated UserInfo users = 2;
+}
+
+// 获取当前用户信息请求
+message GetUserInfoRequest {
+  int64 user_id = 1;
+}
+
+// 创建用户请求
+message CreateUserRequest {
+  string username = 1;    // 用户名
+  string password = 2;    // 密码
+  string email = 3;       // 邮箱
+  string mobile = 4;      // 手机号
+  string real_name = 5;   // 真实姓名
+  int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 7;       // 状态 (0-禁用, 1-正常)
+  repeated int64 role_ids = 8; // 角色ID列表
+  int64 operator_id = 9;  // 操作者
+}
+
+// 更新用户请求
+message UpdateUserRequest {
+  int64 id = 1;           // 用户ID
+  string email = 2;       // 邮箱
+  string mobile = 3;      // 手机号
+  string real_name = 4;   // 真实姓名
+  int32 gender = 5;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 6;       // 状态 (0-禁用, 1-正常)
+  repeated int64 role_ids = 7; // 角色ID列表
+  string avatar = 8;      // 头像URL
+  int64 operator_id = 9;  // 操作者
+}
+
+// 删除用户请求
+message DeleteUserRequest {
+  int64 id = 1;           // 用户ID
+  int64 operator_id = 2;  // 操作者
+}
+
+// 更新用户密码请求
+message UpdateUserPasswordRequest {
+  int64 user_id = 1;      // 用户ID
+  string old_password = 2; // 旧密码
+  string new_password = 3; // 新密码
+  int64 operator_id = 4;  // 操作者
+}
+
+
+// 用户信息
+message UserInfo {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string email = 3;       // 邮箱
+  string mobile = 4;      // 手机号
+  string real_name = 5;   // 真实姓名
+  int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 7;       // 状态 (0-禁用, 1-正常)
+  repeated Role roles = 8; // 角色列表
+  repeated Menu menu_tree = 9; // 菜单列表
+  string avatar = 10; // 头像
+}
+
+message User {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string email = 3;       // 邮箱
+  string mobile = 4;      // 手机号
+  string real_name = 5;   // 真实姓名
+  int32 gender = 6;       // 性别 (0-未知, 1-男, 2-女)
+  int32 status = 7;       // 状态 (0-禁用, 1-正常)
+  string avatar = 8;     // 头像
+}
+
+
+service UserService {
+  // 用户管理
+  rpc GetUserList(UserListRequest) returns (UserListResponse);
+  rpc GetUserById(Int64Value) returns (UserInfo);
+  rpc CreateUser(CreateUserRequest) returns (UserInfo);
+  rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
+  rpc DeleteUser(DeleteUserRequest) returns (Empty);
+  rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (Empty);
+
+  // 获取当前用户信息
+  rpc GetUserInfo(GetUserInfoRequest) returns (UserInfo);
+}
+

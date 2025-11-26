@@ -34,9 +34,3 @@ func (s *AuthServiceServer) RefreshToken(ctx context.Context, in *sysclient.Refr
 	l := authservicelogic.NewRefreshTokenLogic(ctx, s.svcCtx)
 	return l.RefreshToken(in)
 }
-
-// 获取当前用户信息
-func (s *AuthServiceServer) GetCurrentUser(ctx context.Context, in *sysclient.GetCurrentUserRequest) (*sysclient.UserInfo, error) {
-	l := authservicelogic.NewGetCurrentUserLogic(ctx, s.svcCtx)
-	return l.GetCurrentUser(in)
-}

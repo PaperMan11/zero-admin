@@ -19,9 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Login_FullMethodName          = "/sysclient.AuthService/Login"
-	AuthService_RefreshToken_FullMethodName   = "/sysclient.AuthService/RefreshToken"
-	AuthService_GetCurrentUser_FullMethodName = "/sysclient.AuthService/GetCurrentUser"
+	AuthService_Login_FullMethodName        = "/sysclient.AuthService/Login"
+	AuthService_RefreshToken_FullMethodName = "/sysclient.AuthService/RefreshToken"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -34,8 +33,6 @@ type AuthServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// 刷新令牌
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
-	// 获取当前用户信息
-	GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
 }
 
 type authServiceClient struct {
@@ -66,16 +63,6 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRe
 	return out, nil
 }
 
-func (c *authServiceClient) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserInfo)
-	err := c.cc.Invoke(ctx, AuthService_GetCurrentUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -86,8 +73,6 @@ type AuthServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// 刷新令牌
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
-	// 获取当前用户信息
-	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserInfo, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -103,9 +88,6 @@ func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*Lo
 }
 func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
-}
-func (UnimplementedAuthServiceServer) GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUser not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -164,24 +146,6 @@ func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_GetCurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCurrentUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).GetCurrentUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_GetCurrentUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -197,9 +161,261 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "RefreshToken",
 			Handler:    _AuthService_RefreshToken_Handler,
 		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "rpc/sys/sys.proto",
+}
+
+const (
+	RoleService_GetRoleList_FullMethodName = "/sysclient.RoleService/GetRoleList"
+	RoleService_GetRoleById_FullMethodName = "/sysclient.RoleService/GetRoleById"
+	RoleService_CreateRole_FullMethodName  = "/sysclient.RoleService/CreateRole"
+	RoleService_UpdateRole_FullMethodName  = "/sysclient.RoleService/UpdateRole"
+	RoleService_DeleteRole_FullMethodName  = "/sysclient.RoleService/DeleteRole"
+)
+
+// RoleServiceClient is the client API for RoleService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type RoleServiceClient interface {
+	// 角色管理
+	GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error)
+	GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
+	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+	UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
+}
+
+type roleServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewRoleServiceClient(cc grpc.ClientConnInterface) RoleServiceClient {
+	return &roleServiceClient{cc}
+}
+
+func (c *roleServiceClient) GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleListResponse)
+	err := c.cc.Invoke(ctx, RoleService_GetRoleList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleInfo)
+	err := c.cc.Invoke(ctx, RoleService_GetRoleById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleInfo)
+	err := c.cc.Invoke(ctx, RoleService_CreateRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleInfo)
+	err := c.cc.Invoke(ctx, RoleService_UpdateRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, RoleService_DeleteRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// RoleServiceServer is the server API for RoleService service.
+// All implementations must embed UnimplementedRoleServiceServer
+// for forward compatibility.
+type RoleServiceServer interface {
+	// 角色管理
+	GetRoleList(context.Context, *RoleListRequest) (*RoleListResponse, error)
+	GetRoleById(context.Context, *Int64Value) (*RoleInfo, error)
+	CreateRole(context.Context, *CreateRoleRequest) (*RoleInfo, error)
+	UpdateRole(context.Context, *UpdateRoleRequest) (*RoleInfo, error)
+	DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error)
+	mustEmbedUnimplementedRoleServiceServer()
+}
+
+// UnimplementedRoleServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedRoleServiceServer struct{}
+
+func (UnimplementedRoleServiceServer) GetRoleList(context.Context, *RoleListRequest) (*RoleListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleList not implemented")
+}
+func (UnimplementedRoleServiceServer) GetRoleById(context.Context, *Int64Value) (*RoleInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleById not implemented")
+}
+func (UnimplementedRoleServiceServer) CreateRole(context.Context, *CreateRoleRequest) (*RoleInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
+}
+func (UnimplementedRoleServiceServer) UpdateRole(context.Context, *UpdateRoleRequest) (*RoleInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
+}
+func (UnimplementedRoleServiceServer) DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
+}
+func (UnimplementedRoleServiceServer) mustEmbedUnimplementedRoleServiceServer() {}
+func (UnimplementedRoleServiceServer) testEmbeddedByValue()                     {}
+
+// UnsafeRoleServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RoleServiceServer will
+// result in compilation errors.
+type UnsafeRoleServiceServer interface {
+	mustEmbedUnimplementedRoleServiceServer()
+}
+
+func RegisterRoleServiceServer(s grpc.ServiceRegistrar, srv RoleServiceServer) {
+	// If the following call pancis, it indicates UnimplementedRoleServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&RoleService_ServiceDesc, srv)
+}
+
+func _RoleService_GetRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RoleListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).GetRoleList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_GetRoleList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).GetRoleList(ctx, req.(*RoleListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoleService_GetRoleById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Int64Value)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).GetRoleById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_GetRoleById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).GetRoleById(ctx, req.(*Int64Value))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoleService_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).CreateRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_CreateRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).CreateRole(ctx, req.(*CreateRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoleService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).UpdateRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_UpdateRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).UpdateRole(ctx, req.(*UpdateRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoleService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).DeleteRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_DeleteRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).DeleteRole(ctx, req.(*DeleteRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// RoleService_ServiceDesc is the grpc.ServiceDesc for RoleService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var RoleService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sysclient.RoleService",
+	HandlerType: (*RoleServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetCurrentUser",
-			Handler:    _AuthService_GetCurrentUser_Handler,
+			MethodName: "GetRoleList",
+			Handler:    _RoleService_GetRoleList_Handler,
+		},
+		{
+			MethodName: "GetRoleById",
+			Handler:    _RoleService_GetRoleById_Handler,
+		},
+		{
+			MethodName: "CreateRole",
+			Handler:    _RoleService_CreateRole_Handler,
+		},
+		{
+			MethodName: "UpdateRole",
+			Handler:    _RoleService_UpdateRole_Handler,
+		},
+		{
+			MethodName: "DeleteRole",
+			Handler:    _RoleService_DeleteRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -207,33 +423,467 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	PermissionService_GetUserList_FullMethodName        = "/sysclient.PermissionService/GetUserList"
-	PermissionService_GetUserById_FullMethodName        = "/sysclient.PermissionService/GetUserById"
-	PermissionService_CreateUser_FullMethodName         = "/sysclient.PermissionService/CreateUser"
-	PermissionService_UpdateUser_FullMethodName         = "/sysclient.PermissionService/UpdateUser"
-	PermissionService_DeleteUser_FullMethodName         = "/sysclient.PermissionService/DeleteUser"
-	PermissionService_UpdateUserPassword_FullMethodName = "/sysclient.PermissionService/UpdateUserPassword"
-	PermissionService_GetRoleList_FullMethodName        = "/sysclient.PermissionService/GetRoleList"
-	PermissionService_GetRoleById_FullMethodName        = "/sysclient.PermissionService/GetRoleById"
-	PermissionService_CreateRole_FullMethodName         = "/sysclient.PermissionService/CreateRole"
-	PermissionService_UpdateRole_FullMethodName         = "/sysclient.PermissionService/UpdateRole"
-	PermissionService_DeleteRole_FullMethodName         = "/sysclient.PermissionService/DeleteRole"
-	PermissionService_GetMenuTree_FullMethodName        = "/sysclient.PermissionService/GetMenuTree"
-	PermissionService_GetMenuById_FullMethodName        = "/sysclient.PermissionService/GetMenuById"
-	PermissionService_CreateMenu_FullMethodName         = "/sysclient.PermissionService/CreateMenu"
-	PermissionService_UpdateMenu_FullMethodName         = "/sysclient.PermissionService/UpdateMenu"
-	PermissionService_DeleteMenu_FullMethodName         = "/sysclient.PermissionService/DeleteMenu"
-	PermissionService_GetScopeList_FullMethodName       = "/sysclient.PermissionService/GetScopeList"
-	PermissionService_GetScopeById_FullMethodName       = "/sysclient.PermissionService/GetScopeById"
-	PermissionService_CreateScope_FullMethodName        = "/sysclient.PermissionService/CreateScope"
-	PermissionService_UpdateScope_FullMethodName        = "/sysclient.PermissionService/UpdateScope"
-	PermissionService_DeleteScope_FullMethodName        = "/sysclient.PermissionService/DeleteScope"
+	ScopeService_GetScopeList_FullMethodName = "/sysclient.ScopeService/GetScopeList"
+	ScopeService_GetScopeById_FullMethodName = "/sysclient.ScopeService/GetScopeById"
+	ScopeService_CreateScope_FullMethodName  = "/sysclient.ScopeService/CreateScope"
+	ScopeService_UpdateScope_FullMethodName  = "/sysclient.ScopeService/UpdateScope"
+	ScopeService_DeleteScope_FullMethodName  = "/sysclient.ScopeService/DeleteScope"
+	ScopeService_GetMenuTree_FullMethodName  = "/sysclient.ScopeService/GetMenuTree"
+	ScopeService_GetMenuById_FullMethodName  = "/sysclient.ScopeService/GetMenuById"
+	ScopeService_CreateMenu_FullMethodName   = "/sysclient.ScopeService/CreateMenu"
+	ScopeService_UpdateMenu_FullMethodName   = "/sysclient.ScopeService/UpdateMenu"
+	ScopeService_DeleteMenu_FullMethodName   = "/sysclient.ScopeService/DeleteMenu"
 )
 
-// PermissionServiceClient is the client API for PermissionService service.
+// ScopeServiceClient is the client API for ScopeService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PermissionServiceClient interface {
+type ScopeServiceClient interface {
+	// 安全范围管理
+	GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error)
+	GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error)
+	CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
+	UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
+	DeleteScope(ctx context.Context, in *DeleteScopeRequest, opts ...grpc.CallOption) (*Empty, error)
+	// 菜单管理
+	GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error)
+	GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error)
+	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
+	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
+	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error)
+}
+
+type scopeServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewScopeServiceClient(cc grpc.ClientConnInterface) ScopeServiceClient {
+	return &scopeServiceClient{cc}
+}
+
+func (c *scopeServiceClient) GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ScopeListResponse)
+	err := c.cc.Invoke(ctx, ScopeService_GetScopeList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ScopeInfo)
+	err := c.cc.Invoke(ctx, ScopeService_GetScopeById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ScopeInfo)
+	err := c.cc.Invoke(ctx, ScopeService_CreateScope_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ScopeInfo)
+	err := c.cc.Invoke(ctx, ScopeService_UpdateScope_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) DeleteScope(ctx context.Context, in *DeleteScopeRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, ScopeService_DeleteScope_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MenuTreeResponse)
+	err := c.cc.Invoke(ctx, ScopeService_GetMenuTree_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Menu)
+	err := c.cc.Invoke(ctx, ScopeService_GetMenuById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Menu)
+	err := c.cc.Invoke(ctx, ScopeService_CreateMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Menu)
+	err := c.cc.Invoke(ctx, ScopeService_UpdateMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, ScopeService_DeleteMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ScopeServiceServer is the server API for ScopeService service.
+// All implementations must embed UnimplementedScopeServiceServer
+// for forward compatibility.
+type ScopeServiceServer interface {
+	// 安全范围管理
+	GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error)
+	GetScopeById(context.Context, *Int64Value) (*ScopeInfo, error)
+	CreateScope(context.Context, *CreateScopeRequest) (*ScopeInfo, error)
+	UpdateScope(context.Context, *UpdateScopeRequest) (*ScopeInfo, error)
+	DeleteScope(context.Context, *DeleteScopeRequest) (*Empty, error)
+	// 菜单管理
+	GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error)
+	GetMenuById(context.Context, *Int64Value) (*Menu, error)
+	CreateMenu(context.Context, *CreateMenuRequest) (*Menu, error)
+	UpdateMenu(context.Context, *UpdateMenuRequest) (*Menu, error)
+	DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error)
+	mustEmbedUnimplementedScopeServiceServer()
+}
+
+// UnimplementedScopeServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedScopeServiceServer struct{}
+
+func (UnimplementedScopeServiceServer) GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetScopeList not implemented")
+}
+func (UnimplementedScopeServiceServer) GetScopeById(context.Context, *Int64Value) (*ScopeInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetScopeById not implemented")
+}
+func (UnimplementedScopeServiceServer) CreateScope(context.Context, *CreateScopeRequest) (*ScopeInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateScope not implemented")
+}
+func (UnimplementedScopeServiceServer) UpdateScope(context.Context, *UpdateScopeRequest) (*ScopeInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateScope not implemented")
+}
+func (UnimplementedScopeServiceServer) DeleteScope(context.Context, *DeleteScopeRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteScope not implemented")
+}
+func (UnimplementedScopeServiceServer) GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMenuTree not implemented")
+}
+func (UnimplementedScopeServiceServer) GetMenuById(context.Context, *Int64Value) (*Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMenuById not implemented")
+}
+func (UnimplementedScopeServiceServer) CreateMenu(context.Context, *CreateMenuRequest) (*Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
+}
+func (UnimplementedScopeServiceServer) UpdateMenu(context.Context, *UpdateMenuRequest) (*Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
+}
+func (UnimplementedScopeServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (UnimplementedScopeServiceServer) mustEmbedUnimplementedScopeServiceServer() {}
+func (UnimplementedScopeServiceServer) testEmbeddedByValue()                      {}
+
+// UnsafeScopeServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ScopeServiceServer will
+// result in compilation errors.
+type UnsafeScopeServiceServer interface {
+	mustEmbedUnimplementedScopeServiceServer()
+}
+
+func RegisterScopeServiceServer(s grpc.ServiceRegistrar, srv ScopeServiceServer) {
+	// If the following call pancis, it indicates UnimplementedScopeServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ScopeService_ServiceDesc, srv)
+}
+
+func _ScopeService_GetScopeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ScopeListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetScopeList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetScopeList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetScopeList(ctx, req.(*ScopeListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_GetScopeById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Int64Value)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetScopeById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetScopeById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetScopeById(ctx, req.(*Int64Value))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_CreateScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateScopeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).CreateScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_CreateScope_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).CreateScope(ctx, req.(*CreateScopeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_UpdateScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateScopeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).UpdateScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_UpdateScope_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).UpdateScope(ctx, req.(*UpdateScopeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_DeleteScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteScopeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).DeleteScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_DeleteScope_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).DeleteScope(ctx, req.(*DeleteScopeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_GetMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MenuListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetMenuTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetMenuTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetMenuTree(ctx, req.(*MenuListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_GetMenuById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Int64Value)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetMenuById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetMenuById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetMenuById(ctx, req.(*Int64Value))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_CreateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMenuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).CreateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_CreateMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).CreateMenu(ctx, req.(*CreateMenuRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMenuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).UpdateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_UpdateMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).UpdateMenu(ctx, req.(*UpdateMenuRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMenuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).DeleteMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_DeleteMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).DeleteMenu(ctx, req.(*DeleteMenuRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ScopeService_ServiceDesc is the grpc.ServiceDesc for ScopeService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ScopeService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sysclient.ScopeService",
+	HandlerType: (*ScopeServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetScopeList",
+			Handler:    _ScopeService_GetScopeList_Handler,
+		},
+		{
+			MethodName: "GetScopeById",
+			Handler:    _ScopeService_GetScopeById_Handler,
+		},
+		{
+			MethodName: "CreateScope",
+			Handler:    _ScopeService_CreateScope_Handler,
+		},
+		{
+			MethodName: "UpdateScope",
+			Handler:    _ScopeService_UpdateScope_Handler,
+		},
+		{
+			MethodName: "DeleteScope",
+			Handler:    _ScopeService_DeleteScope_Handler,
+		},
+		{
+			MethodName: "GetMenuTree",
+			Handler:    _ScopeService_GetMenuTree_Handler,
+		},
+		{
+			MethodName: "GetMenuById",
+			Handler:    _ScopeService_GetMenuById_Handler,
+		},
+		{
+			MethodName: "CreateMenu",
+			Handler:    _ScopeService_CreateMenu_Handler,
+		},
+		{
+			MethodName: "UpdateMenu",
+			Handler:    _ScopeService_UpdateMenu_Handler,
+		},
+		{
+			MethodName: "DeleteMenu",
+			Handler:    _ScopeService_DeleteMenu_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "rpc/sys/sys.proto",
+}
+
+const (
+	UserService_GetUserList_FullMethodName        = "/sysclient.UserService/GetUserList"
+	UserService_GetUserById_FullMethodName        = "/sysclient.UserService/GetUserById"
+	UserService_CreateUser_FullMethodName         = "/sysclient.UserService/CreateUser"
+	UserService_UpdateUser_FullMethodName         = "/sysclient.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName         = "/sysclient.UserService/DeleteUser"
+	UserService_UpdateUserPassword_FullMethodName = "/sysclient.UserService/UpdateUserPassword"
+	UserService_GetUserInfo_FullMethodName        = "/sysclient.UserService/GetUserInfo"
+)
+
+// UserServiceClient is the client API for UserService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type UserServiceClient interface {
 	// 用户管理
 	GetUserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 	GetUserById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*UserInfo, error)
@@ -241,248 +891,92 @@ type PermissionServiceClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error)
 	UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error)
-	// 角色管理
-	GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error)
-	GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
-	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
-	UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
-	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
-	// 菜单管理
-	GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error)
-	GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error)
-	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
-	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
-	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error)
-	// 安全范围管理
-	GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error)
-	GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error)
-	CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
-	UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
-	DeleteScope(ctx context.Context, in *DeleteScopeRequest, opts ...grpc.CallOption) (*Empty, error)
+	// 获取当前用户信息
+	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
 }
 
-type permissionServiceClient struct {
+type userServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPermissionServiceClient(cc grpc.ClientConnInterface) PermissionServiceClient {
-	return &permissionServiceClient{cc}
+func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
+	return &userServiceClient{cc}
 }
 
-func (c *permissionServiceClient) GetUserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+func (c *userServiceClient) GetUserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserListResponse)
-	err := c.cc.Invoke(ctx, PermissionService_GetUserList_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_GetUserList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) GetUserById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*UserInfo, error) {
+func (c *userServiceClient) GetUserById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfo)
-	err := c.cc.Invoke(ctx, PermissionService_GetUserById_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_GetUserById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
+func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfo)
-	err := c.cc.Invoke(ctx, PermissionService_CreateUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_CreateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfo)
-	err := c.cc.Invoke(ctx, PermissionService_UpdateUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_UpdateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, PermissionService_DeleteUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_DeleteUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *userServiceClient) UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, PermissionService_UpdateUserPassword_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserService_UpdateUserPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error) {
+func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleListResponse)
-	err := c.cc.Invoke(ctx, PermissionService_GetRoleList_FullMethodName, in, out, cOpts...)
+	out := new(UserInfo)
+	err := c.cc.Invoke(ctx, UserService_GetUserInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleInfo)
-	err := c.cc.Invoke(ctx, PermissionService_GetRoleById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleInfo)
-	err := c.cc.Invoke(ctx, PermissionService_CreateRole_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleInfo)
-	err := c.cc.Invoke(ctx, PermissionService_UpdateRole_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, PermissionService_DeleteRole_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MenuTreeResponse)
-	err := c.cc.Invoke(ctx, PermissionService_GetMenuTree_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Menu)
-	err := c.cc.Invoke(ctx, PermissionService_GetMenuById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Menu)
-	err := c.cc.Invoke(ctx, PermissionService_CreateMenu_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Menu)
-	err := c.cc.Invoke(ctx, PermissionService_UpdateMenu_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, PermissionService_DeleteMenu_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ScopeListResponse)
-	err := c.cc.Invoke(ctx, PermissionService_GetScopeList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ScopeInfo)
-	err := c.cc.Invoke(ctx, PermissionService_GetScopeById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ScopeInfo)
-	err := c.cc.Invoke(ctx, PermissionService_CreateScope_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) UpdateScope(ctx context.Context, in *UpdateScopeRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ScopeInfo)
-	err := c.cc.Invoke(ctx, PermissionService_UpdateScope_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *permissionServiceClient) DeleteScope(ctx context.Context, in *DeleteScopeRequest, opts ...grpc.CallOption) (*Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, PermissionService_DeleteScope_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// PermissionServiceServer is the server API for PermissionService service.
-// All implementations must embed UnimplementedPermissionServiceServer
+// UserServiceServer is the server API for UserService service.
+// All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
-type PermissionServiceServer interface {
+type UserServiceServer interface {
 	// 用户管理
 	GetUserList(context.Context, *UserListRequest) (*UserListResponse, error)
 	GetUserById(context.Context, *Int64Value) (*UserInfo, error)
@@ -490,586 +984,220 @@ type PermissionServiceServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*Empty, error)
 	UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*Empty, error)
-	// 角色管理
-	GetRoleList(context.Context, *RoleListRequest) (*RoleListResponse, error)
-	GetRoleById(context.Context, *Int64Value) (*RoleInfo, error)
-	CreateRole(context.Context, *CreateRoleRequest) (*RoleInfo, error)
-	UpdateRole(context.Context, *UpdateRoleRequest) (*RoleInfo, error)
-	DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error)
-	// 菜单管理
-	GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error)
-	GetMenuById(context.Context, *Int64Value) (*Menu, error)
-	CreateMenu(context.Context, *CreateMenuRequest) (*Menu, error)
-	UpdateMenu(context.Context, *UpdateMenuRequest) (*Menu, error)
-	DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error)
-	// 安全范围管理
-	GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error)
-	GetScopeById(context.Context, *Int64Value) (*ScopeInfo, error)
-	CreateScope(context.Context, *CreateScopeRequest) (*ScopeInfo, error)
-	UpdateScope(context.Context, *UpdateScopeRequest) (*ScopeInfo, error)
-	DeleteScope(context.Context, *DeleteScopeRequest) (*Empty, error)
-	mustEmbedUnimplementedPermissionServiceServer()
+	// 获取当前用户信息
+	GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error)
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-// UnimplementedPermissionServiceServer must be embedded to have
+// UnimplementedUserServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPermissionServiceServer struct{}
+type UnimplementedUserServiceServer struct{}
 
-func (UnimplementedPermissionServiceServer) GetUserList(context.Context, *UserListRequest) (*UserListResponse, error) {
+func (UnimplementedUserServiceServer) GetUserList(context.Context, *UserListRequest) (*UserListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
 }
-func (UnimplementedPermissionServiceServer) GetUserById(context.Context, *Int64Value) (*UserInfo, error) {
+func (UnimplementedUserServiceServer) GetUserById(context.Context, *Int64Value) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserById not implemented")
 }
-func (UnimplementedPermissionServiceServer) CreateUser(context.Context, *CreateUserRequest) (*UserInfo, error) {
+func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedPermissionServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error) {
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedPermissionServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*Empty, error) {
+func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedPermissionServiceServer) UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*Empty, error) {
+func (UnimplementedUserServiceServer) UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserPassword not implemented")
 }
-func (UnimplementedPermissionServiceServer) GetRoleList(context.Context, *RoleListRequest) (*RoleListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRoleList not implemented")
+func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
 }
-func (UnimplementedPermissionServiceServer) GetRoleById(context.Context, *Int64Value) (*RoleInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRoleById not implemented")
-}
-func (UnimplementedPermissionServiceServer) CreateRole(context.Context, *CreateRoleRequest) (*RoleInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
-}
-func (UnimplementedPermissionServiceServer) UpdateRole(context.Context, *UpdateRoleRequest) (*RoleInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
-}
-func (UnimplementedPermissionServiceServer) DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
-}
-func (UnimplementedPermissionServiceServer) GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMenuTree not implemented")
-}
-func (UnimplementedPermissionServiceServer) GetMenuById(context.Context, *Int64Value) (*Menu, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMenuById not implemented")
-}
-func (UnimplementedPermissionServiceServer) CreateMenu(context.Context, *CreateMenuRequest) (*Menu, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
-}
-func (UnimplementedPermissionServiceServer) UpdateMenu(context.Context, *UpdateMenuRequest) (*Menu, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
-}
-func (UnimplementedPermissionServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
-}
-func (UnimplementedPermissionServiceServer) GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetScopeList not implemented")
-}
-func (UnimplementedPermissionServiceServer) GetScopeById(context.Context, *Int64Value) (*ScopeInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetScopeById not implemented")
-}
-func (UnimplementedPermissionServiceServer) CreateScope(context.Context, *CreateScopeRequest) (*ScopeInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateScope not implemented")
-}
-func (UnimplementedPermissionServiceServer) UpdateScope(context.Context, *UpdateScopeRequest) (*ScopeInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateScope not implemented")
-}
-func (UnimplementedPermissionServiceServer) DeleteScope(context.Context, *DeleteScopeRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteScope not implemented")
-}
-func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
-func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
+func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
+func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
 
-// UnsafePermissionServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PermissionServiceServer will
+// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserServiceServer will
 // result in compilation errors.
-type UnsafePermissionServiceServer interface {
-	mustEmbedUnimplementedPermissionServiceServer()
+type UnsafeUserServiceServer interface {
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-func RegisterPermissionServiceServer(s grpc.ServiceRegistrar, srv PermissionServiceServer) {
-	// If the following call pancis, it indicates UnimplementedPermissionServiceServer was
+func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
+	// If the following call pancis, it indicates UnimplementedUserServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&PermissionService_ServiceDesc, srv)
+	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _PermissionService_GetUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetUserList(ctx, in)
+		return srv.(UserServiceServer).GetUserList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_GetUserList_FullMethodName,
+		FullMethod: UserService_GetUserList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetUserList(ctx, req.(*UserListRequest))
+		return srv.(UserServiceServer).GetUserList(ctx, req.(*UserListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_GetUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_GetUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Int64Value)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetUserById(ctx, in)
+		return srv.(UserServiceServer).GetUserById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_GetUserById_FullMethodName,
+		FullMethod: UserService_GetUserById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetUserById(ctx, req.(*Int64Value))
+		return srv.(UserServiceServer).GetUserById(ctx, req.(*Int64Value))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).CreateUser(ctx, in)
+		return srv.(UserServiceServer).CreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_CreateUser_FullMethodName,
+		FullMethod: UserService_CreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
+		return srv.(UserServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdateUser(ctx, in)
+		return srv.(UserServiceServer).UpdateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_UpdateUser_FullMethodName,
+		FullMethod: UserService_UpdateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).DeleteUser(ctx, in)
+		return srv.(UserServiceServer).DeleteUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_DeleteUser_FullMethodName,
+		FullMethod: UserService_DeleteUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
+		return srv.(UserServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_UpdateUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UpdateUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdateUserPassword(ctx, in)
+		return srv.(UserServiceServer).UpdateUserPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_UpdateUserPassword_FullMethodName,
+		FullMethod: UserService_UpdateUserPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdateUserPassword(ctx, req.(*UpdateUserPasswordRequest))
+		return srv.(UserServiceServer).UpdateUserPassword(ctx, req.(*UpdateUserPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_GetRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleListRequest)
+func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetRoleList(ctx, in)
+		return srv.(UserServiceServer).GetUserInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_GetRoleList_FullMethodName,
+		FullMethod: UserService_GetUserInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetRoleList(ctx, req.(*RoleListRequest))
+		return srv.(UserServiceServer).GetUserInfo(ctx, req.(*GetUserInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_GetRoleById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Int64Value)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetRoleById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_GetRoleById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetRoleById(ctx, req.(*Int64Value))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).CreateRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_CreateRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).CreateRole(ctx, req.(*CreateRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdateRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_UpdateRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdateRole(ctx, req.(*UpdateRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).DeleteRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_DeleteRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).DeleteRole(ctx, req.(*DeleteRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_GetMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MenuListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetMenuTree(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_GetMenuTree_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetMenuTree(ctx, req.(*MenuListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_GetMenuById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Int64Value)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetMenuById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_GetMenuById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetMenuById(ctx, req.(*Int64Value))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_CreateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateMenuRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).CreateMenu(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_CreateMenu_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).CreateMenu(ctx, req.(*CreateMenuRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateMenuRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdateMenu(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_UpdateMenu_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdateMenu(ctx, req.(*UpdateMenuRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteMenuRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).DeleteMenu(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_DeleteMenu_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).DeleteMenu(ctx, req.(*DeleteMenuRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_GetScopeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ScopeListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetScopeList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_GetScopeList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetScopeList(ctx, req.(*ScopeListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_GetScopeById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Int64Value)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).GetScopeById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_GetScopeById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).GetScopeById(ctx, req.(*Int64Value))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_CreateScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateScopeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).CreateScope(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_CreateScope_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).CreateScope(ctx, req.(*CreateScopeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_UpdateScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateScopeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdateScope(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_UpdateScope_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdateScope(ctx, req.(*UpdateScopeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PermissionService_DeleteScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteScopeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PermissionServiceServer).DeleteScope(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PermissionService_DeleteScope_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).DeleteScope(ctx, req.(*DeleteScopeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// PermissionService_ServiceDesc is the grpc.ServiceDesc for PermissionService service.
+// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PermissionService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "sysclient.PermissionService",
-	HandlerType: (*PermissionServiceServer)(nil),
+var UserService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sysclient.UserService",
+	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetUserList",
-			Handler:    _PermissionService_GetUserList_Handler,
+			Handler:    _UserService_GetUserList_Handler,
 		},
 		{
 			MethodName: "GetUserById",
-			Handler:    _PermissionService_GetUserById_Handler,
+			Handler:    _UserService_GetUserById_Handler,
 		},
 		{
 			MethodName: "CreateUser",
-			Handler:    _PermissionService_CreateUser_Handler,
+			Handler:    _UserService_CreateUser_Handler,
 		},
 		{
 			MethodName: "UpdateUser",
-			Handler:    _PermissionService_UpdateUser_Handler,
+			Handler:    _UserService_UpdateUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",
-			Handler:    _PermissionService_DeleteUser_Handler,
+			Handler:    _UserService_DeleteUser_Handler,
 		},
 		{
 			MethodName: "UpdateUserPassword",
-			Handler:    _PermissionService_UpdateUserPassword_Handler,
+			Handler:    _UserService_UpdateUserPassword_Handler,
 		},
 		{
-			MethodName: "GetRoleList",
-			Handler:    _PermissionService_GetRoleList_Handler,
-		},
-		{
-			MethodName: "GetRoleById",
-			Handler:    _PermissionService_GetRoleById_Handler,
-		},
-		{
-			MethodName: "CreateRole",
-			Handler:    _PermissionService_CreateRole_Handler,
-		},
-		{
-			MethodName: "UpdateRole",
-			Handler:    _PermissionService_UpdateRole_Handler,
-		},
-		{
-			MethodName: "DeleteRole",
-			Handler:    _PermissionService_DeleteRole_Handler,
-		},
-		{
-			MethodName: "GetMenuTree",
-			Handler:    _PermissionService_GetMenuTree_Handler,
-		},
-		{
-			MethodName: "GetMenuById",
-			Handler:    _PermissionService_GetMenuById_Handler,
-		},
-		{
-			MethodName: "CreateMenu",
-			Handler:    _PermissionService_CreateMenu_Handler,
-		},
-		{
-			MethodName: "UpdateMenu",
-			Handler:    _PermissionService_UpdateMenu_Handler,
-		},
-		{
-			MethodName: "DeleteMenu",
-			Handler:    _PermissionService_DeleteMenu_Handler,
-		},
-		{
-			MethodName: "GetScopeList",
-			Handler:    _PermissionService_GetScopeList_Handler,
-		},
-		{
-			MethodName: "GetScopeById",
-			Handler:    _PermissionService_GetScopeById_Handler,
-		},
-		{
-			MethodName: "CreateScope",
-			Handler:    _PermissionService_CreateScope_Handler,
-		},
-		{
-			MethodName: "UpdateScope",
-			Handler:    _PermissionService_UpdateScope_Handler,
-		},
-		{
-			MethodName: "DeleteScope",
-			Handler:    _PermissionService_DeleteScope_Handler,
+			MethodName: "GetUserInfo",
+			Handler:    _UserService_GetUserInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

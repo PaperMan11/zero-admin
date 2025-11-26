@@ -2,7 +2,7 @@
 // goctl 1.9.2
 // Source: sys.proto
 
-package authservice
+package roleservice
 
 import (
 	"context"
@@ -52,32 +52,48 @@ type (
 	UserListRequest           = sysclient.UserListRequest
 	UserListResponse          = sysclient.UserListResponse
 
-	AuthService interface {
-		// 用户登录
-		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-		// 刷新令牌
-		RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	RoleService interface {
+		// 角色管理
+		GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error)
+		GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
+		CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
 	}
 
-	defaultAuthService struct {
+	defaultRoleService struct {
 		cli zrpc.Client
 	}
 )
 
-func NewAuthService(cli zrpc.Client) AuthService {
-	return &defaultAuthService{
+func NewRoleService(cli zrpc.Client) RoleService {
+	return &defaultRoleService{
 		cli: cli,
 	}
 }
 
-// 用户登录
-func (m *defaultAuthService) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	client := sysclient.NewAuthServiceClient(m.cli.Conn())
-	return client.Login(ctx, in, opts...)
+// 角色管理
+func (m *defaultRoleService) GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.GetRoleList(ctx, in, opts...)
 }
 
-// 刷新令牌
-func (m *defaultAuthService) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
-	client := sysclient.NewAuthServiceClient(m.cli.Conn())
-	return client.RefreshToken(ctx, in, opts...)
+func (m *defaultRoleService) GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.GetRoleById(ctx, in, opts...)
+}
+
+func (m *defaultRoleService) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.CreateRole(ctx, in, opts...)
+}
+
+func (m *defaultRoleService) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.UpdateRole(ctx, in, opts...)
+}
+
+func (m *defaultRoleService) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.DeleteRole(ctx, in, opts...)
 }
