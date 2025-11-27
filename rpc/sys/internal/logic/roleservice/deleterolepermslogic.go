@@ -9,21 +9,22 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type UpdateRoleScopesLogic struct {
+type DeleteRolePermsLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewUpdateRoleScopesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateRoleScopesLogic {
-	return &UpdateRoleScopesLogic{
+func NewDeleteRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteRolePermsLogic {
+	return &DeleteRolePermsLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *UpdateRoleScopesLogic) UpdateRoleScopes(in *sysclient.UpdateRoleScopesRequest) (*sysclient.RoleInfo, error) {
+// 删除角色权限
+func (l *DeleteRolePermsLogic) DeleteRolePerms(in *sysclient.DeleteRolePermsRequest) (*sysclient.RoleInfo, error) {
 	// todo: add your logic here and delete this line
 
 	return &sysclient.RoleInfo{}, nil

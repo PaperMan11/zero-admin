@@ -23,8 +23,8 @@ message Menu {
   int32 status = 14;            // 状态 (0-禁用, 1-正常)
   int64 scope_id = 15;          // 权限范围ID
   string remark = 16;           // 备注
+  repeated Menu children = 17;
 }
-
 
 
 // ========== 菜单管理 ==========
@@ -94,7 +94,7 @@ message CreateScopeRequest {
   string description = 3; // 范围描述
   int32 sort = 4;         // 排序
   repeated int64 menu_ids = 5; // 菜单ID
-  int64 operator_id = 5;  // 操作者
+  int64 operator_id = 6;  // 操作者
 }
 
 // 更新安全范围请求

@@ -3,6 +3,7 @@ package logic
 import (
 	"time"
 	"zero-admin/pkg/convert"
+	"zero-admin/rpc/sys/db"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/sysclient"
 )
@@ -102,7 +103,7 @@ func ConvertToModelMenu(operatorID int64, menu *sysclient.Menu) *model.SysMenu {
 
 func ConvertToRpcRole(role *model.SysRole) *sysclient.Role {
 	return &sysclient.Role{
-		Id:       role.ID,
+		RoleId:   role.ID,
 		RoleName: role.RoleName,
 		RoleCode: role.RoleCode,
 	}
@@ -134,4 +135,11 @@ func ConvertToRpcScopes(scopes []model.SysScope) []*sysclient.Scope {
 		res = append(res, ConvertToRpcScope(&s))
 	}
 	return res
+}
+
+// op log
+
+func AddOperatorLog(db db.DB, operatorID, message string) error {
+
+	return nil
 }

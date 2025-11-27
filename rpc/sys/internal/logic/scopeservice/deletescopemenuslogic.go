@@ -9,22 +9,22 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetScopeByIdLogic struct {
+type DeleteScopeMenusLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetScopeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetScopeByIdLogic {
-	return &GetScopeByIdLogic{
+func NewDeleteScopeMenusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteScopeMenusLogic {
+	return &DeleteScopeMenusLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetScopeByIdLogic) GetScopeById(in *sysclient.Int64Value) (*sysclient.Scope, error) {
+func (l *DeleteScopeMenusLogic) DeleteScopeMenus(in *sysclient.DeleteScopeMenusRequest) (*sysclient.ScopeInfo, error) {
 	// todo: add your logic here and delete this line
 
-	return &sysclient.Scope{}, nil
+	return &sysclient.ScopeInfo{}, nil
 }

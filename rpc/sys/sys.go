@@ -6,7 +6,9 @@ import (
 
 	"zero-admin/rpc/sys/internal/config"
 	authserviceServer "zero-admin/rpc/sys/internal/server/authservice"
-	permissionserviceServer "zero-admin/rpc/sys/internal/server/permissionservice"
+	roleserviceServer "zero-admin/rpc/sys/internal/server/roleservice"
+	scopeserviceServer "zero-admin/rpc/sys/internal/server/scopeservice"
+	userserviceServer "zero-admin/rpc/sys/internal/server/userservice"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -28,7 +30,9 @@ func main() {
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		sysclient.RegisterAuthServiceServer(grpcServer, authserviceServer.NewAuthServiceServer(ctx))
-		sysclient.RegisterPermissionServiceServer(grpcServer, permissionserviceServer.NewPermissionServiceServer(ctx))
+		sysclient.RegisterRoleServiceServer(grpcServer, roleserviceServer.NewRoleServiceServer(ctx))
+		sysclient.RegisterScopeServiceServer(grpcServer, scopeserviceServer.NewScopeServiceServer(ctx))
+		sysclient.RegisterUserServiceServer(grpcServer, userserviceServer.NewUserServiceServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

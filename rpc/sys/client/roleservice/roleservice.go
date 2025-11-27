@@ -14,12 +14,16 @@ import (
 )
 
 type (
+	AddRolePermsRequest       = sysclient.AddRolePermsRequest
+	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
 	CreateMenuRequest         = sysclient.CreateMenuRequest
 	CreateRoleRequest         = sysclient.CreateRoleRequest
 	CreateScopeRequest        = sysclient.CreateScopeRequest
 	CreateUserRequest         = sysclient.CreateUserRequest
 	DeleteMenuRequest         = sysclient.DeleteMenuRequest
+	DeleteRolePermsRequest    = sysclient.DeleteRolePermsRequest
 	DeleteRoleRequest         = sysclient.DeleteRoleRequest
+	DeleteScopeMenusRequest   = sysclient.DeleteScopeMenusRequest
 	DeleteScopeRequest        = sysclient.DeleteScopeRequest
 	DeleteUserRequest         = sysclient.DeleteUserRequest
 	Empty                     = sysclient.Empty
@@ -39,13 +43,14 @@ type (
 	RoleListRequest           = sysclient.RoleListRequest
 	RoleListResponse          = sysclient.RoleListResponse
 	RoleScope                 = sysclient.RoleScope
+	RoleScopeInfo             = sysclient.RoleScopeInfo
 	Scope                     = sysclient.Scope
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
+	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
-	UpdateRoleScopesRequest   = sysclient.UpdateRoleScopesRequest
 	UpdateScopeRequest        = sysclient.UpdateScopeRequest
 	UpdateUserPasswordRequest = sysclient.UpdateUserPasswordRequest
 	UpdateUserRequest         = sysclient.UpdateUserRequest
@@ -55,13 +60,22 @@ type (
 	UserListResponse          = sysclient.UserListResponse
 
 	RoleService interface {
-		// 角色管理
+		// 角色列表
 		GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error)
-		GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
-		CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
-		UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
-		UpdateRoleScopes(ctx context.Context, in *UpdateRoleScopesRequest, opts ...grpc.CallOption) (*RoleScope, error)
+		// 创建角色
+		CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*Role, error)
+		// 更新角色
+		UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*Role, error)
+		// 删除角色
 		DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
+		// 添加角色权限
+		AddRolePerms(ctx context.Context, in *AddRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		// 更新角色权限
+		UpdateRolePerms(ctx context.Context, in *UpdateRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		// 删除角色权限
+		DeleteRolePerms(ctx context.Context, in *DeleteRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		// 获取角色权限
+		GetRolePerms(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
 	}
 
 	defaultRoleService struct {
@@ -75,33 +89,50 @@ func NewRoleService(cli zrpc.Client) RoleService {
 	}
 }
 
-// 角色管理
+// 角色列表
 func (m *defaultRoleService) GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.GetRoleList(ctx, in, opts...)
 }
 
-func (m *defaultRoleService) GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
-	client := sysclient.NewRoleServiceClient(m.cli.Conn())
-	return client.GetRoleById(ctx, in, opts...)
-}
-
-func (m *defaultRoleService) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+// 创建角色
+func (m *defaultRoleService) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*Role, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.CreateRole(ctx, in, opts...)
 }
 
-func (m *defaultRoleService) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+// 更新角色
+func (m *defaultRoleService) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*Role, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.UpdateRole(ctx, in, opts...)
 }
 
-func (m *defaultRoleService) UpdateRoleScopes(ctx context.Context, in *UpdateRoleScopesRequest, opts ...grpc.CallOption) (*RoleScope, error) {
-	client := sysclient.NewRoleServiceClient(m.cli.Conn())
-	return client.UpdateRoleScopes(ctx, in, opts...)
-}
-
+// 删除角色
 func (m *defaultRoleService) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.DeleteRole(ctx, in, opts...)
+}
+
+// 添加角色权限
+func (m *defaultRoleService) AddRolePerms(ctx context.Context, in *AddRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.AddRolePerms(ctx, in, opts...)
+}
+
+// 更新角色权限
+func (m *defaultRoleService) UpdateRolePerms(ctx context.Context, in *UpdateRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.UpdateRolePerms(ctx, in, opts...)
+}
+
+// 删除角色权限
+func (m *defaultRoleService) DeleteRolePerms(ctx context.Context, in *DeleteRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.DeleteRolePerms(ctx, in, opts...)
+}
+
+// 获取角色权限
+func (m *defaultRoleService) GetRolePerms(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.GetRolePerms(ctx, in, opts...)
 }

@@ -14,12 +14,16 @@ import (
 )
 
 type (
+	AddRolePermsRequest       = sysclient.AddRolePermsRequest
+	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
 	CreateMenuRequest         = sysclient.CreateMenuRequest
 	CreateRoleRequest         = sysclient.CreateRoleRequest
 	CreateScopeRequest        = sysclient.CreateScopeRequest
 	CreateUserRequest         = sysclient.CreateUserRequest
 	DeleteMenuRequest         = sysclient.DeleteMenuRequest
+	DeleteRolePermsRequest    = sysclient.DeleteRolePermsRequest
 	DeleteRoleRequest         = sysclient.DeleteRoleRequest
+	DeleteScopeMenusRequest   = sysclient.DeleteScopeMenusRequest
 	DeleteScopeRequest        = sysclient.DeleteScopeRequest
 	DeleteUserRequest         = sysclient.DeleteUserRequest
 	Empty                     = sysclient.Empty
@@ -39,13 +43,14 @@ type (
 	RoleListRequest           = sysclient.RoleListRequest
 	RoleListResponse          = sysclient.RoleListResponse
 	RoleScope                 = sysclient.RoleScope
+	RoleScopeInfo             = sysclient.RoleScopeInfo
 	Scope                     = sysclient.Scope
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
+	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
-	UpdateRoleScopesRequest   = sysclient.UpdateRoleScopesRequest
 	UpdateScopeRequest        = sysclient.UpdateScopeRequest
 	UpdateUserPasswordRequest = sysclient.UpdateUserPasswordRequest
 	UpdateUserRequest         = sysclient.UpdateUserRequest

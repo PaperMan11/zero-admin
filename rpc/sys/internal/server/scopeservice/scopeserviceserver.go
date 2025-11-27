@@ -29,17 +29,17 @@ func (s *ScopeServiceServer) GetScopeList(ctx context.Context, in *sysclient.Sco
 	return l.GetScopeList(in)
 }
 
-func (s *ScopeServiceServer) GetScopeById(ctx context.Context, in *sysclient.Int64Value) (*sysclient.ScopeInfo, error) {
+func (s *ScopeServiceServer) GetScopeById(ctx context.Context, in *sysclient.Int64Value) (*sysclient.Scope, error) {
 	l := scopeservicelogic.NewGetScopeByIdLogic(ctx, s.svcCtx)
 	return l.GetScopeById(in)
 }
 
-func (s *ScopeServiceServer) CreateScope(ctx context.Context, in *sysclient.CreateScopeRequest) (*sysclient.ScopeInfo, error) {
+func (s *ScopeServiceServer) CreateScope(ctx context.Context, in *sysclient.CreateScopeRequest) (*sysclient.Scope, error) {
 	l := scopeservicelogic.NewCreateScopeLogic(ctx, s.svcCtx)
 	return l.CreateScope(in)
 }
 
-func (s *ScopeServiceServer) UpdateScope(ctx context.Context, in *sysclient.UpdateScopeRequest) (*sysclient.ScopeInfo, error) {
+func (s *ScopeServiceServer) UpdateScope(ctx context.Context, in *sysclient.UpdateScopeRequest) (*sysclient.Scope, error) {
 	l := scopeservicelogic.NewUpdateScopeLogic(ctx, s.svcCtx)
 	return l.UpdateScope(in)
 }
@@ -47,6 +47,21 @@ func (s *ScopeServiceServer) UpdateScope(ctx context.Context, in *sysclient.Upda
 func (s *ScopeServiceServer) DeleteScope(ctx context.Context, in *sysclient.DeleteScopeRequest) (*sysclient.Empty, error) {
 	l := scopeservicelogic.NewDeleteScopeLogic(ctx, s.svcCtx)
 	return l.DeleteScope(in)
+}
+
+func (s *ScopeServiceServer) AddScopeMenus(ctx context.Context, in *sysclient.AddScopeMenusRequest) (*sysclient.ScopeInfo, error) {
+	l := scopeservicelogic.NewAddScopeMenusLogic(ctx, s.svcCtx)
+	return l.AddScopeMenus(in)
+}
+
+func (s *ScopeServiceServer) DeleteScopeMenus(ctx context.Context, in *sysclient.DeleteScopeMenusRequest) (*sysclient.ScopeInfo, error) {
+	l := scopeservicelogic.NewDeleteScopeMenusLogic(ctx, s.svcCtx)
+	return l.DeleteScopeMenus(in)
+}
+
+func (s *ScopeServiceServer) GetScopeMenus(ctx context.Context, in *sysclient.Int64Value) (*sysclient.ScopeInfo, error) {
+	l := scopeservicelogic.NewGetScopeMenusLogic(ctx, s.svcCtx)
+	return l.GetScopeMenus(in)
 }
 
 // 菜单管理

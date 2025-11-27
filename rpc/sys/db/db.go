@@ -21,9 +21,9 @@ type DB interface {
 	GetUserByID(ctx context.Context, userID int64) (model.SysUser, error)
 	// 更新用户
 	UpdateUserByID(ctx context.Context, userID int64, updates interface{}) error
+
 	// 创建角色
 	CreateRole(ctx context.Context, role model.SysRole) (int64, error)
-
 	// 删除角色及关联数据
 	DeleteRoleTx(ctx context.Context, roleID int64) error
 	// 根据ID获取角色
@@ -31,6 +31,7 @@ type DB interface {
 	GetRoleByName(ctx context.Context, roleName string) (model.SysRole, error)
 	// 判断角色是否存在
 	ExistsRoleByName(ctx context.Context, roleName string) (bool, error)
+	ExistsRoleByCode(ctx context.Context, roleCode string) (bool, error)
 	// 获取用户角色
 	GetRolesByUserID(ctx context.Context, userID int64) ([]model.SysRole, error)
 	// 分页查询角色
@@ -41,6 +42,7 @@ type DB interface {
 	GetUserRoleCodes(ctx context.Context, userID int64) ([]string, error)
 	SaveRole(ctx context.Context, role model.SysRole)
 	UpdateRoleScopes(ctx context.Context, roleID int64, scopeIDs []int64) error
+	AddRoleScopes(ctx context.Context, roleScopes []model.SysRoleScope) error
 
 	// ---------------------菜单 & 权限---------------------
 	// 获取所有的菜单

@@ -6,6 +6,8 @@ import (
 	"zero-admin/pkg/convert"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/mysql/model"
+	"zero-admin/rpc/sys/internal/logic"
+
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -26,8 +28,21 @@ func NewCreateRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 	}
 }
 
-func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclient.RoleInfo, error) {
-	operator := convert.ToString(in.GetOperatorId())
+// 创建角色
+func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclient.Role, error) {
+	operator := convert.ToString(in.OperatorId)
+	// 1. 是否有重复的
+	exists, err := l.svcCtx.DB.ExistsRoleByCode(l.ctx, in.RoleCode)
+	if err != nil {
+		logc.Errorf(l.ctx, "查询role_code失败, 参数：%+v, 异常: %s", in, err.Error())
+		return nil, xerr.NewErrCode(xerr.ErrorDb)
+	}
+	if exists {
+		logc.Errorf(l.ctx, "角色已存在, 参数：%+v", in)
+		return nil, xerr.NewErrCode(xerr.ErrorRoleExist)
+	}
+
+	// 2. 创建
 	roleID, err := l.svcCtx.DB.CreateRole(l.ctx, model.SysRole{
 		RoleName:    in.RoleName,
 		RoleCode:    in.RoleCode,
@@ -35,12 +50,12 @@ func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclien
 		Status:      in.Status,
 		Creator:     operator,
 		Updater:     operator,
-		DelFlag:     0,
 	})
 	if err != nil {
-		logc.Errorf(l.ctx, "创建角色失败, 参数：%+v, 错误：%s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorCreateRole)
+		logc.Errorf(l.ctx, "创建角色失败, 参数：%+v, 异常: %s", in, err.Error())
+		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
 
-	return NewGetRoleByIdLogic(l.ctx, l.svcCtx).GetRoleById(&sysclient.Int64Value{Value: roleID})
+	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, roleID)
+	return logic.ConvertToRpcRole(&role), nil
 }

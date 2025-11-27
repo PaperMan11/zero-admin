@@ -23,33 +23,50 @@ func NewRoleServiceServer(svcCtx *svc.ServiceContext) *RoleServiceServer {
 	}
 }
 
-// 角色管理
+// 角色列表
 func (s *RoleServiceServer) GetRoleList(ctx context.Context, in *sysclient.RoleListRequest) (*sysclient.RoleListResponse, error) {
 	l := roleservicelogic.NewGetRoleListLogic(ctx, s.svcCtx)
 	return l.GetRoleList(in)
 }
 
-func (s *RoleServiceServer) GetRoleById(ctx context.Context, in *sysclient.Int64Value) (*sysclient.RoleInfo, error) {
-	l := roleservicelogic.NewGetRoleByIdLogic(ctx, s.svcCtx)
-	return l.GetRoleById(in)
-}
-
-func (s *RoleServiceServer) CreateRole(ctx context.Context, in *sysclient.CreateRoleRequest) (*sysclient.RoleInfo, error) {
+// 创建角色
+func (s *RoleServiceServer) CreateRole(ctx context.Context, in *sysclient.CreateRoleRequest) (*sysclient.Role, error) {
 	l := roleservicelogic.NewCreateRoleLogic(ctx, s.svcCtx)
 	return l.CreateRole(in)
 }
 
-func (s *RoleServiceServer) UpdateRole(ctx context.Context, in *sysclient.UpdateRoleRequest) (*sysclient.RoleInfo, error) {
+// 更新角色
+func (s *RoleServiceServer) UpdateRole(ctx context.Context, in *sysclient.UpdateRoleRequest) (*sysclient.Role, error) {
 	l := roleservicelogic.NewUpdateRoleLogic(ctx, s.svcCtx)
 	return l.UpdateRole(in)
 }
 
-func (s *RoleServiceServer) UpdateRoleScopes(ctx context.Context, in *sysclient.UpdateRoleScopesRequest) (*sysclient.RoleScope, error) {
-	l := roleservicelogic.NewUpdateRoleScopesLogic(ctx, s.svcCtx)
-	return l.UpdateRoleScopes(in)
-}
-
+// 删除角色
 func (s *RoleServiceServer) DeleteRole(ctx context.Context, in *sysclient.DeleteRoleRequest) (*sysclient.Empty, error) {
 	l := roleservicelogic.NewDeleteRoleLogic(ctx, s.svcCtx)
 	return l.DeleteRole(in)
+}
+
+// 添加角色权限
+func (s *RoleServiceServer) AddRolePerms(ctx context.Context, in *sysclient.AddRolePermsRequest) (*sysclient.RoleInfo, error) {
+	l := roleservicelogic.NewAddRolePermsLogic(ctx, s.svcCtx)
+	return l.AddRolePerms(in)
+}
+
+// 更新角色权限
+func (s *RoleServiceServer) UpdateRolePerms(ctx context.Context, in *sysclient.UpdateRolePermsRequest) (*sysclient.RoleInfo, error) {
+	l := roleservicelogic.NewUpdateRolePermsLogic(ctx, s.svcCtx)
+	return l.UpdateRolePerms(in)
+}
+
+// 删除角色权限
+func (s *RoleServiceServer) DeleteRolePerms(ctx context.Context, in *sysclient.DeleteRolePermsRequest) (*sysclient.RoleInfo, error) {
+	l := roleservicelogic.NewDeleteRolePermsLogic(ctx, s.svcCtx)
+	return l.DeleteRolePerms(in)
+}
+
+// 获取角色权限
+func (s *RoleServiceServer) GetRolePerms(ctx context.Context, in *sysclient.Int64Value) (*sysclient.RoleInfo, error) {
+	l := roleservicelogic.NewGetRolePermsLogic(ctx, s.svcCtx)
+	return l.GetRolePerms(in)
 }

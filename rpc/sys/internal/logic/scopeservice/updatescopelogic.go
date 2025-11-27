@@ -23,8 +23,8 @@ func NewUpdateScopeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Updat
 	}
 }
 
-func (l *UpdateScopeLogic) UpdateScope(in *sysclient.UpdateScopeRequest) (*sysclient.ScopeInfo, error) {
+func (l *UpdateScopeLogic) UpdateScope(in *sysclient.UpdateScopeRequest) (*sysclient.Scope, error) {
 	// todo: add your logic here and delete this line
 
-	return &sysclient.ScopeInfo{}, nil
+	return &sysclient.Scope{}, nil
 }

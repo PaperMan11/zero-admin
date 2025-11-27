@@ -71,6 +71,7 @@ const (
 	ErrorGetRoleList  = 600005
 	ErrorRoleExist    = 600006
 	ErrorRoleNotExist = 600007
+	ErrorAddRoleScope = 600008
 )
 
 // scope

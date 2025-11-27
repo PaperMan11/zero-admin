@@ -18,7 +18,7 @@ message RoleScope {
   int64 id = 1;
   string role_code = 2;
   string scope_code = 3;
-  int32 perm = 4;
+  repeated string perms = 4;
 }
 
 message RoleScopeInfo {
@@ -51,8 +51,7 @@ message CreateRoleRequest {
   string role_code = 2;   // 角色编码
   string description = 3; // 角色描述
   int32 status = 4;       // 状态 (0-禁用, 1-正常)
-  repeated int64 scope_ids = 5; // 安全范围id
-  int64 operator_id = 6;  // 操作者
+  int64 operator_id = 5;  // 操作者
 }
 
 // 更新角色请求
