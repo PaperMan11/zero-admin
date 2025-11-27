@@ -44,6 +44,11 @@ func (s *RoleServiceServer) UpdateRole(ctx context.Context, in *sysclient.Update
 	return l.UpdateRole(in)
 }
 
+func (s *RoleServiceServer) UpdateRoleScopes(ctx context.Context, in *sysclient.UpdateRoleScopesRequest) (*sysclient.RoleScope, error) {
+	l := roleservicelogic.NewUpdateRoleScopesLogic(ctx, s.svcCtx)
+	return l.UpdateRoleScopes(in)
+}
+
 func (s *RoleServiceServer) DeleteRole(ctx context.Context, in *sysclient.DeleteRoleRequest) (*sysclient.Empty, error) {
 	l := roleservicelogic.NewDeleteRoleLogic(ctx, s.svcCtx)
 	return l.DeleteRole(in)

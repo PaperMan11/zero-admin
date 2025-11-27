@@ -38,12 +38,14 @@ type (
 	RoleInfo                  = sysclient.RoleInfo
 	RoleListRequest           = sysclient.RoleListRequest
 	RoleListResponse          = sysclient.RoleListResponse
+	RoleScope                 = sysclient.RoleScope
 	Scope                     = sysclient.Scope
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
+	UpdateRoleScopesRequest   = sysclient.UpdateRoleScopesRequest
 	UpdateScopeRequest        = sysclient.UpdateScopeRequest
 	UpdateUserPasswordRequest = sysclient.UpdateUserPasswordRequest
 	UpdateUserRequest         = sysclient.UpdateUserRequest

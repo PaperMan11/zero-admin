@@ -167,11 +167,12 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RoleService_GetRoleList_FullMethodName = "/sysclient.RoleService/GetRoleList"
-	RoleService_GetRoleById_FullMethodName = "/sysclient.RoleService/GetRoleById"
-	RoleService_CreateRole_FullMethodName  = "/sysclient.RoleService/CreateRole"
-	RoleService_UpdateRole_FullMethodName  = "/sysclient.RoleService/UpdateRole"
-	RoleService_DeleteRole_FullMethodName  = "/sysclient.RoleService/DeleteRole"
+	RoleService_GetRoleList_FullMethodName      = "/sysclient.RoleService/GetRoleList"
+	RoleService_GetRoleById_FullMethodName      = "/sysclient.RoleService/GetRoleById"
+	RoleService_CreateRole_FullMethodName       = "/sysclient.RoleService/CreateRole"
+	RoleService_UpdateRole_FullMethodName       = "/sysclient.RoleService/UpdateRole"
+	RoleService_UpdateRoleScopes_FullMethodName = "/sysclient.RoleService/UpdateRoleScopes"
+	RoleService_DeleteRole_FullMethodName       = "/sysclient.RoleService/DeleteRole"
 )
 
 // RoleServiceClient is the client API for RoleService service.
@@ -183,6 +184,7 @@ type RoleServiceClient interface {
 	GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
 	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 	UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+	UpdateRoleScopes(ctx context.Context, in *UpdateRoleScopesRequest, opts ...grpc.CallOption) (*RoleScope, error)
 	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
@@ -234,6 +236,16 @@ func (c *roleServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleReques
 	return out, nil
 }
 
+func (c *roleServiceClient) UpdateRoleScopes(ctx context.Context, in *UpdateRoleScopesRequest, opts ...grpc.CallOption) (*RoleScope, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleScope)
+	err := c.cc.Invoke(ctx, RoleService_UpdateRoleScopes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *roleServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
@@ -253,6 +265,7 @@ type RoleServiceServer interface {
 	GetRoleById(context.Context, *Int64Value) (*RoleInfo, error)
 	CreateRole(context.Context, *CreateRoleRequest) (*RoleInfo, error)
 	UpdateRole(context.Context, *UpdateRoleRequest) (*RoleInfo, error)
+	UpdateRoleScopes(context.Context, *UpdateRoleScopesRequest) (*RoleScope, error)
 	DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error)
 	mustEmbedUnimplementedRoleServiceServer()
 }
@@ -275,6 +288,9 @@ func (UnimplementedRoleServiceServer) CreateRole(context.Context, *CreateRoleReq
 }
 func (UnimplementedRoleServiceServer) UpdateRole(context.Context, *UpdateRoleRequest) (*RoleInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
+}
+func (UnimplementedRoleServiceServer) UpdateRoleScopes(context.Context, *UpdateRoleScopesRequest) (*RoleScope, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRoleScopes not implemented")
 }
 func (UnimplementedRoleServiceServer) DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
@@ -372,6 +388,24 @@ func _RoleService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RoleService_UpdateRoleScopes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRoleScopesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).UpdateRoleScopes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_UpdateRoleScopes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).UpdateRoleScopes(ctx, req.(*UpdateRoleScopesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RoleService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRoleRequest)
 	if err := dec(in); err != nil {
@@ -412,6 +446,10 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateRole",
 			Handler:    _RoleService_UpdateRole_Handler,
+		},
+		{
+			MethodName: "UpdateRoleScopes",
+			Handler:    _RoleService_UpdateRoleScopes_Handler,
 		},
 		{
 			MethodName: "DeleteRole",

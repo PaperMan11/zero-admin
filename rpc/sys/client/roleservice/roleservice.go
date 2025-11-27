@@ -38,12 +38,14 @@ type (
 	RoleInfo                  = sysclient.RoleInfo
 	RoleListRequest           = sysclient.RoleListRequest
 	RoleListResponse          = sysclient.RoleListResponse
+	RoleScope                 = sysclient.RoleScope
 	Scope                     = sysclient.Scope
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
+	UpdateRoleScopesRequest   = sysclient.UpdateRoleScopesRequest
 	UpdateScopeRequest        = sysclient.UpdateScopeRequest
 	UpdateUserPasswordRequest = sysclient.UpdateUserPasswordRequest
 	UpdateUserRequest         = sysclient.UpdateUserRequest
@@ -58,6 +60,7 @@ type (
 		GetRoleById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
 		CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 		UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		UpdateRoleScopes(ctx context.Context, in *UpdateRoleScopesRequest, opts ...grpc.CallOption) (*RoleScope, error)
 		DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
 	}
 
@@ -91,6 +94,11 @@ func (m *defaultRoleService) CreateRole(ctx context.Context, in *CreateRoleReque
 func (m *defaultRoleService) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.UpdateRole(ctx, in, opts...)
+}
+
+func (m *defaultRoleService) UpdateRoleScopes(ctx context.Context, in *UpdateRoleScopesRequest, opts ...grpc.CallOption) (*RoleScope, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.UpdateRoleScopes(ctx, in, opts...)
 }
 
 func (m *defaultRoleService) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {

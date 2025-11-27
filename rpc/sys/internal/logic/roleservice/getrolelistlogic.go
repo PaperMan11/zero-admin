@@ -35,14 +35,12 @@ func (l *GetRoleListLogic) GetRoleList(in *sysclient.RoleListRequest) (*sysclien
 	roleInfos := make([]*sysclient.RoleInfo, 0, len(roles))
 	for _, role := range roles {
 		scopes, _ := l.svcCtx.DB.GetScopesByRoleCode(l.ctx, role.RoleCode)
-		menus, _ := l.svcCtx.DB.GetMenusByRoleCode(l.ctx, role.RoleCode)
 		roleInfos = append(roleInfos, &sysclient.RoleInfo{
 			Id:          role.ID,
 			RoleName:    role.RoleName,
 			RoleCode:    role.RoleCode,
 			Description: role.Description,
 			Status:      role.Status,
-			Menus:       logic.ConvertToRpcMenus(menus),
 			Scopes:      logic.ConvertToRpcScopes(scopes),
 		})
 	}

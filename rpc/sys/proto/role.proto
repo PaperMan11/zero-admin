@@ -4,6 +4,34 @@ package main;
 
 option go_package = "./proto";
 
+
+// 角色信息
+message Role {
+  int64 role_id = 1;      // 角色ID
+  string role_name = 2;   // 角色名称
+  string role_code = 3;   // 角色编码
+  string description = 4; // 角色描述
+  int32 status = 5;    // 状态（0-禁用，1-正常）
+}
+
+message RoleScope {
+  int64 id = 1;
+  string role_code = 2;
+  string scope_code = 3;
+  int32 perm = 4;
+}
+
+message RoleScopeInfo {
+  Scope scope = 1;
+  repeated string perms = 2;
+}
+
+message RoleInfo {
+  Role role = 1;
+  repeated RoleScopeInfo scopes = 2;
+}
+
+
 // 角色列表请求
 message RoleListRequest {
   PageRequest page_request = 1;
@@ -13,19 +41,9 @@ message RoleListRequest {
 // 角色列表响应
 message RoleListResponse {
   PageResponse page_response = 1;
-  repeated RoleInfo roles = 2;
+  repeated Role roles = 2;
 }
 
-// 角色信息
-message RoleInfo {
-  int64 id = 1;           // 角色ID
-  string role_name = 2;   // 角色名称
-  string role_code = 3;   // 角色编码
-  string description = 4; // 角色描述
-  int32 status = 5;       // 状态 (0-禁用, 1-正常)
-  repeated Menu menus = 6; // 菜单列表
-  repeated Scope scopes = 7; // 安全范围列表
-}
 
 // 创建角色请求
 message CreateRoleRequest {
@@ -33,13 +51,13 @@ message CreateRoleRequest {
   string role_code = 2;   // 角色编码
   string description = 3; // 角色描述
   int32 status = 4;       // 状态 (0-禁用, 1-正常)
-  repeated int64 scope_ids = 6; // 安全范围ID列表
-  int64 operator_id = 7;  // 操作者
+  repeated int64 scope_ids = 5; // 安全范围id
+  int64 operator_id = 6;  // 操作者
 }
 
 // 更新角色请求
 message UpdateRoleRequest {
-  int64 id = 1;           // 角色ID
+  int64 role_id = 1;           // 角色ID
   string role_name = 2;   // 角色名称
   string role_code = 3;   // 角色编码
   string description = 4; // 角色描述
@@ -53,23 +71,44 @@ message DeleteRoleRequest {
   int64 operator_id = 2;  // 操作者
 }
 
-// 角色信息
-message Role {
-  int64 id = 1;           // 角色ID
-  string role_name = 2;   // 角色名称
-  string role_code = 3;   // 角色编码
-  string description = 4; // 角色描述
-  int32 status = 5;    // 状态（0-禁用，1-正常）
+message AddRolePermsRequest {
+  int64 role_id = 1;           // 角色ID
+  string role_code = 2;   // 角色code
+  int64 operator_id = 3;  // 操作者
+  repeated RoleScope role_scopes = 4;
+}
+
+message UpdateRolePermsRequest {
+  int64 role_id = 1;      // 角色ID
+  string role_code = 2;   // 角色code
+  int64 operator_id = 3;  // 操作者
+  repeated RoleScope role_scopes = 4;
+}
+
+message DeleteRolePermsRequest {
+  int64 role_id = 1;      // 角色ID
+  string role_code = 2;   // 角色code
+  int64 operator_id = 3;  // 操作者
+  repeated string scope_codes = 4;
 }
 
 
 service RoleService {
-  // 角色管理
+  // 角色列表
   rpc GetRoleList(RoleListRequest) returns (RoleListResponse);
-  rpc GetRoleById(Int64Value) returns (RoleInfo);
-  rpc CreateRole(CreateRoleRequest) returns (RoleInfo);
+  // 创建角色
+  rpc CreateRole(CreateRoleRequest) returns (Role);
+  // 更新角色
   rpc UpdateRole(UpdateRoleRequest) returns (Role);
-  rpc UpdateRoleScopes(UpdateRoleScopesRequest) returns()
+  // 删除角色
   rpc DeleteRole(DeleteRoleRequest) returns (Empty);
+  // 添加角色权限
+  rpc AddRolePerms(AddRolePermsRequest) returns (RoleInfo);
+  // 更新角色权限
+  rpc UpdateRolePerms(UpdateRolePermsRequest) returns (RoleInfo);
+  // 删除角色权限
+  rpc DeleteRolePerms(DeleteRolePermsRequest) returns (RoleInfo);
+  // 获取角色权限
+  rpc GetRolePerms(Int64Value) returns (RoleInfo);
 }
 

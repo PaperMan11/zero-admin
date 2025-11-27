@@ -48,6 +48,8 @@ func init() {
 	message[ErrorGetMenu] = "获取菜单失败"
 	message[ErrorDeleteMenu] = "删除菜单失败"
 	message[ErrorUpdateMenu] = "更新菜单失败"
+	message[ErrorMenuExist] = "菜单已存在"
+	message[ErrorMenuNotExist] = "菜单不存在"
 
 	// role
 	message[ErrorCreateRole] = "创建角色失败"
@@ -55,6 +57,8 @@ func init() {
 	message[ErrorDeleteRole] = "删除角色信息失败"
 	message[ErrorGetRole] = "获取角色信息失败"
 	message[ErrorGetRoleList] = "获取角色列表失败"
+	message[ErrorRoleExist] = "角色已存在"
+	message[ErrorRoleNotExist] = "角色不存在"
 
 	// scope
 	message[ErrorCreateScope] = "创建安全范围失败"
@@ -62,6 +66,8 @@ func init() {
 	message[ErrorDeleteScope] = "删除安全范围失败"
 	message[ErrorGetScope] = "获取安全范围失败"
 	message[ErrorGetScopeList] = "获取安全范围表失败"
+	message[ErrorScopeExist] = "安全范围已存在"
+	message[ErrorScopeNotExist] = "安全范围不存在"
 }
 
 func MapErrMsg(errcode uint32) string {

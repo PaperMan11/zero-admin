@@ -58,22 +58,28 @@ const (
 	ErrorGetMenuTree     = 500006
 	ErrorGetMenuRoleList = 500007
 	ErrorGetMenuRoleTree = 500008
+	ErrorMenuExist       = 500009
+	ErrorMenuNotExist    = 500010
 )
 
 // role
 const (
-	ErrorCreateRole  = 600001
-	ErrorUpdateRole  = 600002
-	ErrorDeleteRole  = 600003
-	ErrorGetRole     = 600004
-	ErrorGetRoleList = 600005
+	ErrorCreateRole   = 600001
+	ErrorUpdateRole   = 600002
+	ErrorDeleteRole   = 600003
+	ErrorGetRole      = 600004
+	ErrorGetRoleList  = 600005
+	ErrorRoleExist    = 600006
+	ErrorRoleNotExist = 600007
 )
 
 // scope
 const (
-	ErrorCreateScope  = 700001
-	ErrorUpdateScope  = 700002
-	ErrorDeleteScope  = 700003
-	ErrorGetScope     = 700004
-	ErrorGetScopeList = 700005
+	ErrorCreateScope   = 700001
+	ErrorUpdateScope   = 700002
+	ErrorDeleteScope   = 700003
+	ErrorGetScope      = 700004
+	ErrorGetScopeList  = 700005
+	ErrorScopeExist    = 700006
+	ErrorScopeNotExist = 700007
 )

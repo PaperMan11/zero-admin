@@ -10,7 +10,6 @@ option go_package = "./proto";
 message UserListRequest {
   PageRequest page_request = 1;
   int32 status = 2;       // 状态过滤
-  int64 dept_id = 3;      // 部门ID过滤 (预留)
 }
 
 // 用户列表响应

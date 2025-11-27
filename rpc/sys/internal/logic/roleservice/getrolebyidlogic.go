@@ -33,14 +33,12 @@ func (l *GetRoleByIdLogic) GetRoleById(in *sysclient.Int64Value) (*sysclient.Rol
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
 	scopes, _ := l.svcCtx.DB.GetScopesByRoleCode(l.ctx, role.RoleCode)
-	menus, _ := l.svcCtx.DB.GetMenusByRoleCode(l.ctx, role.RoleCode)
 	return &sysclient.RoleInfo{
 		Id:          role.ID,
 		RoleName:    role.RoleName,
 		RoleCode:    role.RoleCode,
 		Description: role.Description,
 		Status:      role.Status,
-		Menus:       logic.ConvertToRpcMenus(menus),
 		Scopes:      logic.ConvertToRpcScopes(scopes),
 	}, nil
 }
