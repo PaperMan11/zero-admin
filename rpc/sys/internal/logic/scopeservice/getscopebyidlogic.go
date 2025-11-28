@@ -2,6 +2,10 @@ package scopeservicelogic
 
 import (
 	"context"
+	"errors"
+	"gorm.io/gorm"
+	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -24,7 +28,12 @@ func NewGetScopeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetS
 }
 
 func (l *GetScopeByIdLogic) GetScopeById(in *sysclient.Int64Value) (*sysclient.Scope, error) {
-	// todo: add your logic here and delete this line
-
-	return &sysclient.Scope{}, nil
+	scope, err := l.svcCtx.DB.GetScopeByID(l.ctx, in.Value)
+	switch {
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		return nil, xerr.NewErrCode(xerr.ErrorScopeNotExist)
+	case err != nil:
+		return nil, xerr.NewErrCode(xerr.ErrorDb)
+	}
+	return logic.ConvertToRpcScope(&scope), nil
 }

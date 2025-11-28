@@ -2,6 +2,11 @@ package scopeservicelogic
 
 import (
 	"context"
+	"errors"
+	"github.com/zeromicro/go-zero/core/logc"
+	"gorm.io/gorm"
+	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -24,7 +29,13 @@ func NewGetMenuByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMe
 }
 
 func (l *GetMenuByIdLogic) GetMenuById(in *sysclient.Int64Value) (*sysclient.Menu, error) {
-	// todo: add your logic here and delete this line
-
-	return &sysclient.Menu{}, nil
+	menu, err := l.svcCtx.DB.GetMenuByID(l.ctx, in.Value)
+	switch {
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		return nil, xerr.NewErrCode(xerr.ErrorMenuNotExist)
+	case err != nil:
+		logc.Errorf(l.ctx, "查询菜单信息, 参数：%+v, 错误：%v", in, err)
+		return nil, xerr.NewErrCode(xerr.ErrorDb)
+	}
+	return logic.ConvertToRpcMenu(&menu), nil
 }

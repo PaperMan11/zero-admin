@@ -60,6 +60,8 @@ func init() {
 	message[ErrorRoleExist] = "角色已存在"
 	message[ErrorRoleNotExist] = "角色不存在"
 	message[ErrorAddRoleScope] = "添加角色权限失败"
+	message[ErrorGetRolePerms] = "获取角色权限失败"
+	message[ErrorGetRoleAssociated] = "查询角色关联用户失败"
 
 	// scope
 	message[ErrorCreateScope] = "创建安全范围失败"

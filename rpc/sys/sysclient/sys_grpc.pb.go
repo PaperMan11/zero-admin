@@ -167,14 +167,16 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RoleService_GetRoleList_FullMethodName     = "/sysclient.RoleService/GetRoleList"
-	RoleService_CreateRole_FullMethodName      = "/sysclient.RoleService/CreateRole"
-	RoleService_UpdateRole_FullMethodName      = "/sysclient.RoleService/UpdateRole"
-	RoleService_DeleteRole_FullMethodName      = "/sysclient.RoleService/DeleteRole"
-	RoleService_AddRolePerms_FullMethodName    = "/sysclient.RoleService/AddRolePerms"
-	RoleService_UpdateRolePerms_FullMethodName = "/sysclient.RoleService/UpdateRolePerms"
-	RoleService_DeleteRolePerms_FullMethodName = "/sysclient.RoleService/DeleteRolePerms"
-	RoleService_GetRolePerms_FullMethodName    = "/sysclient.RoleService/GetRolePerms"
+	RoleService_GetRoleList_FullMethodName      = "/sysclient.RoleService/GetRoleList"
+	RoleService_CreateRole_FullMethodName       = "/sysclient.RoleService/CreateRole"
+	RoleService_UpdateRole_FullMethodName       = "/sysclient.RoleService/UpdateRole"
+	RoleService_ToggleRoleStatus_FullMethodName = "/sysclient.RoleService/ToggleRoleStatus"
+	RoleService_DeleteRole_FullMethodName       = "/sysclient.RoleService/DeleteRole"
+	RoleService_BatchDeleteRoles_FullMethodName = "/sysclient.RoleService/BatchDeleteRoles"
+	RoleService_AddRolePerms_FullMethodName     = "/sysclient.RoleService/AddRolePerms"
+	RoleService_UpdateRolePerms_FullMethodName  = "/sysclient.RoleService/UpdateRolePerms"
+	RoleService_DeleteRolePerms_FullMethodName  = "/sysclient.RoleService/DeleteRolePerms"
+	RoleService_GetRolePerms_FullMethodName     = "/sysclient.RoleService/GetRolePerms"
 )
 
 // RoleServiceClient is the client API for RoleService service.
@@ -187,8 +189,11 @@ type RoleServiceClient interface {
 	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*Role, error)
 	// 更新角色
 	UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*Role, error)
+	// 禁用角色
+	ToggleRoleStatus(ctx context.Context, in *ToggleRoleStatusRequest, opts ...grpc.CallOption) (*Role, error)
 	// 删除角色
 	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
+	BatchDeleteRoles(ctx context.Context, in *BatchDeleteRolesRequest, opts ...grpc.CallOption) (*Empty, error)
 	// 添加角色权限
 	AddRolePerms(ctx context.Context, in *AddRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 	// 更新角色权限
@@ -237,10 +242,30 @@ func (c *roleServiceClient) UpdateRole(ctx context.Context, in *UpdateRoleReques
 	return out, nil
 }
 
+func (c *roleServiceClient) ToggleRoleStatus(ctx context.Context, in *ToggleRoleStatusRequest, opts ...grpc.CallOption) (*Role, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Role)
+	err := c.cc.Invoke(ctx, RoleService_ToggleRoleStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *roleServiceClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, RoleService_DeleteRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) BatchDeleteRoles(ctx context.Context, in *BatchDeleteRolesRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, RoleService_BatchDeleteRoles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -297,8 +322,11 @@ type RoleServiceServer interface {
 	CreateRole(context.Context, *CreateRoleRequest) (*Role, error)
 	// 更新角色
 	UpdateRole(context.Context, *UpdateRoleRequest) (*Role, error)
+	// 禁用角色
+	ToggleRoleStatus(context.Context, *ToggleRoleStatusRequest) (*Role, error)
 	// 删除角色
 	DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error)
+	BatchDeleteRoles(context.Context, *BatchDeleteRolesRequest) (*Empty, error)
 	// 添加角色权限
 	AddRolePerms(context.Context, *AddRolePermsRequest) (*RoleInfo, error)
 	// 更新角色权限
@@ -326,8 +354,14 @@ func (UnimplementedRoleServiceServer) CreateRole(context.Context, *CreateRoleReq
 func (UnimplementedRoleServiceServer) UpdateRole(context.Context, *UpdateRoleRequest) (*Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
 }
+func (UnimplementedRoleServiceServer) ToggleRoleStatus(context.Context, *ToggleRoleStatusRequest) (*Role, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ToggleRoleStatus not implemented")
+}
 func (UnimplementedRoleServiceServer) DeleteRole(context.Context, *DeleteRoleRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
+}
+func (UnimplementedRoleServiceServer) BatchDeleteRoles(context.Context, *BatchDeleteRolesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchDeleteRoles not implemented")
 }
 func (UnimplementedRoleServiceServer) AddRolePerms(context.Context, *AddRolePermsRequest) (*RoleInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddRolePerms not implemented")
@@ -416,6 +450,24 @@ func _RoleService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RoleService_ToggleRoleStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ToggleRoleStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).ToggleRoleStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_ToggleRoleStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).ToggleRoleStatus(ctx, req.(*ToggleRoleStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RoleService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRoleRequest)
 	if err := dec(in); err != nil {
@@ -430,6 +482,24 @@ func _RoleService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServiceServer).DeleteRole(ctx, req.(*DeleteRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoleService_BatchDeleteRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchDeleteRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).BatchDeleteRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_BatchDeleteRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).BatchDeleteRoles(ctx, req.(*BatchDeleteRolesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -526,8 +596,16 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RoleService_UpdateRole_Handler,
 		},
 		{
+			MethodName: "ToggleRoleStatus",
+			Handler:    _RoleService_ToggleRoleStatus_Handler,
+		},
+		{
 			MethodName: "DeleteRole",
 			Handler:    _RoleService_DeleteRole_Handler,
+		},
+		{
+			MethodName: "BatchDeleteRoles",
+			Handler:    _RoleService_BatchDeleteRoles_Handler,
 		},
 		{
 			MethodName: "AddRolePerms",
@@ -1119,6 +1197,7 @@ const (
 	UserService_UpdateUser_FullMethodName         = "/sysclient.UserService/UpdateUser"
 	UserService_DeleteUser_FullMethodName         = "/sysclient.UserService/DeleteUser"
 	UserService_UpdateUserPassword_FullMethodName = "/sysclient.UserService/UpdateUserPassword"
+	UserService_AssignUserRole_FullMethodName     = "/sysclient.UserService/AssignUserRole"
 	UserService_GetUserInfo_FullMethodName        = "/sysclient.UserService/GetUserInfo"
 )
 
@@ -1133,6 +1212,7 @@ type UserServiceClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error)
 	UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error)
+	AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error)
 	// 获取当前用户信息
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
 }
@@ -1205,6 +1285,16 @@ func (c *userServiceClient) UpdateUserPassword(ctx context.Context, in *UpdateUs
 	return out, nil
 }
 
+func (c *userServiceClient) AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, UserService_AssignUserRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfo)
@@ -1226,6 +1316,7 @@ type UserServiceServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*Empty, error)
 	UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*Empty, error)
+	AssignUserRole(context.Context, *AssignUserRoleRequest) (*Empty, error)
 	// 获取当前用户信息
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -1255,6 +1346,9 @@ func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserReq
 }
 func (UnimplementedUserServiceServer) UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserPassword not implemented")
+}
+func (UnimplementedUserServiceServer) AssignUserRole(context.Context, *AssignUserRoleRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AssignUserRole not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
@@ -1388,6 +1482,24 @@ func _UserService_UpdateUserPassword_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AssignUserRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignUserRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AssignUserRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_AssignUserRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AssignUserRole(ctx, req.(*AssignUserRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserInfoRequest)
 	if err := dec(in); err != nil {
@@ -1436,6 +1548,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserPassword",
 			Handler:    _UserService_UpdateUserPassword_Handler,
+		},
+		{
+			MethodName: "AssignUserRole",
+			Handler:    _UserService_AssignUserRole_Handler,
 		},
 		{
 			MethodName: "GetUserInfo",

@@ -2,6 +2,9 @@ package roleservicelogic
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -25,7 +28,20 @@ func NewGetRoleListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetRo
 
 // 角色列表
 func (l *GetRoleListLogic) GetRoleList(in *sysclient.RoleListRequest) (*sysclient.RoleListResponse, error) {
-	// todo: add your logic here and delete this line
+	roles, err := l.svcCtx.DB.GetRolesPagination(l.ctx, in.Status, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
+	if err != nil {
+		logc.Errorf(l.ctx, "获取角色列表失败, 参数：%+v, 错误：%s", in, err.Error())
+		return nil, xerr.NewErrCode(xerr.ErrorDb)
+	}
+	total, _ := l.svcCtx.DB.CountRoles(l.ctx, in.Status)
 
-	return &sysclient.RoleListResponse{}, nil
+	return &sysclient.RoleListResponse{
+		PageResponse: &sysclient.PageResponse{
+			Total:     int32(total),
+			Page:      in.PageRequest.Page,
+			PageSize:  in.PageRequest.PageSize,
+			TotalPage: int32(total)/in.PageRequest.PageSize + 1,
+		},
+		Roles: logic.ConvertToRpcRoles(roles),
+	}, nil
 }

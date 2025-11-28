@@ -2,6 +2,11 @@ package scopeservicelogic
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"time"
+	"zero-admin/pkg/convert"
+	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/db/mysql/model"
 
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -24,7 +29,28 @@ func NewCreateScopeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 }
 
 func (l *CreateScopeLogic) CreateScope(in *sysclient.CreateScopeRequest) (*sysclient.Scope, error) {
-	// todo: add your logic here and delete this line
+	exists, err := l.svcCtx.DB.ExistsScopeByCode(l.ctx, in.ScopeCode)
+	if err != nil {
+		logc.Errorf(l.ctx, "判断安全范围是否存在失败, scope code：%s, 错误：%s", in.ScopeCode, err.Error())
+		return nil, xerr.NewErrCode(xerr.ErrorDb)
+	}
+	if exists {
+		return nil, xerr.NewErrCode(xerr.ErrorScopeExist)
+	}
 
-	return &sysclient.Scope{}, nil
+	now := time.Now()
+	operator := convert.ToString(in.OperatorId)
+	scopeID, err := l.svcCtx.DB.CreateScopeTx(l.ctx, model.SysScope{
+		ScopeName:   in.ScopeName,
+		ScopeCode:   in.ScopeCode,
+		Description: in.Description,
+		Sort:        in.Sort,
+		Creator:     operator,
+		CreateTime:  now,
+		Updater:     operator,
+		UpdateTime:  now,
+		DelFlag:     0,
+	}, in.MenuIds)
+
+	return NewGetScopeByIdLogic(l.ctx, l.svcCtx).GetScopeById(&sysclient.Int64Value{Value: scopeID})
 }

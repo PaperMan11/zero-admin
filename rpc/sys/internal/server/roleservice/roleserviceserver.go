@@ -41,10 +41,21 @@ func (s *RoleServiceServer) UpdateRole(ctx context.Context, in *sysclient.Update
 	return l.UpdateRole(in)
 }
 
+// 禁用角色
+func (s *RoleServiceServer) ToggleRoleStatus(ctx context.Context, in *sysclient.ToggleRoleStatusRequest) (*sysclient.Role, error) {
+	l := roleservicelogic.NewToggleRoleStatusLogic(ctx, s.svcCtx)
+	return l.ToggleRoleStatus(in)
+}
+
 // 删除角色
 func (s *RoleServiceServer) DeleteRole(ctx context.Context, in *sysclient.DeleteRoleRequest) (*sysclient.Empty, error) {
 	l := roleservicelogic.NewDeleteRoleLogic(ctx, s.svcCtx)
 	return l.DeleteRole(in)
+}
+
+func (s *RoleServiceServer) BatchDeleteRoles(ctx context.Context, in *sysclient.BatchDeleteRolesRequest) (*sysclient.Empty, error) {
+	l := roleservicelogic.NewBatchDeleteRolesLogic(ctx, s.svcCtx)
+	return l.BatchDeleteRoles(in)
 }
 
 // 添加角色权限

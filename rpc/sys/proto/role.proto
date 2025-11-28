@@ -91,6 +91,20 @@ message DeleteRolePermsRequest {
   repeated string scope_codes = 4;
 }
 
+// 启用/禁用角色请求
+message ToggleRoleStatusRequest {
+  int64 role_id = 1;
+  int32 status = 2;          // 目标状态: 0=禁用, 1=启用
+  int64 operator_id = 3;
+}
+
+// 批量删除角色
+message BatchDeleteRolesRequest {
+  repeated int64 role_ids = 1;
+  int64 operator_id = 2;
+}
+
+
 
 service RoleService {
   // 角色列表
@@ -99,8 +113,11 @@ service RoleService {
   rpc CreateRole(CreateRoleRequest) returns (Role);
   // 更新角色
   rpc UpdateRole(UpdateRoleRequest) returns (Role);
+  // 禁用角色
+  rpc ToggleRoleStatus(ToggleRoleStatusRequest) returns (Role);
   // 删除角色
   rpc DeleteRole(DeleteRoleRequest) returns (Empty);
+  rpc BatchDeleteRoles(BatchDeleteRolesRequest) returns (Empty);
   // 添加角色权限
   rpc AddRolePerms(AddRolePermsRequest) returns (RoleInfo);
   // 更新角色权限

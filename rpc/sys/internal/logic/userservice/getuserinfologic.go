@@ -6,8 +6,8 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/internal/logic"
-
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -47,13 +47,26 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 	}
 	// menus
 	menus, _ := l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
+	menuTree := logic.BuildMenuTree(menus, 0)
+	userPerms, _ := l.svcCtx.DB.GetUserPerms(l.ctx, user.ID)
+
+	// 映射用户权限
+	userPermMap := make(map[int64][]string)
+	for _, userPerm := range userPerms {
+		userPermMap[userPerm.ID] = common.PermissionMap[userPerm.Perm]
+	}
+
+	// 添加菜单权限
+	for _, menu := range menuTree {
+		menu.Perms = userPermMap[menu.ScopeId]
+	}
 
 	resp := &sysclient.UserInfo{
 		Id:       user.ID,
 		Username: user.Username,
 		Status:   user.Status,
 		Roles:    logic.ConvertToRpcRoles(userRoles),
-		MenuTree: logic.BuildMenuTree(menus, 0),
+		MenuTree: menuTree,
 		Email:    user.Email,
 		Mobile:   user.Mobile,
 		RealName: user.RealName,

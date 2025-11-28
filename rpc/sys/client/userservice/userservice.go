@@ -16,6 +16,8 @@ import (
 type (
 	AddRolePermsRequest       = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
+	AssignUserRoleRequest     = sysclient.AssignUserRoleRequest
+	BatchDeleteRolesRequest   = sysclient.BatchDeleteRolesRequest
 	CreateMenuRequest         = sysclient.CreateMenuRequest
 	CreateRoleRequest         = sysclient.CreateRoleRequest
 	CreateScopeRequest        = sysclient.CreateScopeRequest
@@ -48,6 +50,7 @@ type (
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
+	ToggleRoleStatusRequest   = sysclient.ToggleRoleStatusRequest
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
 	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
@@ -67,6 +70,7 @@ type (
 		UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
 		DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error)
 		UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error)
+		AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error)
 		// 获取当前用户信息
 		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
 	}
@@ -111,6 +115,11 @@ func (m *defaultUserService) DeleteUser(ctx context.Context, in *DeleteUserReque
 func (m *defaultUserService) UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
 	client := sysclient.NewUserServiceClient(m.cli.Conn())
 	return client.UpdateUserPassword(ctx, in, opts...)
+}
+
+func (m *defaultUserService) AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
+	client := sysclient.NewUserServiceClient(m.cli.Conn())
+	return client.AssignUserRole(ctx, in, opts...)
 }
 
 // 获取当前用户信息

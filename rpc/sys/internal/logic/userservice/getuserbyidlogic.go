@@ -24,7 +24,5 @@ func NewGetUserByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 }
 
 func (l *GetUserByIdLogic) GetUserById(in *sysclient.Int64Value) (*sysclient.UserInfo, error) {
-	// todo: add your logic here and delete this line
-
-	return &sysclient.UserInfo{}, nil
+	return NewGetUserInfoLogic(l.ctx, l.svcCtx).GetUserInfo(&sysclient.GetUserInfoRequest{UserId: in.Value})
 }

@@ -3,7 +3,6 @@ package logic
 import (
 	"time"
 	"zero-admin/pkg/convert"
-	"zero-admin/rpc/sys/db"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/sysclient"
 )
@@ -135,11 +134,4 @@ func ConvertToRpcScopes(scopes []model.SysScope) []*sysclient.Scope {
 		res = append(res, ConvertToRpcScope(&s))
 	}
 	return res
-}
-
-// op log
-
-func AddOperatorLog(db db.DB, operatorID, message string) error {
-
-	return nil
 }

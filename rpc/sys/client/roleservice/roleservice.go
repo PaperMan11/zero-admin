@@ -16,6 +16,8 @@ import (
 type (
 	AddRolePermsRequest       = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
+	AssignUserRoleRequest     = sysclient.AssignUserRoleRequest
+	BatchDeleteRolesRequest   = sysclient.BatchDeleteRolesRequest
 	CreateMenuRequest         = sysclient.CreateMenuRequest
 	CreateRoleRequest         = sysclient.CreateRoleRequest
 	CreateScopeRequest        = sysclient.CreateScopeRequest
@@ -48,6 +50,7 @@ type (
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
+	ToggleRoleStatusRequest   = sysclient.ToggleRoleStatusRequest
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
 	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
@@ -66,8 +69,11 @@ type (
 		CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*Role, error)
 		// 更新角色
 		UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...grpc.CallOption) (*Role, error)
+		// 禁用角色
+		ToggleRoleStatus(ctx context.Context, in *ToggleRoleStatusRequest, opts ...grpc.CallOption) (*Role, error)
 		// 删除角色
 		DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error)
+		BatchDeleteRoles(ctx context.Context, in *BatchDeleteRolesRequest, opts ...grpc.CallOption) (*Empty, error)
 		// 添加角色权限
 		AddRolePerms(ctx context.Context, in *AddRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 		// 更新角色权限
@@ -107,10 +113,21 @@ func (m *defaultRoleService) UpdateRole(ctx context.Context, in *UpdateRoleReque
 	return client.UpdateRole(ctx, in, opts...)
 }
 
+// 禁用角色
+func (m *defaultRoleService) ToggleRoleStatus(ctx context.Context, in *ToggleRoleStatusRequest, opts ...grpc.CallOption) (*Role, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.ToggleRoleStatus(ctx, in, opts...)
+}
+
 // 删除角色
 func (m *defaultRoleService) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.DeleteRole(ctx, in, opts...)
+}
+
+func (m *defaultRoleService) BatchDeleteRoles(ctx context.Context, in *BatchDeleteRolesRequest, opts ...grpc.CallOption) (*Empty, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.BatchDeleteRoles(ctx, in, opts...)
 }
 
 // 添加角色权限

@@ -7,8 +7,9 @@ import (
 )
 
 type ServiceContext struct {
-	Config                config.Config
-	DB                    db.DB
+	Config config.Config
+	DB     db.DB
+
 	PermissionInterceptor *interceptor.PermissionInterceptor
 }
 

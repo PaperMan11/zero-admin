@@ -24,6 +24,7 @@ message Menu {
   int64 scope_id = 15;          // 权限范围ID
   string remark = 16;           // 备注
   repeated Menu children = 17;
+  repeated string perms = 18;
 }
 
 

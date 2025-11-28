@@ -15,7 +15,7 @@ message UserListRequest {
 // 用户列表响应
 message UserListResponse {
   PageResponse page_response = 1;
-  repeated UserInfo users = 2;
+  repeated User users = 2;
 }
 
 // 获取当前用户信息请求
@@ -63,6 +63,13 @@ message UpdateUserPasswordRequest {
   int64 operator_id = 4;  // 操作者
 }
 
+// 分配用户角色
+message AssignUserRoleRequest {
+  int64 user_id = 1;
+  repeated int64 role_ids = 2;
+  int64 operator_id = 3;
+}
+
 
 // 用户信息
 message UserInfo {
@@ -98,7 +105,7 @@ service UserService {
   rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
   rpc DeleteUser(DeleteUserRequest) returns (Empty);
   rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (Empty);
-
+  rpc AssignUserRole(AssignUserRoleRequest) returns (Empty);
   // 获取当前用户信息
   rpc GetUserInfo(GetUserInfoRequest) returns (UserInfo);
 }

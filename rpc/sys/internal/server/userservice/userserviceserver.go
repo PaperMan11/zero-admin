@@ -54,6 +54,11 @@ func (s *UserServiceServer) UpdateUserPassword(ctx context.Context, in *sysclien
 	return l.UpdateUserPassword(in)
 }
 
+func (s *UserServiceServer) AssignUserRole(ctx context.Context, in *sysclient.AssignUserRoleRequest) (*sysclient.Empty, error) {
+	l := userservicelogic.NewAssignUserRoleLogic(ctx, s.svcCtx)
+	return l.AssignUserRole(in)
+}
+
 // 获取当前用户信息
 func (s *UserServiceServer) GetUserInfo(ctx context.Context, in *sysclient.GetUserInfoRequest) (*sysclient.UserInfo, error) {
 	l := userservicelogic.NewGetUserInfoLogic(ctx, s.svcCtx)

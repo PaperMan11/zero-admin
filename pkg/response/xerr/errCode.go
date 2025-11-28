@@ -64,14 +64,16 @@ const (
 
 // role
 const (
-	ErrorCreateRole   = 600001
-	ErrorUpdateRole   = 600002
-	ErrorDeleteRole   = 600003
-	ErrorGetRole      = 600004
-	ErrorGetRoleList  = 600005
-	ErrorRoleExist    = 600006
-	ErrorRoleNotExist = 600007
-	ErrorAddRoleScope = 600008
+	ErrorCreateRole        = 600001
+	ErrorUpdateRole        = 600002
+	ErrorDeleteRole        = 600003
+	ErrorGetRole           = 600004
+	ErrorGetRoleList       = 600005
+	ErrorRoleExist         = 600006
+	ErrorRoleNotExist      = 600007
+	ErrorAddRoleScope      = 600008
+	ErrorGetRolePerms      = 600009
+	ErrorGetRoleAssociated = 600010
 )
 
 // scope

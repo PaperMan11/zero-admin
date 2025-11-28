@@ -16,6 +16,8 @@ import (
 type (
 	AddRolePermsRequest       = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
+	AssignUserRoleRequest     = sysclient.AssignUserRoleRequest
+	BatchDeleteRolesRequest   = sysclient.BatchDeleteRolesRequest
 	CreateMenuRequest         = sysclient.CreateMenuRequest
 	CreateRoleRequest         = sysclient.CreateRoleRequest
 	CreateScopeRequest        = sysclient.CreateScopeRequest
@@ -48,6 +50,7 @@ type (
 	ScopeInfo                 = sysclient.ScopeInfo
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
+	ToggleRoleStatusRequest   = sysclient.ToggleRoleStatusRequest
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
 	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest
