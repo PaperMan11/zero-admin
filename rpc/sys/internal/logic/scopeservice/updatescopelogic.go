@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
 	"gorm.io/gorm"
+	"zero-admin/pkg/convert"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/logic"
 
@@ -40,10 +41,11 @@ func (l *UpdateScopeLogic) UpdateScope(in *sysclient.UpdateScopeRequest) (*syscl
 	scope.ScopeName = in.ScopeName
 	scope.Description = in.Description
 	scope.Sort = in.Sort
-	err = l.svcCtx.DB.SaveScope(l.ctx, scope)
+	scope.Updater = convert.ToString(in.OperatorId)
+	err = l.svcCtx.DB.SaveScope(l.ctx, *scope)
 	if err != nil {
 		logc.Errorf(l.ctx, "更新安全范围失败, scope code：%s, 错误：%s", in.ScopeCode, err.Error())
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
-	return logic.ConvertToRpcScope(&scope), nil
+	return logic.ConvertToRpcScope(scope), nil
 }

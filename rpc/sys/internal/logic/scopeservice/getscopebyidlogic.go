@@ -35,5 +35,5 @@ func (l *GetScopeByIdLogic) GetScopeById(in *sysclient.Int64Value) (*sysclient.S
 	case err != nil:
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
-	return logic.ConvertToRpcScope(&scope), nil
+	return logic.ConvertToRpcScope(scope), nil
 }

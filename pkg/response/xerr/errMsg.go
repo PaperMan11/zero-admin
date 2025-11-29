@@ -38,6 +38,7 @@ func init() {
 	message[ErrorCreateUser] = "创建用户失败"
 	message[ErrorUpdateUser] = "更新用户失败"
 	message[ErrorDeleteUser] = "删除用户失败"
+	message[ErrorPasswordLength] = "密码长度不符合要求"
 
 	// menu
 	message[ErrorCreateMenu] = "创建菜单失败"

@@ -45,7 +45,7 @@ func (l *GetScopeMenusLogic) GetScopeMenus(in *sysclient.Int64Value) (*sysclient
 	}
 
 	return &sysclient.ScopeInfo{
-		Scope: logic.ConvertToRpcScope(&scope),
+		Scope: logic.ConvertToRpcScope(scope),
 		Menus: logic.ConvertToRpcMenus(menus),
 	}, nil
 }

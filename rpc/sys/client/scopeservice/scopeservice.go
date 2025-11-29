@@ -51,6 +51,7 @@ type (
 	ScopeListRequest          = sysclient.ScopeListRequest
 	ScopeListResponse         = sysclient.ScopeListResponse
 	ToggleRoleStatusRequest   = sysclient.ToggleRoleStatusRequest
+	ToggleUserStatusRequest   = sysclient.ToggleUserStatusRequest
 	UpdateMenuRequest         = sysclient.UpdateMenuRequest
 	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest         = sysclient.UpdateRoleRequest

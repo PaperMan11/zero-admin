@@ -3,6 +3,7 @@ package roleservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/pkg/convert"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/logic"
 
@@ -37,12 +38,12 @@ func (l *ToggleRoleStatusLogic) ToggleRoleStatus(in *sysclient.ToggleRoleStatusR
 		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 	}
 
-	err = l.svcCtx.DB.ToggleRoleStatus(l.ctx, in.RoleId, in.Status)
+	err = l.svcCtx.DB.ToggleRoleStatus(l.ctx, in.RoleId, in.Status, convert.ToString(in.OperatorId))
 	if err != nil {
 		logc.Errorf(l.ctx, "禁用角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "禁用/启用角色失败")
 	}
 
 	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, in.RoleId)
-	return logic.ConvertToRpcRole(&role), nil
+	return logic.ConvertToRpcRole(role), nil
 }

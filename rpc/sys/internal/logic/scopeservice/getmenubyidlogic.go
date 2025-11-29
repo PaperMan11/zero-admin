@@ -37,5 +37,5 @@ func (l *GetMenuByIdLogic) GetMenuById(in *sysclient.Int64Value) (*sysclient.Men
 		logc.Errorf(l.ctx, "查询菜单信息, 参数：%+v, 错误：%v", in, err)
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
-	return logic.ConvertToRpcMenu(&menu), nil
+	return logic.ConvertToRpcMenu(menu), nil
 }

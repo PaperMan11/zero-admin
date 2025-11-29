@@ -378,10 +378,8 @@ message UpdateUserRequest {
   string mobile = 3;      // 手机号
   string real_name = 4;   // 真实姓名
   int32 gender = 5;       // 性别 (0-未知, 1-男, 2-女)
-  int32 status = 6;       // 状态 (0-禁用, 1-正常)
-  repeated int64 role_ids = 7; // 角色ID列表
-  string avatar = 8;      // 头像URL
-  int64 operator_id = 9;  // 操作者
+  string avatar = 6;      // 头像URL
+  int64 operator_id = 7;  // 操作者
 }
 
 // 删除用户请求
@@ -401,7 +399,7 @@ message UpdateUserPasswordRequest {
 // 分配用户角色
 message AssignUserRoleRequest {
   int64 user_id = 1;
-  repeated int64 role_ids = 2;
+  repeated string role_codes = 2;
   int64 operator_id = 3;
 }
 
@@ -418,6 +416,12 @@ message UserInfo {
   repeated Role roles = 8; // 角色列表
   repeated Menu menu_tree = 9; // 菜单列表
   string avatar = 10; // 头像
+}
+
+message ToggleUserStatusRequest {
+  int64 user_id = 1;
+  int32 status = 2;
+  int64 operator_id = 3;
 }
 
 message User {
@@ -437,10 +441,11 @@ service UserService {
   rpc GetUserList(UserListRequest) returns (UserListResponse);
   rpc GetUserById(Int64Value) returns (UserInfo);
   rpc CreateUser(CreateUserRequest) returns (UserInfo);
-  rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
+  rpc UpdateUser(UpdateUserRequest) returns (User);
   rpc DeleteUser(DeleteUserRequest) returns (Empty);
   rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (Empty);
   rpc AssignUserRole(AssignUserRoleRequest) returns (Empty);
+  rpc ToggleUserStatus(ToggleUserStatusRequest) returns (User);  // 禁用/启用用户
   // 获取当前用户信息
   rpc GetUserInfo(GetUserInfoRequest) returns (UserInfo);
 }

@@ -38,9 +38,9 @@ func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sy
 		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 	}
 
-	roleScopes := make([]model.SysRoleScope, 0, len(in.GetRoleScopes()))
+	roleScopes := make([]*model.SysRoleScope, 0, len(in.GetRoleScopes()))
 	for _, roleScope := range in.GetRoleScopes() {
-		roleScopes = append(roleScopes, model.SysRoleScope{
+		roleScopes = append(roleScopes, &model.SysRoleScope{
 			RoleCode:  roleScope.RoleCode,
 			ScopeCode: roleScope.ScopeCode,
 			Perm:      common.ParsePermission(roleScope.Perms),

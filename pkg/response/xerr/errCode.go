@@ -37,15 +37,16 @@ const (
 
 // user
 const (
-	ErrorRegister     uint32 = 200004
-	ErrorUserExist    uint32 = 200003
-	ErrorUserNotExist uint32 = 200005
-	ErrorOldPassword  uint32 = 200006
-	ErrorUserPassword uint32 = 200008
-	ErrorRepeatName   uint32 = 200009
-	ErrorCreateUser   uint32 = 200010
-	ErrorUpdateUser   uint32 = 200011
-	ErrorDeleteUser   uint32 = 200012
+	ErrorRegister       uint32 = 200004
+	ErrorUserExist      uint32 = 200003
+	ErrorUserNotExist   uint32 = 200005
+	ErrorOldPassword    uint32 = 200006
+	ErrorUserPassword   uint32 = 200008
+	ErrorRepeatName     uint32 = 200009
+	ErrorCreateUser     uint32 = 200010
+	ErrorUpdateUser     uint32 = 200011
+	ErrorDeleteUser     uint32 = 200012
+	ErrorPasswordLength        = 200013
 )
 
 // menu

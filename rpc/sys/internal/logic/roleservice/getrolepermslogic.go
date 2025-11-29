@@ -61,7 +61,7 @@ func (l *GetRolePermsLogic) GetRolePerms(in *sysclient.Int64Value) (*sysclient.R
 	}
 
 	return &sysclient.RoleInfo{
-		Role:   logic.ConvertToRpcRole(&role),
+		Role:   logic.ConvertToRpcRole(role),
 		Scopes: scopes,
 	}, nil
 }

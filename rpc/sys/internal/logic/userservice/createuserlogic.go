@@ -6,6 +6,7 @@ import (
 	bcryptUtil "zero-admin/pkg/bcrypt"
 	"zero-admin/pkg/convert"
 	"zero-admin/pkg/response/xerr"
+	"zero-admin/pkg/utils"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -35,9 +36,15 @@ func (l *CreateUserLogic) CreateUser(in *sysclient.CreateUserRequest) (*sysclien
 		return nil, xerr.NewErrCode(xerr.ErrorUserExist)
 	}
 
+	if !bcryptUtil.ValidatePasswordLength(in.Password) {
+		return nil, xerr.NewErrCode(xerr.ErrorPasswordLength)
+	}
+	// 生成盐值
+	salt := utils.GetRandomString(16)
 	userID, err := l.svcCtx.DB.CreateUser(l.ctx, model.SysUser{
 		Username: in.Username,
-		Password: bcryptUtil.HashPassword(in.Password),
+		Password: bcryptUtil.HashPassword(in.Password + salt),
+		Salt:     salt,
 		Email:    in.Email,
 		Mobile:   in.Mobile,
 		RealName: in.RealName,

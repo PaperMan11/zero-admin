@@ -57,5 +57,5 @@ func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclien
 	}
 
 	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, roleID)
-	return logic.ConvertToRpcRole(&role), nil
+	return logic.ConvertToRpcRole(role), nil
 }

@@ -56,7 +56,7 @@ func (l *CreateMenuLogic) CreateMenu(in *sysclient.CreateMenuRequest) (*sysclien
 	if newMenu.Hidden {
 		hidden = 1
 	}
-	menuID, err := l.svcCtx.DB.CreateMenus(l.ctx, []model.SysMenu{model.SysMenu{
+	menuID, err := l.svcCtx.DB.CreateMenu(l.ctx, model.SysMenu{
 		ScopeID:   newMenu.ScopeId,
 		ParentID:  newMenu.ParentId,
 		MenuName:  newMenu.MenuName,
@@ -75,7 +75,7 @@ func (l *CreateMenuLogic) CreateMenu(in *sysclient.CreateMenuRequest) (*sysclien
 		Updater:   operator,
 		DelFlag:   0,
 		Remark:    newMenu.Remark,
-	}})
+	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建菜单失败, 菜单名：%s, 错误：%s", in.Menu.MenuName, err.Error())
 		return nil, xerr.NewErrCode(xerr.ErrorDb)

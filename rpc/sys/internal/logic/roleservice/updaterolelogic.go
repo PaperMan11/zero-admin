@@ -42,11 +42,11 @@ func (l *UpdateRoleLogic) UpdateRole(in *sysclient.UpdateRoleRequest) (*sysclien
 	role.RoleName = in.RoleName
 	role.Description = in.Description
 	role.Status = in.Status
-	err = l.svcCtx.DB.SaveRole(l.ctx, role)
+	err = l.svcCtx.DB.SaveRole(l.ctx, *role)
 	if err != nil {
 		logc.Errorf(l.ctx, "更新角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
 		return nil, xerr.NewErrCode(xerr.ErrorDb)
 	}
 
-	return logic.ConvertToRpcRole(&role), nil
+	return logic.ConvertToRpcRole(role), nil
 }

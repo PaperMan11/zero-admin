@@ -1,6 +1,10 @@
 package utils
 
-import "reflect"
+import (
+	"math/rand"
+	"reflect"
+	"time"
+)
 
 type TypeError struct {
 	FieldName string
@@ -63,4 +67,19 @@ func MapToStruct(data map[string]interface{}, dest interface{}) error {
 		}
 	}
 	return nil
+}
+
+func GetRandomString(length int) string {
+	str := "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	var (
+		result []byte
+		b      []byte
+		r      *rand.Rand
+	)
+	b = []byte(str)
+	r = rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < length; i++ {
+		result = append(result, b[r.Intn(len(b))])
+	}
+	return string(result)
 }

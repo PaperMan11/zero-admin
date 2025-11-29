@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
 	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -42,6 +43,6 @@ func (l *GetUserListLogic) GetUserList(in *sysclient.UserListRequest) (*sysclien
 			PageSize:  in.PageRequest.PageSize,
 			TotalPage: int32(total)/in.PageRequest.PageSize + 1,
 		},
-		Users: nil,
+		Users: logic.ConvertToRpcUsers(users),
 	}, nil
 }

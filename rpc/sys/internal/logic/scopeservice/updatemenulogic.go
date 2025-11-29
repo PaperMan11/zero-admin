@@ -70,10 +70,10 @@ func (l *UpdateMenuLogic) UpdateMenu(in *sysclient.UpdateMenuRequest) (*sysclien
 	menu.External = external
 	menu.NoCache = noCache
 	menu.Status = in.Menu.Status
-	err = l.svcCtx.DB.SaveMenu(l.ctx, menu)
+	err = l.svcCtx.DB.SaveMenu(l.ctx, *menu)
 	if err != nil {
 		logc.Errorf(l.ctx, "更新菜单, 菜单ID：%d, 错误：%s", in.Menu.Id, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "更新菜单失败")
 	}
 
 	return NewGetMenuByIdLogic(l.ctx, l.svcCtx).GetMenuById(&sysclient.Int64Value{Value: menu.ID})

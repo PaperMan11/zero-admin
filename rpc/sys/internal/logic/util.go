@@ -9,13 +9,34 @@ import (
 
 // ----------------------------------------------user----------------------------------------------
 
+func ConvertToRpcUser(user *model.SysUser) *sysclient.User {
+	return &sysclient.User{
+		Id:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		Mobile:   user.Mobile,
+		RealName: user.RealName,
+		Gender:   user.Gender,
+		Status:   user.Status,
+		Avatar:   user.Avatar,
+	}
+}
+
+func ConvertToRpcUsers(users []*model.SysUser) []*sysclient.User {
+	res := make([]*sysclient.User, 0, len(users))
+	for _, u := range users {
+		res = append(res, ConvertToRpcUser(u))
+	}
+	return res
+}
+
 // ----------------------------------------------menu----------------------------------------------
 
-func BuildMenuTree(menus []model.SysMenu, parentID int64) (menuTree []*sysclient.Menu) {
+func BuildMenuTree(menus []*model.SysMenu, parentID int64) (menuTree []*sysclient.Menu) {
 	menuTree = make([]*sysclient.Menu, 0)
 	for _, menu := range menus {
 		if menu.ParentID == parentID && menu.Status == 1 {
-			m := ConvertToRpcMenu(&menu)
+			m := ConvertToRpcMenu(menu)
 			menuTree = append(menuTree, m)
 			m.Children = BuildMenuTree(menus, menu.ID)
 		}
@@ -52,10 +73,10 @@ func ConvertToRpcMenu(menu *model.SysMenu) *sysclient.Menu {
 	return m
 }
 
-func ConvertToRpcMenus(menus []model.SysMenu) []*sysclient.Menu {
+func ConvertToRpcMenus(menus []*model.SysMenu) []*sysclient.Menu {
 	res := make([]*sysclient.Menu, 0, len(menus))
 	for _, m := range menus {
-		res = append(res, ConvertToRpcMenu(&m))
+		res = append(res, ConvertToRpcMenu(m))
 	}
 	return res
 }
@@ -108,10 +129,10 @@ func ConvertToRpcRole(role *model.SysRole) *sysclient.Role {
 	}
 }
 
-func ConvertToRpcRoles(roles []model.SysRole) []*sysclient.Role {
+func ConvertToRpcRoles(roles []*model.SysRole) []*sysclient.Role {
 	res := make([]*sysclient.Role, 0, len(roles))
 	for _, role := range roles {
-		res = append(res, ConvertToRpcRole(&role))
+		res = append(res, ConvertToRpcRole(role))
 	}
 	return res
 }
@@ -128,10 +149,10 @@ func ConvertToRpcScope(scope *model.SysScope) *sysclient.Scope {
 	}
 }
 
-func ConvertToRpcScopes(scopes []model.SysScope) []*sysclient.Scope {
+func ConvertToRpcScopes(scopes []*model.SysScope) []*sysclient.Scope {
 	res := make([]*sysclient.Scope, 0, len(scopes))
 	for _, s := range scopes {
-		res = append(res, ConvertToRpcScope(&s))
+		res = append(res, ConvertToRpcScope(s))
 	}
 	return res
 }

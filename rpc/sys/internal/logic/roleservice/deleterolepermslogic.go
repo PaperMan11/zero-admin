@@ -35,7 +35,7 @@ func (l *DeleteRolePermsLogic) DeleteRolePerms(in *sysclient.DeleteRolePermsRequ
 		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 	}
 
-	err = l.svcCtx.DB.DeleteRoleScopes(l.ctx, in.RoleId, in.ScopeCodes)
+	err = l.svcCtx.DB.DeleteRoleScopes(l.ctx, in.RoleCode, in.ScopeCodes)
 	if err != nil {
 		return nil, xerr.NewErrMsg("删除角色权限失败")
 	}

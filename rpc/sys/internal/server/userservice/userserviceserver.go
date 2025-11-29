@@ -39,7 +39,7 @@ func (s *UserServiceServer) CreateUser(ctx context.Context, in *sysclient.Create
 	return l.CreateUser(in)
 }
 
-func (s *UserServiceServer) UpdateUser(ctx context.Context, in *sysclient.UpdateUserRequest) (*sysclient.UserInfo, error) {
+func (s *UserServiceServer) UpdateUser(ctx context.Context, in *sysclient.UpdateUserRequest) (*sysclient.User, error) {
 	l := userservicelogic.NewUpdateUserLogic(ctx, s.svcCtx)
 	return l.UpdateUser(in)
 }
@@ -57,6 +57,11 @@ func (s *UserServiceServer) UpdateUserPassword(ctx context.Context, in *sysclien
 func (s *UserServiceServer) AssignUserRole(ctx context.Context, in *sysclient.AssignUserRoleRequest) (*sysclient.Empty, error) {
 	l := userservicelogic.NewAssignUserRoleLogic(ctx, s.svcCtx)
 	return l.AssignUserRole(in)
+}
+
+func (s *UserServiceServer) ToggleUserStatus(ctx context.Context, in *sysclient.ToggleUserStatusRequest) (*sysclient.User, error) {
+	l := userservicelogic.NewToggleUserStatusLogic(ctx, s.svcCtx)
+	return l.ToggleUserStatus(in)
 }
 
 // 获取当前用户信息

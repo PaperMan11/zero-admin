@@ -1198,6 +1198,7 @@ const (
 	UserService_DeleteUser_FullMethodName         = "/sysclient.UserService/DeleteUser"
 	UserService_UpdateUserPassword_FullMethodName = "/sysclient.UserService/UpdateUserPassword"
 	UserService_AssignUserRole_FullMethodName     = "/sysclient.UserService/AssignUserRole"
+	UserService_ToggleUserStatus_FullMethodName   = "/sysclient.UserService/ToggleUserStatus"
 	UserService_GetUserInfo_FullMethodName        = "/sysclient.UserService/GetUserInfo"
 )
 
@@ -1209,10 +1210,11 @@ type UserServiceClient interface {
 	GetUserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 	GetUserById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*UserInfo, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error)
 	UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error)
 	AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error)
+	ToggleUserStatus(ctx context.Context, in *ToggleUserStatusRequest, opts ...grpc.CallOption) (*User, error)
 	// 获取当前用户信息
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
 }
@@ -1255,9 +1257,9 @@ func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserInfo)
+	out := new(User)
 	err := c.cc.Invoke(ctx, UserService_UpdateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1295,6 +1297,16 @@ func (c *userServiceClient) AssignUserRole(ctx context.Context, in *AssignUserRo
 	return out, nil
 }
 
+func (c *userServiceClient) ToggleUserStatus(ctx context.Context, in *ToggleUserStatusRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserService_ToggleUserStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserInfo)
@@ -1313,10 +1325,11 @@ type UserServiceServer interface {
 	GetUserList(context.Context, *UserListRequest) (*UserListResponse, error)
 	GetUserById(context.Context, *Int64Value) (*UserInfo, error)
 	CreateUser(context.Context, *CreateUserRequest) (*UserInfo, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*Empty, error)
 	UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*Empty, error)
 	AssignUserRole(context.Context, *AssignUserRoleRequest) (*Empty, error)
+	ToggleUserStatus(context.Context, *ToggleUserStatusRequest) (*User, error)
 	// 获取当前用户信息
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -1338,7 +1351,7 @@ func (UnimplementedUserServiceServer) GetUserById(context.Context, *Int64Value) 
 func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error) {
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*Empty, error) {
@@ -1349,6 +1362,9 @@ func (UnimplementedUserServiceServer) UpdateUserPassword(context.Context, *Updat
 }
 func (UnimplementedUserServiceServer) AssignUserRole(context.Context, *AssignUserRoleRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AssignUserRole not implemented")
+}
+func (UnimplementedUserServiceServer) ToggleUserStatus(context.Context, *ToggleUserStatusRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ToggleUserStatus not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*UserInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
@@ -1500,6 +1516,24 @@ func _UserService_AssignUserRole_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_ToggleUserStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ToggleUserStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ToggleUserStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ToggleUserStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ToggleUserStatus(ctx, req.(*ToggleUserStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserInfoRequest)
 	if err := dec(in); err != nil {
@@ -1552,6 +1586,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AssignUserRole",
 			Handler:    _UserService_AssignUserRole_Handler,
+		},
+		{
+			MethodName: "ToggleUserStatus",
+			Handler:    _UserService_ToggleUserStatus_Handler,
 		},
 		{
 			MethodName: "GetUserInfo",

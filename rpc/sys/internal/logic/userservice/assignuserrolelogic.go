@@ -37,7 +37,7 @@ func (l *AssignUserRoleLogic) AssignUserRole(in *sysclient.AssignUserRoleRequest
 		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "查询用户信息失败")
 	}
 
-	err = l.svcCtx.DB.AddUserRolesTx(l.ctx, user.ID, in.RoleIds)
+	err = l.svcCtx.DB.AddUserRolesTx(l.ctx, user.ID, in.RoleCodes)
 	if err != nil {
 		logc.Errorf(l.ctx, "添加用户角色, 参数：%+v, 错误：%v", in, err)
 		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "添加用户角色失败")

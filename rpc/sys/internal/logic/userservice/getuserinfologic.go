@@ -48,7 +48,7 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 	// menus
 	menus, _ := l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
 	menuTree := logic.BuildMenuTree(menus, 0)
-	userPerms, _ := l.svcCtx.DB.GetUserPerms(l.ctx, user.ID)
+	userPerms, _ := l.svcCtx.DB.GetRolesScopesPerm(l.ctx, roleCodes)
 
 	// 映射用户权限
 	userPermMap := make(map[int64][]string)
