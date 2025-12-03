@@ -14,6 +14,8 @@ import (
 )
 
 type (
+	AddOperateLogReq          = sysclient.AddOperateLogReq
+	AddOperateLogResp         = sysclient.AddOperateLogResp
 	AddRolePermsRequest       = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
 	AssignUserRoleRequest     = sysclient.AssignUserRoleRequest
@@ -23,6 +25,8 @@ type (
 	CreateScopeRequest        = sysclient.CreateScopeRequest
 	CreateUserRequest         = sysclient.CreateUserRequest
 	DeleteMenuRequest         = sysclient.DeleteMenuRequest
+	DeleteOperateLogReq       = sysclient.DeleteOperateLogReq
+	DeleteOperateLogResp      = sysclient.DeleteOperateLogResp
 	DeleteRolePermsRequest    = sysclient.DeleteRolePermsRequest
 	DeleteRoleRequest         = sysclient.DeleteRoleRequest
 	DeleteScopeMenusRequest   = sysclient.DeleteScopeMenusRequest
@@ -36,8 +40,12 @@ type (
 	Menu                      = sysclient.Menu
 	MenuListRequest           = sysclient.MenuListRequest
 	MenuTreeResponse          = sysclient.MenuTreeResponse
+	OperateLog                = sysclient.OperateLog
+	OperateLogListData        = sysclient.OperateLogListData
 	PageRequest               = sysclient.PageRequest
 	PageResponse              = sysclient.PageResponse
+	QueryOperateLogDetailReq  = sysclient.QueryOperateLogDetailReq
+	QueryOperateLogListReq    = sysclient.QueryOperateLogListReq
 	RefreshTokenRequest       = sysclient.RefreshTokenRequest
 	RefreshTokenResponse      = sysclient.RefreshTokenResponse
 	Role                      = sysclient.Role

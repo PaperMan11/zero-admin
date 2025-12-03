@@ -10,21 +10,21 @@ func TestBuildMenuTree(t *testing.T) {
 	// 测试用例定义
 	tests := []struct {
 		name      string            // 测试用例名称
-		menus     []model.SysMenu   // 输入的菜单列表
+		menus     []*model.SysMenu  // 输入的菜单列表
 		parentID  int64             // 父级ID
 		want      []*sysclient.Menu // 期望的结果
 		wantCount int               // 期望的菜单数量(用于简单验证)
 	}{
 		{
 			name:      "TC001-空菜单列表",
-			menus:     []model.SysMenu{},
+			menus:     []*model.SysMenu{},
 			parentID:  0,
 			want:      []*sysclient.Menu{},
 			wantCount: 0,
 		},
 		{
 			name: "TC002-无匹配父ID",
-			menus: []model.SysMenu{
+			menus: []*model.SysMenu{
 				{ID: 1, ParentID: 100, MenuName: "Menu1", Status: 1},
 				{ID: 2, ParentID: 100, MenuName: "Menu2", Status: 1},
 			},
@@ -34,7 +34,7 @@ func TestBuildMenuTree(t *testing.T) {
 		},
 		{
 			name: "TC003-状态禁用过滤",
-			menus: []model.SysMenu{
+			menus: []*model.SysMenu{
 				{ID: 1, ParentID: 0, MenuName: "DisabledMenu", Status: 0},
 				{ID: 2, ParentID: 0, MenuName: "EnabledMenu", Status: 1},
 			},
@@ -51,7 +51,7 @@ func TestBuildMenuTree(t *testing.T) {
 		},
 		{
 			name: "TC004-单层菜单",
-			menus: []model.SysMenu{
+			menus: []*model.SysMenu{
 				{ID: 1, ParentID: 0, MenuName: "Root1", Status: 1},
 				{ID: 2, ParentID: 0, MenuName: "Root2", Status: 1},
 				{ID: 3, ParentID: 0, MenuName: "Root3", Status: 1},
@@ -81,7 +81,7 @@ func TestBuildMenuTree(t *testing.T) {
 		},
 		{
 			name: "TC005-多层嵌套菜单",
-			menus: []model.SysMenu{
+			menus: []*model.SysMenu{
 				{ID: 1, ParentID: 0, MenuName: "Root", Status: 1},
 				{ID: 2, ParentID: 1, MenuName: "Child1", Status: 1},
 				{ID: 3, ParentID: 1, MenuName: "Child2", Status: 1},
@@ -92,7 +92,7 @@ func TestBuildMenuTree(t *testing.T) {
 		},
 		{
 			name: "TC006-混合场景-包含禁用和不匹配项",
-			menus: []model.SysMenu{
+			menus: []*model.SysMenu{
 				{ID: 1, ParentID: 0, MenuName: "ValidRoot", Status: 1},
 				{ID: 2, ParentID: 0, MenuName: "DisabledRoot", Status: 0},
 				{ID: 3, ParentID: 999, MenuName: "UnmatchedParent", Status: 1},
@@ -159,7 +159,7 @@ func validateMenuStructure(t *testing.T, testName string, got, want []*sysclient
 // TestBuildMenuTree_Recursive 测试递归构建功能
 func TestBuildMenuTree_Recursive(t *testing.T) {
 	// 构造一个多层级的测试数据
-	menus := []model.SysMenu{
+	menus := []*model.SysMenu{
 		{ID: 1, ParentID: 0, MenuName: "Level1-Root", Status: 1},
 		{ID: 2, ParentID: 1, MenuName: "Level2-Child1", Status: 1},
 		{ID: 3, ParentID: 1, MenuName: "Level2-Child2", Status: 1},
@@ -205,17 +205,17 @@ func TestBuildMenuTree_Recursive(t *testing.T) {
 func TestBuildMenuTree_EdgeCases(t *testing.T) {
 	tests := []struct {
 		name     string
-		menus    []model.SysMenu
+		menus    []*model.SysMenu
 		parentID int64
 	}{
 		{
 			name:     "负数ParentID",
-			menus:    []model.SysMenu{{ID: 1, ParentID: -1, MenuName: "NegativeParent", Status: 1}},
+			menus:    []*model.SysMenu{{ID: 1, ParentID: -1, MenuName: "NegativeParent", Status: 1}},
 			parentID: -1,
 		},
 		{
 			name:     "大数值ID",
-			menus:    []model.SysMenu{{ID: 9999999999, ParentID: 0, MenuName: "LargeID", Status: 1}},
+			menus:    []*model.SysMenu{{ID: 9999999999, ParentID: 0, MenuName: "LargeID", Status: 1}},
 			parentID: 0,
 		},
 	}
@@ -239,13 +239,13 @@ func TestBuildMenuTree_EdgeCases(t *testing.T) {
 // BenchmarkBuildMenuTree 性能基准测试
 func BenchmarkBuildMenuTree(b *testing.B) {
 	// 创建大量测试数据
-	var menus []model.SysMenu
+	var menus []*model.SysMenu
 	for i := int64(0); i < 1000; i++ {
 		status := int32(1)
 		if i%10 == 0 {
 			status = 0 // 10%的菜单是禁用状态
 		}
-		menus = append(menus, model.SysMenu{
+		menus = append(menus, &model.SysMenu{
 			ID:       i + 1,
 			ParentID: i / 10, // 创建一些父子关系
 			MenuName: "Menu" + string(rune(i)),

@@ -18,6 +18,11 @@ fi; \
 )
 
 
+format: ## 格式化代码
+	$(GOCTL) api format --dir api/admin/doc/api
+	$(GOCTL) api format --dir api/front/doc/api
+	$(GOCTL) api format --dir api/web/doc/api
+
 gen:	## 生成所有模块代码
 	# 合并rpc代码 & 生成sys-rpc代码
 	$(GOCMD) run rpc/sys/proto/main.go

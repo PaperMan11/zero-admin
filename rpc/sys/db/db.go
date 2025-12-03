@@ -100,6 +100,12 @@ type DB interface {
 	// 添加操作日志
 	CreateOperationLog(ctx context.Context, log model.SysOperateLog) (int64, error)
 	CreateOperationLogs(ctx context.Context, logs []*model.SysOperateLog) error
+	// 获取操作日志详情
+	GetOperateLog(ctx context.Context, logID int64) (*model.SysOperateLog, error)
+	// 获取操作日志列表
+	GetOperateLogs(ctx context.Context, filter model.OperateLogFilter, page int, pageSize int) ([]*model.SysOperateLog, int64, error)
+	DeleteOperateLogs(ctx context.Context, logIDs []int64) error // 删除操作日志
+	DeleteOperateLog(ctx context.Context, logID int64) error
 }
 
 const (

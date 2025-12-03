@@ -156,3 +156,32 @@ func ConvertToRpcScopes(scopes []*model.SysScope) []*sysclient.Scope {
 	}
 	return res
 }
+
+// ----------------------------------------------operate log----------------------------------------------
+
+func ConvertToRpcOperateLog(log *model.SysOperateLog) *sysclient.OperateLog {
+	return &sysclient.OperateLog{
+		Id:                log.ID,
+		Title:             log.Title,
+		OperationType:     log.OperationType,
+		OperationName:     log.OperationName,
+		RequestMethod:     log.RequestMethod,
+		OperationUrl:      log.OperationURL,
+		OperationParams:   log.OperationParams,
+		OperationResponse: log.OperationResponse,
+		OperationStatus:   log.OperationStatus,
+		UseTime:           log.UseTime,
+		Browser:           log.Browser,
+		Os:                log.Os,
+		OperationIp:       log.OperationIP,
+		OperationTime:     log.OperationTime.Format(time.DateTime),
+	}
+}
+
+func ConvertToRpcOperateLogs(logs []*model.SysOperateLog) []*sysclient.OperateLog {
+	res := make([]*sysclient.OperateLog, 0, len(logs))
+	for _, log := range logs {
+		res = append(res, ConvertToRpcOperateLog(log))
+	}
+	return res
+}

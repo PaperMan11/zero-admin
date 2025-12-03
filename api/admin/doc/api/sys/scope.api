@@ -1,0 +1,195 @@
+syntax = "v1"
+
+info(
+    desc:   "role"
+    author: "tzq"
+    email:  "1327899605@qq.com"
+)
+
+import "common.api"
+
+// 菜单信息
+type Menu struct {
+    Id int64 `json:"id"`                 // 菜单ID
+    ParentId int64 `json:"parent_id"`    // 父菜单ID
+    MenuType string `json:"menu_type"`   // 菜单类型 (M-目录, C-菜单, F-按钮)
+    Path string `json:"path"`            // 路由路径
+    Component string `json:"component"`  // 组件路径
+    Redirect string `json:"redirect"`    // 重定向路径
+    Sort int32 `json:"sort"`             // 排序
+    External bool `json:"external"`      // 是否外部链接
+    Hidden bool `json:"hidden"`          // 是否隐藏
+    Status int32 `json:"status"`         // 状态 (0-禁用, 1-正常)
+    ScopeId int64 `json:"scope_id"`      // 权限范围ID
+    Remark string `json:"remark"`        // 备注
+    Meta MenuMeta `json:"meta"`          // 元数据
+    Children []Menu `json:"children"`
+    Perms []string `json:"perms"`
+}
+
+type MenuMeta struct {
+    MenuName string `json:"menu_name"` // 菜单标题
+    Icon string `json:"icon"`              // 菜单图标
+    NoCache bool `json:"no_cache"`           // 是否缓存
+    Affix bool `json:"affix"`              // 是否固定在标签栏
+}
+
+// 安全范围
+type Scope struct {
+    Id int64 `json:"id"`           // 范围ID
+    ScopeName string `json:"scope_name"`  // 范围名称
+    ScopeCode string `json:"scope_code"`  // 范围编码
+    Description string `json:"description"` // 范围描述
+    Sort int32 `json:"sort"`         // 排序
+}
+
+type ScopeInfo struct {
+    Scope Scope `json:"scope"`
+    Menus []Menu `json:"menus"` // 菜单
+}
+
+// 菜单列表请求
+type MenuListRequest struct {
+    WithButton bool `json:"with_button,optional"`   // 是否包含按钮
+    Status int32 `json:"status"`       // 状态过滤
+}
+
+// 菜单列表响应 (树形结构)
+type MenuTreeResponse struct {
+    Menus []Menu `json:"menus"`
+}
+
+// 创建菜单请求
+type CreateMenuRequest struct {
+    ParentId int64 `json:"parent_id"`          // 父菜单ID
+    MenuName string `json:"menu_name"`         // 菜单名称
+    MenuType string `json:"menu_type"`         // 菜单类型 (M-目录, C-菜单, F-按钮)
+    Path string `json:"path,optional"`         // 路由路径
+    Component string `json:"component"`        // 组件路径
+    Redirect string `json:"redirect,optional"` // 重定向路径
+    Icon string `json:"icon,optional"`         // 菜单图标
+    Sort int32 `json:"sort,default=0"`         // 排序
+    NoCache bool `json:"no_cache,default=false"`    // 是否缓存
+    Affix bool `json:"affix,default=false"`         // 是否固定在标签栏
+    External bool `json:"external,default=false"`   // 是否外部链接
+    Hidden bool `json:"hidden,default=false"`       // 是否隐藏
+    Status int32 `json:"status,default=1"`          // 状态 (0-禁用, 1-正常)
+    ScopeId int64 `json:"scope_id"`          // 权限范围ID
+    Remark string `json:"remark,optional"`   // 备注
+    Perms []string `json:"perms"`
+    Children []Menu `json:"children"`
+}
+
+// 更新菜单请求
+type UpdateMenuRequest struct {
+    ParentId int64 `json:"parent_id,optional"`          // 父菜单ID
+    MenuName string `json:"menu_name,optional"`         // 菜单名称
+    MenuType string `json:"menu_type,optional"`         // 菜单类型 (M-目录, C-菜单, F-按钮)
+    Path string `json:"path,optional"`         // 路由路径
+    Component string `json:"component,optional"`        // 组件路径
+    Redirect string `json:"redirect,optional"` // 重定向路径
+    Icon string `json:"icon,optional"`         // 菜单图标
+    Sort int32 `json:"sort,optional"`         // 排序
+    NoCache bool `json:"no_cache,optional"`    // 是否缓存
+    Affix bool `json:"affix,optional"`         // 是否固定在标签栏
+    External bool `json:"external,optional"`   // 是否外部链接
+    Hidden bool `json:"hidden,optional"`       // 是否隐藏
+    Status int32 `json:"status,optional"`          // 状态 (0-禁用, 1-正常)
+    Remark string `json:"remark,optional"`   // 备注
+}
+
+// 删除菜单请求
+type DeleteMenuRequest struct {
+    Id int64 `json:"id"`           // 菜单ID
+}
+
+// 安全范围列表请求
+type ScopeListRequest struct {
+    PageRequest
+}
+
+// 安全范围列表响应
+type ScopeListResponse struct {
+    PageResponse
+    Scopes []ScopeInfo `json:"scopes"`
+}
+
+// 创建安全范围请求
+type CreateScopeRequest struct {
+    ScopeName string `json:"scope_name"`  // 范围名称
+    ScopeCode string `json:"scope_code"`  // 范围编码
+    Description string `json:"description"` // 范围描述
+    Sort int32 `json:"sort,default=0"`         // 排序
+    MenuIds []int64 `json:"menu_ids,optional"` // 菜单ID
+}
+
+// 更新安全范围请求
+type UpdateScopeRequest struct {
+    Id int64 `json:"id"`           // 范围ID
+    ScopeName string `json:"scope_name,optional"`  // 范围名称
+    ScopeCode string `json:"scope_code"`  // 范围编码
+    Description string `json:"description,optional"` // 范围描述
+    Sort int32 `json:"sort,optional"`         // 排序
+}
+
+// 删除安全范围请求
+type DeleteScopeRequest struct {
+    Id int64 `json:"id"`           // 范围ID
+}
+
+// 添加安全范围菜单请求
+type AddScopeMenusRequest struct {
+    ScopeId int64 `json:"scope_id"`
+    MenuIds []int64 `json:"menu_ids"`
+}
+
+// 删除安全范围菜单请求
+type DeleteScopeMenusRequest struct {
+    ScopeId int64 `json:"scope_id"`
+    MenuIds []int64 `json:"menu_ids,optional"`
+    DeleteAll bool `json:"delete_all,default=false"`
+}
+
+// 安全范围服务
+service zero-admin {
+    // 安全范围管理
+    @handler GetScopeList
+    post /scope/list (ScopeListRequest) returns (ScopeListResponse)
+
+    @handler GetScopeById
+    get /scope/:id (IdValue) returns (Scope)
+
+    @handler CreateScope
+    post /scope (CreateScopeRequest) returns (Scope)
+
+    @handler UpdateScope
+    put /scope (UpdateScopeRequest) returns (Scope)
+
+    @handler DeleteScope
+    delete /scope (DeleteScopeRequest) returns (Empty)
+
+    @handler AddScopeMenus
+    post /scope/menus (AddScopeMenusRequest) returns (ScopeInfo)
+
+    @handler DeleteScopeMenus
+    delete /scope/menus (DeleteScopeMenusRequest) returns (ScopeInfo)
+
+    @handler GetScopeMenus
+    get /scope/menus/:id (IdValue) returns (ScopeInfo)
+
+    // 菜单管理
+    @handler GetMenuTree
+    post /menu/tree (MenuListRequest) returns (MenuTreeResponse)
+
+    @handler GetMenuById
+    get /menu/:id (IdValue) returns (Menu)
+
+    @handler CreateMenu
+    post /menu (CreateMenuRequest) returns (Menu)
+
+    @handler UpdateMenu
+    put /menu (UpdateMenuRequest) returns (Menu)
+
+    @handler DeleteMenu
+    delete /menu (DeleteMenuRequest) returns (Empty)
+}

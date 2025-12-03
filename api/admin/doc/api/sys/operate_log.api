@@ -1,0 +1,97 @@
+// operate_log.api
+
+syntax = "v1"
+
+
+info(
+    desc:   "operate"
+    author: "tzq"
+    email:  "1327899605@qq.com"
+)
+
+
+// 系统操作日志表
+type OperateLog struct {
+    Id int64 `json:"id"` //编号
+    Title string `json:"title"` //系统模块
+    OperationType string `json:"operation_type"` //操作类型
+    OperationName string `json:"operation_name"` //操作人员
+    RequestMethod string `json:"request_method"` //请求方式
+    OperationUrl string `json:"operation_url"` //操作方法
+    OperationParams string `json:"operation_params"` //请求参数
+    OperationResponse string `json:"operation_response"` //响应参数
+    OperationStatus int32 `json:"operation_status"` //操作状态
+    UseTime int64 `json:"use_time"` //执行时长(毫秒)
+    Browser string `json:"browser"` //浏览器
+    Os string `json:"os"` //操作信息
+    OperationIp string `json:"operation_ip"` //操作地址
+    OperationTime string `json:"operation_time"` //操作时间
+}
+
+type AddOperateLogReq struct {
+    Title string `json:"title"` //系统模块
+    OperationType string `json:"operation_type"` //操作类型
+    OperationName string `json:"operation_name"` //操作人员
+    RequestMethod string `json:"request_method"` //请求方式
+    OperationUrl string `json:"operation_url"` //操作方法
+    OperationParams string `json:"operation_params"` //请求参数
+    OperationResponse string `json:"operation_response"` //响应参数
+    OperationStatus int32 `json:"operation_status"` //操作状态
+    UseTime int64 `json:"use_time"`
+    Browser string `json:"browser"`
+    Os string `json:"os"`
+    OperationIp string `json:"operation_ip"`
+    OperationTime string `json:"operation_time"`
+}
+
+type AddOperateLogResp struct {
+    Pong string `json:"pong"`
+}
+
+// 删除系统操作日志表
+type DeleteOperateLogReq struct {
+    Ids []int64 `json:"ids"`
+}
+
+type DeleteOperateLogResp struct {
+    Pong string `json:"pong"`
+}
+
+// 查询系统操作日志表详情
+type QueryOperateLogDetailReq struct {
+    Id int64 `json:"id"`
+}
+
+// 分页查询系统操作日志表列表
+type QueryOperateLogListReq struct {
+    PageRequest PageRequest `json:"page_request"`
+    OperationIp string `json:"operation_ip"` //操作地址
+    OperationName string `json:"operation_name"` //操作人员
+    OperationStatus int32 `json:"operation_status"` //操作状态
+    OperationType string `json:"operation_type"` //操作类型
+    OperationUrl string `json:"operation_url"` //操作方法
+    Title string `json:"title"` //系统模块
+    Os string `json:"os"` //操作系统信息
+    Browser string `json:"browser"` //浏览器
+    RequestMethod string `json:"request_method"` //请求方式
+}
+
+type OperateLogListData struct {
+    PageResponse PageResponse `json:"page_response"`
+    Data []OperateLog `json:"data"`
+}
+
+// 系统操作日志服务
+service OperateLogService {
+    // 删除系统操作日志表
+    @handler DeleteOperateLog
+    delete /operate-log (DeleteOperateLogReq) returns (DeleteOperateLogResp)
+
+    // 查询系统操作日志表详情
+    @handler QueryOperateLogDetail
+    get /operate-log/:id (QueryOperateLogDetailReq) returns (OperateLog)
+
+    // 查询系统操作日志表列表
+    @handler QueryOperateLogList
+    post /operate-log/list (QueryOperateLogListReq) returns (OperateLogListData)
+}

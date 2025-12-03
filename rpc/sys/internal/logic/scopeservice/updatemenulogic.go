@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
 	"gorm.io/gorm"
+	"zero-admin/pkg/convert"
 	"zero-admin/pkg/response/xerr"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -52,6 +53,8 @@ func (l *UpdateMenuLogic) UpdateMenu(in *sysclient.UpdateMenuRequest) (*sysclien
 	menu.Sort = in.Menu.Sort
 	menu.ParentID = in.Menu.ParentId
 	menu.MenuType = in.Menu.MenuType
+	menu.Redirect = in.Menu.Redirect
+	menu.Remark = in.Menu.Remark
 	var hidden, affix, external, noCache int32
 	if in.Menu.Hidden {
 		hidden = 1
@@ -70,6 +73,7 @@ func (l *UpdateMenuLogic) UpdateMenu(in *sysclient.UpdateMenuRequest) (*sysclien
 	menu.External = external
 	menu.NoCache = noCache
 	menu.Status = in.Menu.Status
+	menu.Updater = convert.ToString(in.OperatorId)
 	err = l.svcCtx.DB.SaveMenu(l.ctx, *menu)
 	if err != nil {
 		logc.Errorf(l.ctx, "更新菜单, 菜单ID：%d, 错误：%s", in.Menu.Id, err.Error())

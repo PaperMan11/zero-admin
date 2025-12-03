@@ -10,15 +10,22 @@ import (
 
 const TableNameSysOperateLog = "sys_operate_log"
 
-// SysOperateLog 系统操作日志
+// SysOperateLog 系统操作日志表
 type SysOperateLog struct {
-	ID         int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:日志ID" json:"id"`                        // 日志ID
-	UserID     int64     `gorm:"column:user_id;not null;comment:操作用户" json:"user_id"`                                   // 操作用户
-	Operation  string    `gorm:"column:operation;not null;comment:操作描述" json:"operation"`                               // 操作描述
-	Method     string    `gorm:"column:method;not null;comment:请求方法" json:"method"`                                     // 请求方法
-	Params     *string   `gorm:"column:params;comment:请求参数" json:"params"`                                              // 请求参数
-	IP         string    `gorm:"column:ip;not null;comment:IP地址" json:"ip"`                                             // IP地址
-	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
+	ID                int64     `gorm:"column:id;primaryKey;autoIncrement:true;comment:编号" json:"id"`                                // 编号
+	Title             string    `gorm:"column:title;not null;comment:系统模块" json:"title"`                                             // 系统模块
+	OperationType     string    `gorm:"column:operation_type;not null;comment:操作类型" json:"operation_type"`                           // 操作类型
+	OperationName     string    `gorm:"column:operation_name;not null;comment:操作人员" json:"operation_name"`                           // 操作人员
+	RequestMethod     string    `gorm:"column:request_method;not null;comment:请求方式" json:"request_method"`                           // 请求方式
+	OperationURL      string    `gorm:"column:operation_url;not null;comment:操作方法" json:"operation_url"`                             // 操作方法
+	OperationParams   string    `gorm:"column:operation_params;not null;comment:请求参数" json:"operation_params"`                       // 请求参数
+	OperationResponse string    `gorm:"column:operation_response;not null;comment:响应参数" json:"operation_response"`                   // 响应参数
+	OperationStatus   int32     `gorm:"column:operation_status;not null;comment:操作状态" json:"operation_status"`                       // 操作状态
+	UseTime           int64     `gorm:"column:use_time;not null;comment:执行时长(毫秒)" json:"use_time"`                                   // 执行时长(毫秒)
+	Browser           string    `gorm:"column:browser;not null;comment:浏览器" json:"browser"`                                          // 浏览器
+	Os                string    `gorm:"column:os;not null;comment:操作系统" json:"os"`                                                   // 操作系统
+	OperationIP       string    `gorm:"column:operation_ip;not null;comment:操作地址" json:"operation_ip"`                               // 操作地址
+	OperationTime     time.Time `gorm:"column:operation_time;not null;default:CURRENT_TIMESTAMP;comment:操作时间" json:"operation_time"` // 操作时间
 }
 
 // TableName SysOperateLog's table name

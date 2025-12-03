@@ -773,3 +773,43 @@ func (m *MockDB) CreateOperationLogs(ctx context.Context, logs []*model.SysOpera
 
 	return nil
 }
+
+// 获取操作日志详情
+func (m *MockDB) GetOperateLog(ctx context.Context, logID int64) (*model.SysOperateLog, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return m.operationLogs[logID-1], nil
+}
+
+// 获取操作日志列表
+func (m *MockDB) GetOperateLogs(ctx context.Context, filter model.OperateLogFilter, page int, pageSize int) ([]*model.SysOperateLog, int64, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return m.operationLogs, int64(len(m.operationLogs)), nil
+}
+
+// 删除操作日志
+func (m *MockDB) DeleteOperateLogs(ctx context.Context, logIDs []int64) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	for _, logID := range logIDs {
+		for i, log := range m.operationLogs {
+			if log.ID == logID {
+				m.operationLogs = append(m.operationLogs[:i], m.operationLogs[i+1:]...)
+				break
+			}
+		}
+	}
+	return nil
+}
+
+func (m *MockDB) DeleteOperateLog(ctx context.Context, logID int64) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	for i, log := range m.operationLogs {
+		if log.ID == logID {
+			m.operationLogs = append(m.operationLogs[:i], m.operationLogs[i+1:]...)
+		}
+	}
+	return nil
+}

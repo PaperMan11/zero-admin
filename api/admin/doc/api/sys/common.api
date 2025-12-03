@@ -1,0 +1,27 @@
+syntax = "v1"
+
+info(
+    desc:   "common"
+    author: "tzq"
+    email:  "1327899605@qq.com"
+)
+
+
+type PageRequest struct {
+    Page int64 `json:"page,default=1"`
+    PageSize int64 `json:"page_size,default=10"`
+    Keyword string `json:"keyword,optional"`
+}
+
+type PageResponse struct {
+    Total int64 `json:"total"`
+    Page int64 `json:"page"`
+    PageSize int64 `json:"page_size"`
+    TotalPage int64 `json:"total_page"`
+}
+
+type IdValue struct {
+    Id int64 `path:"id"`
+}
+
+type Empty struct {}

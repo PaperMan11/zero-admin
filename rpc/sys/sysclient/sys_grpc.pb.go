@@ -167,6 +167,234 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	OperateLogService_AddOperateLog_FullMethodName         = "/sysclient.OperateLogService/AddOperateLog"
+	OperateLogService_DeleteOperateLog_FullMethodName      = "/sysclient.OperateLogService/DeleteOperateLog"
+	OperateLogService_QueryOperateLogDetail_FullMethodName = "/sysclient.OperateLogService/QueryOperateLogDetail"
+	OperateLogService_QueryOperateLogList_FullMethodName   = "/sysclient.OperateLogService/QueryOperateLogList"
+)
+
+// OperateLogServiceClient is the client API for OperateLogService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 系统操作日志表
+type OperateLogServiceClient interface {
+	// 添加系统操作日志表
+	AddOperateLog(ctx context.Context, in *AddOperateLogReq, opts ...grpc.CallOption) (*AddOperateLogResp, error)
+	// 删除系统操作日志表
+	DeleteOperateLog(ctx context.Context, in *DeleteOperateLogReq, opts ...grpc.CallOption) (*DeleteOperateLogResp, error)
+	// 查询系统操作日志表详情
+	QueryOperateLogDetail(ctx context.Context, in *QueryOperateLogDetailReq, opts ...grpc.CallOption) (*OperateLog, error)
+	// 查询系统操作日志表列表
+	QueryOperateLogList(ctx context.Context, in *QueryOperateLogListReq, opts ...grpc.CallOption) (*OperateLogListData, error)
+}
+
+type operateLogServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewOperateLogServiceClient(cc grpc.ClientConnInterface) OperateLogServiceClient {
+	return &operateLogServiceClient{cc}
+}
+
+func (c *operateLogServiceClient) AddOperateLog(ctx context.Context, in *AddOperateLogReq, opts ...grpc.CallOption) (*AddOperateLogResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddOperateLogResp)
+	err := c.cc.Invoke(ctx, OperateLogService_AddOperateLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operateLogServiceClient) DeleteOperateLog(ctx context.Context, in *DeleteOperateLogReq, opts ...grpc.CallOption) (*DeleteOperateLogResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteOperateLogResp)
+	err := c.cc.Invoke(ctx, OperateLogService_DeleteOperateLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operateLogServiceClient) QueryOperateLogDetail(ctx context.Context, in *QueryOperateLogDetailReq, opts ...grpc.CallOption) (*OperateLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OperateLog)
+	err := c.cc.Invoke(ctx, OperateLogService_QueryOperateLogDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *operateLogServiceClient) QueryOperateLogList(ctx context.Context, in *QueryOperateLogListReq, opts ...grpc.CallOption) (*OperateLogListData, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OperateLogListData)
+	err := c.cc.Invoke(ctx, OperateLogService_QueryOperateLogList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OperateLogServiceServer is the server API for OperateLogService service.
+// All implementations must embed UnimplementedOperateLogServiceServer
+// for forward compatibility.
+//
+// 系统操作日志表
+type OperateLogServiceServer interface {
+	// 添加系统操作日志表
+	AddOperateLog(context.Context, *AddOperateLogReq) (*AddOperateLogResp, error)
+	// 删除系统操作日志表
+	DeleteOperateLog(context.Context, *DeleteOperateLogReq) (*DeleteOperateLogResp, error)
+	// 查询系统操作日志表详情
+	QueryOperateLogDetail(context.Context, *QueryOperateLogDetailReq) (*OperateLog, error)
+	// 查询系统操作日志表列表
+	QueryOperateLogList(context.Context, *QueryOperateLogListReq) (*OperateLogListData, error)
+	mustEmbedUnimplementedOperateLogServiceServer()
+}
+
+// UnimplementedOperateLogServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedOperateLogServiceServer struct{}
+
+func (UnimplementedOperateLogServiceServer) AddOperateLog(context.Context, *AddOperateLogReq) (*AddOperateLogResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddOperateLog not implemented")
+}
+func (UnimplementedOperateLogServiceServer) DeleteOperateLog(context.Context, *DeleteOperateLogReq) (*DeleteOperateLogResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOperateLog not implemented")
+}
+func (UnimplementedOperateLogServiceServer) QueryOperateLogDetail(context.Context, *QueryOperateLogDetailReq) (*OperateLog, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryOperateLogDetail not implemented")
+}
+func (UnimplementedOperateLogServiceServer) QueryOperateLogList(context.Context, *QueryOperateLogListReq) (*OperateLogListData, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryOperateLogList not implemented")
+}
+func (UnimplementedOperateLogServiceServer) mustEmbedUnimplementedOperateLogServiceServer() {}
+func (UnimplementedOperateLogServiceServer) testEmbeddedByValue()                           {}
+
+// UnsafeOperateLogServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OperateLogServiceServer will
+// result in compilation errors.
+type UnsafeOperateLogServiceServer interface {
+	mustEmbedUnimplementedOperateLogServiceServer()
+}
+
+func RegisterOperateLogServiceServer(s grpc.ServiceRegistrar, srv OperateLogServiceServer) {
+	// If the following call pancis, it indicates UnimplementedOperateLogServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&OperateLogService_ServiceDesc, srv)
+}
+
+func _OperateLogService_AddOperateLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddOperateLogReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperateLogServiceServer).AddOperateLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperateLogService_AddOperateLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperateLogServiceServer).AddOperateLog(ctx, req.(*AddOperateLogReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperateLogService_DeleteOperateLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOperateLogReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperateLogServiceServer).DeleteOperateLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperateLogService_DeleteOperateLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperateLogServiceServer).DeleteOperateLog(ctx, req.(*DeleteOperateLogReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperateLogService_QueryOperateLogDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOperateLogDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperateLogServiceServer).QueryOperateLogDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperateLogService_QueryOperateLogDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperateLogServiceServer).QueryOperateLogDetail(ctx, req.(*QueryOperateLogDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OperateLogService_QueryOperateLogList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOperateLogListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OperateLogServiceServer).QueryOperateLogList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OperateLogService_QueryOperateLogList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OperateLogServiceServer).QueryOperateLogList(ctx, req.(*QueryOperateLogListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// OperateLogService_ServiceDesc is the grpc.ServiceDesc for OperateLogService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var OperateLogService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "sysclient.OperateLogService",
+	HandlerType: (*OperateLogServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AddOperateLog",
+			Handler:    _OperateLogService_AddOperateLog_Handler,
+		},
+		{
+			MethodName: "DeleteOperateLog",
+			Handler:    _OperateLogService_DeleteOperateLog_Handler,
+		},
+		{
+			MethodName: "QueryOperateLogDetail",
+			Handler:    _OperateLogService_QueryOperateLogDetail_Handler,
+		},
+		{
+			MethodName: "QueryOperateLogList",
+			Handler:    _OperateLogService_QueryOperateLogList_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "rpc/sys/sys.proto",
+}
+
+const (
 	RoleService_GetRoleList_FullMethodName      = "/sysclient.RoleService/GetRoleList"
 	RoleService_CreateRole_FullMethodName       = "/sysclient.RoleService/CreateRole"
 	RoleService_UpdateRole_FullMethodName       = "/sysclient.RoleService/UpdateRole"

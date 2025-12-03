@@ -2,7 +2,7 @@
 // goctl 1.9.2
 // Source: sys.proto
 
-package userservice
+package operatelogservice
 
 import (
 	"context"
@@ -71,74 +71,48 @@ type (
 	UserListRequest           = sysclient.UserListRequest
 	UserListResponse          = sysclient.UserListResponse
 
-	UserService interface {
-		// 用户管理
-		GetUserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListResponse, error)
-		GetUserById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*UserInfo, error)
-		CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
-		UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
-		DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error)
-		UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error)
-		AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error)
-		ToggleUserStatus(ctx context.Context, in *ToggleUserStatusRequest, opts ...grpc.CallOption) (*User, error)
-		// 获取当前用户信息
-		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error)
+	OperateLogService interface {
+		// 添加系统操作日志表
+		AddOperateLog(ctx context.Context, in *AddOperateLogReq, opts ...grpc.CallOption) (*AddOperateLogResp, error)
+		// 删除系统操作日志表
+		DeleteOperateLog(ctx context.Context, in *DeleteOperateLogReq, opts ...grpc.CallOption) (*DeleteOperateLogResp, error)
+		// 查询系统操作日志表详情
+		QueryOperateLogDetail(ctx context.Context, in *QueryOperateLogDetailReq, opts ...grpc.CallOption) (*OperateLog, error)
+		// 查询系统操作日志表列表
+		QueryOperateLogList(ctx context.Context, in *QueryOperateLogListReq, opts ...grpc.CallOption) (*OperateLogListData, error)
 	}
 
-	defaultUserService struct {
+	defaultOperateLogService struct {
 		cli zrpc.Client
 	}
 )
 
-func NewUserService(cli zrpc.Client) UserService {
-	return &defaultUserService{
+func NewOperateLogService(cli zrpc.Client) OperateLogService {
+	return &defaultOperateLogService{
 		cli: cli,
 	}
 }
 
-// 用户管理
-func (m *defaultUserService) GetUserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.GetUserList(ctx, in, opts...)
+// 添加系统操作日志表
+func (m *defaultOperateLogService) AddOperateLog(ctx context.Context, in *AddOperateLogReq, opts ...grpc.CallOption) (*AddOperateLogResp, error) {
+	client := sysclient.NewOperateLogServiceClient(m.cli.Conn())
+	return client.AddOperateLog(ctx, in, opts...)
 }
 
-func (m *defaultUserService) GetUserById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*UserInfo, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.GetUserById(ctx, in, opts...)
+// 删除系统操作日志表
+func (m *defaultOperateLogService) DeleteOperateLog(ctx context.Context, in *DeleteOperateLogReq, opts ...grpc.CallOption) (*DeleteOperateLogResp, error) {
+	client := sysclient.NewOperateLogServiceClient(m.cli.Conn())
+	return client.DeleteOperateLog(ctx, in, opts...)
 }
 
-func (m *defaultUserService) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*UserInfo, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.CreateUser(ctx, in, opts...)
+// 查询系统操作日志表详情
+func (m *defaultOperateLogService) QueryOperateLogDetail(ctx context.Context, in *QueryOperateLogDetailReq, opts ...grpc.CallOption) (*OperateLog, error) {
+	client := sysclient.NewOperateLogServiceClient(m.cli.Conn())
+	return client.QueryOperateLogDetail(ctx, in, opts...)
 }
 
-func (m *defaultUserService) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.UpdateUser(ctx, in, opts...)
-}
-
-func (m *defaultUserService) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.DeleteUser(ctx, in, opts...)
-}
-
-func (m *defaultUserService) UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.UpdateUserPassword(ctx, in, opts...)
-}
-
-func (m *defaultUserService) AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.AssignUserRole(ctx, in, opts...)
-}
-
-func (m *defaultUserService) ToggleUserStatus(ctx context.Context, in *ToggleUserStatusRequest, opts ...grpc.CallOption) (*User, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.ToggleUserStatus(ctx, in, opts...)
-}
-
-// 获取当前用户信息
-func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*UserInfo, error) {
-	client := sysclient.NewUserServiceClient(m.cli.Conn())
-	return client.GetUserInfo(ctx, in, opts...)
+// 查询系统操作日志表列表
+func (m *defaultOperateLogService) QueryOperateLogList(ctx context.Context, in *QueryOperateLogListReq, opts ...grpc.CallOption) (*OperateLogListData, error) {
+	client := sysclient.NewOperateLogServiceClient(m.cli.Conn())
+	return client.QueryOperateLogList(ctx, in, opts...)
 }
