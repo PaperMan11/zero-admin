@@ -56,6 +56,6 @@ func (l *CreateMenuLogic) CreateMenu(req *types.CreateMenuRequest) (resp *types.
 		return nil, err
 	}
 
-	menu := ConvertToTypesMenu(res)
+	menu := logic.ConvertToTypesMenu(res)
 	return &menu, nil
 }

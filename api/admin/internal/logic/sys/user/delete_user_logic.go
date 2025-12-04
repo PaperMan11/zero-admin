@@ -5,6 +5,9 @@ package user
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,13 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteUserLogic) DeleteUser(req *types.DeleteUserRequest) (resp *types.Empty, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	_, err = l.svcCtx.UserService.DeleteUser(l.ctx, &userservice.DeleteUserRequest{
+		Id:         req.Id,
+		OperatorId: logic.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "删除用户失败: %v", err)
+		return nil, err
+	}
+	return &types.Empty{}, nil
 }

@@ -49,6 +49,6 @@ func (l *DeleteScopeMenusLogic) DeleteScopeMenus(req *types.DeleteScopeMenusRequ
 			Description: res.Scope.Description,
 			Sort:        res.Scope.Sort,
 		},
-		Menus: ConvertToTypesMenus(res.Menus),
+		Menus: logic.ConvertToTypesMenus(res.Menus),
 	}, nil
 }

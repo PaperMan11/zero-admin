@@ -5,6 +5,9 @@ package scope
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,24 @@ func NewUpdateScopeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Updat
 }
 
 func (l *UpdateScopeLogic) UpdateScope(req *types.UpdateScopeRequest) (resp *types.Scope, err error) {
-	// todo: add your logic here and delete this line
+	res, err := l.svcCtx.ScopeService.UpdateScope(l.ctx, &scopeservice.UpdateScopeRequest{
+		Id:          req.Id,
+		ScopeName:   req.ScopeName,
+		ScopeCode:   req.ScopeCode,
+		Description: req.Description,
+		Sort:        req.Sort,
+		OperatorId:  logic.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "更新安全范围失败: %v", err)
+		return nil, err
+	}
 
-	return
+	return &types.Scope{
+		Id:          res.Id,
+		ScopeName:   res.ScopeName,
+		ScopeCode:   res.ScopeCode,
+		Description: res.Description,
+		Sort:        res.Sort,
+	}, nil
 }

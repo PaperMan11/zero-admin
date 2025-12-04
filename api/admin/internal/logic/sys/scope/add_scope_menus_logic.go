@@ -41,46 +41,7 @@ func (l *AddScopeMenusLogic) AddScopeMenus(req *types.AddScopeMenusRequest) (res
 	}
 
 	return &types.ScopeInfo{
-		Scope: types.Scope{
-			Id:          res.Scope.Id,
-			ScopeName:   res.Scope.ScopeName,
-			ScopeCode:   res.Scope.ScopeCode,
-			Description: res.Scope.Description,
-			Sort:        res.Scope.Sort,
-		},
-		Menus: ConvertToTypesMenus(res.Menus),
+		Scope: logic.ConvertToTypesScope(res.Scope),
+		Menus: logic.ConvertToTypesMenus(res.Menus),
 	}, nil
-}
-
-func ConvertToTypesMenus(menus []*scopeservice.Menu) []types.Menu {
-	menuList := make([]types.Menu, 0, len(menus))
-	for _, v := range menus {
-		menuList = append(menuList, ConvertToTypesMenu(v))
-	}
-	return menuList
-}
-
-func ConvertToTypesMenu(menu *scopeservice.Menu) types.Menu {
-	return types.Menu{
-		Id:        menu.Id,
-		ParentId:  menu.ParentId,
-		MenuType:  menu.MenuType,
-		Path:      menu.Path,
-		Component: menu.Component,
-		Redirect:  menu.Redirect,
-		Sort:      menu.Sort,
-		External:  menu.External,
-		Hidden:    menu.Hidden,
-		Status:    menu.Status,
-		ScopeId:   menu.ScopeId,
-		Remark:    menu.Remark,
-		Meta: types.MenuMeta{
-			MenuName: menu.MenuName,
-			Icon:     menu.Icon,
-			NoCache:  menu.NoCache,
-			Affix:    menu.Affix,
-		},
-		Children: ConvertToTypesMenus(menu.Children),
-		Perms:    menu.Perms,
-	}
 }

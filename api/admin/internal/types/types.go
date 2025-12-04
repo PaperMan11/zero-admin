@@ -310,6 +310,7 @@ type ToggleUserStatusRequest struct {
 }
 
 type UpdateMenuRequest struct {
+	ID        int64  `json:"id"`
 	ParentId  int64  `json:"parent_id,optional"` // 父菜单ID
 	MenuName  string `json:"menu_name,optional"` // 菜单名称
 	MenuType  string `json:"menu_type,optional"` // 菜单类型 (M-目录, C-菜单, F-按钮)

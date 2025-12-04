@@ -5,6 +5,9 @@ package user
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,15 @@ func NewUpdateUserPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *UpdateUserPasswordLogic) UpdateUserPassword(req *types.UpdateUserPasswordRequest) (resp *types.Empty, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	_, err = l.svcCtx.UserService.UpdateUserPassword(l.ctx, &userservice.UpdateUserPasswordRequest{
+		UserId:      req.UserId,
+		OldPassword: req.OldPassword,
+		NewPassword: req.NewPassword,
+		OperatorId:  logic.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "更新用户密码, 参数: %v, 异常: %v", req, err)
+		return nil, err
+	}
+	return &types.Empty{}, nil
 }

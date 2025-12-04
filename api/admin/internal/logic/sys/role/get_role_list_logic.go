@@ -6,6 +6,7 @@ package role
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
 	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -44,13 +45,7 @@ func (l *GetRoleListLogic) GetRoleList(req *types.RoleListRequest) (resp *types.
 
 	roles := make([]types.Role, 0, len(res.Roles))
 	for _, role := range res.Roles {
-		roles = append(roles, types.Role{
-			RoleId:      role.RoleId,
-			RoleName:    role.RoleName,
-			RoleCode:    role.RoleCode,
-			Description: role.Description,
-			Status:      role.Status,
-		})
+		roles = append(roles, logic.ConvertToTypesRole(role))
 	}
 	return &types.RoleListResponse{
 		PageResponse: types.PageResponse{
