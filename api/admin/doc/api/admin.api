@@ -4,12 +4,11 @@ import "sys/auth.api"
 import "sys/role.api"
 import "sys/user.api"
 import "sys/scope.api"
+import "sys/operate_log.api"
 
-
-
-
-info(
-    desc:   "admin"
-    author: "tzq"
-    email:  "1327899605@qq.com"
+info (
+	desc:   "admin"
+	author: "tzq"
+	email:  "1327899605@qq.com"
 )
+

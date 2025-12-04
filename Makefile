@@ -24,6 +24,8 @@ format: ## 格式化代码
 	$(GOCTL) api format --dir api/web/doc/api
 
 gen:	## 生成所有模块代码
+	$(GOCTL) api go -api ./api/admin/doc/api/admin.api -dir ./api/admin/
+
 	# 合并rpc代码 & 生成sys-rpc代码
 	$(GOCMD) run rpc/sys/proto/main.go
 	$(GOCTL) rpc protoc rpc/sys/sys.proto --go_out=./rpc/sys/ --go-grpc_out=./rpc/sys/ --zrpc_out=./rpc/sys/ -m
