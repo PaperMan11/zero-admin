@@ -2,9 +2,11 @@ package roleservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/db/mysql/model"
 
@@ -33,10 +35,10 @@ func (l *UpdateRolePermsLogic) UpdateRolePerms(in *sysclient.UpdateRolePermsRequ
 	exists, err := l.svcCtx.DB.ExistsRoleByID(l.ctx, in.RoleId)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "更新角色权限失败")
 	}
 	if !exists {
-		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
+		return nil, errors.New("角色不存在")
 	}
 
 	now := time.Now()
@@ -52,7 +54,7 @@ func (l *UpdateRolePermsLogic) UpdateRolePerms(in *sysclient.UpdateRolePermsRequ
 	err = l.svcCtx.DB.UpdateRoleScopesTx(l.ctx, in.RoleCode, updates)
 	if err != nil {
 		logc.Errorf(l.ctx, "更新角色权限失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "更新角色权限失败")
 	}
 
 	return NewGetRolePermsLogic(l.ctx, l.svcCtx).GetRolePerms(&sysclient.Int64Value{Value: in.RoleId})

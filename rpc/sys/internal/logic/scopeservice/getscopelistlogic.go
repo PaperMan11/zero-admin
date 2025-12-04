@@ -3,7 +3,8 @@ package scopeservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -29,7 +30,7 @@ func (l *GetScopeListLogic) GetScopeList(in *sysclient.ScopeListRequest) (*syscl
 	scopes, err := l.svcCtx.DB.GetScopesPagination(l.ctx, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
 	if err != nil {
 		logc.Errorf(l.ctx, "获取安全范围列表失败: %v", err)
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "获取安全范围列表失败")
 	}
 
 	total, _ := l.svcCtx.DB.CountScopes(l.ctx)

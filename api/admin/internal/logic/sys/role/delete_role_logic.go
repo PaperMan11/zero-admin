@@ -5,6 +5,9 @@ package role
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,14 @@ func NewDeleteRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteRoleLogic) DeleteRole(req *types.DeleteRoleRequest) (resp *types.Empty, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	uid := logic.GetOperateID(l.ctx)
+	_, err = l.svcCtx.RoleService.DeleteRole(l.ctx, &roleservice.DeleteRoleRequest{
+		Id:         req.Id,
+		OperatorId: uid,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "删除角色失败: %v", err)
+		return nil, err
+	}
+	return &types.Empty{}, nil
 }

@@ -3,7 +3,8 @@ package operatelogservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/db/mysql/model"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -44,7 +45,7 @@ func (l *AddOperateLogLogic) AddOperateLog(in *sysclient.AddOperateLogReq) (*sys
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "保存系统操作日志异常, 登录参数：%+v, 错误：%s", in, err.Error())
-		return &sysclient.AddOperateLogResp{Pong: "1"}, xerr.NewErrCodeMsg(xerr.ErrorDb, "保存系统操作日志异常")
+		return &sysclient.AddOperateLogResp{Pong: "1"}, status.Error(codes.Internal, "保存系统操作日志异常")
 	}
 	return &sysclient.AddOperateLogResp{Pong: "0"}, nil
 }

@@ -3,7 +3,8 @@ package operatelogservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/logic"
 	"zero-admin/rpc/sys/internal/svc"
@@ -41,7 +42,7 @@ func (l *QueryOperateLogListLogic) QueryOperateLogList(in *sysclient.QueryOperat
 	}, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
 	if err != nil {
 		logc.Errorf(l.ctx, "查询系统操作日志表列表失败: %v", err)
-		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "查询系统操作日志表列表失败")
+		return nil, status.Error(codes.Internal, "查询系统操作日志表列表失败")
 	}
 	return &sysclient.OperateLogListData{
 		PageResponse: &sysclient.PageResponse{

@@ -5,6 +5,8 @@ package role
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +29,36 @@ func NewGetRoleListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetRo
 }
 
 func (l *GetRoleListLogic) GetRoleList(req *types.RoleListRequest) (resp *types.RoleListResponse, err error) {
-	// todo: add your logic here and delete this line
+	res, err := l.svcCtx.RoleService.GetRoleList(l.ctx, &roleservice.RoleListRequest{
+		PageRequest: &roleservice.PageRequest{
+			Page:     int32(req.PageRequest.Page),
+			PageSize: int32(req.PageRequest.PageSize),
+			Keyword:  req.PageRequest.Keyword,
+		},
+		Status: req.Status,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "获取角色列表失败：%v", err)
+		return nil, err
+	}
 
-	return
+	roles := make([]types.Role, 0, len(res.Roles))
+	for _, role := range res.Roles {
+		roles = append(roles, types.Role{
+			RoleId:      role.RoleId,
+			RoleName:    role.RoleName,
+			RoleCode:    role.RoleCode,
+			Description: role.Description,
+			Status:      role.Status,
+		})
+	}
+	return &types.RoleListResponse{
+		PageResponse: types.PageResponse{
+			Total:     int64(res.PageResponse.Total),
+			Page:      int64(res.PageResponse.Page),
+			PageSize:  int64(res.PageResponse.PageSize),
+			TotalPage: int64(res.PageResponse.TotalPage),
+		},
+		Roles: roles,
+	}, nil
 }

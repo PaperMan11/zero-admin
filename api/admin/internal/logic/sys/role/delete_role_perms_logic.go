@@ -5,6 +5,8 @@ package role
 
 import (
 	"context"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +29,35 @@ func NewDeleteRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 }
 
 func (l *DeleteRolePermsLogic) DeleteRolePerms(req *types.DeleteRolePermsRequest) (resp *types.RoleInfo, err error) {
-	// todo: add your logic here and delete this line
+	uid := logic.GetOperateID(l.ctx)
+	res, err := l.svcCtx.RoleService.DeleteRolePerms(l.ctx, &roleservice.DeleteRolePermsRequest{
+		RoleId:     req.RoleId,
+		RoleCode:   req.RoleCode,
+		OperatorId: uid,
+		ScopeCodes: req.ScopeCodes,
+	})
 
-	return
+	scopes := make([]types.RoleScopeInfo, 0, len(res.Scopes))
+	for _, v := range res.Scopes {
+		scopes = append(scopes, types.RoleScopeInfo{
+			Scope: types.Scope{
+				Id:          v.Scope.Id,
+				ScopeName:   v.Scope.ScopeName,
+				ScopeCode:   v.Scope.ScopeCode,
+				Description: v.Scope.Description,
+				Sort:        v.Scope.Sort,
+			},
+			Perms: v.Perms,
+		})
+	}
+	return &types.RoleInfo{
+		Role: types.Role{
+			RoleId:      res.Role.RoleId,
+			RoleName:    res.Role.RoleName,
+			RoleCode:    res.Role.RoleCode,
+			Description: res.Role.Description,
+			Status:      res.Role.Status,
+		},
+		Scopes: scopes,
+	}, nil
 }

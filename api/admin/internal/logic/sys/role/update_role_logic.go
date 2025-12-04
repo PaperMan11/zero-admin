@@ -5,6 +5,9 @@ package role
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/sysclient"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,25 @@ func NewUpdateRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 }
 
 func (l *UpdateRoleLogic) UpdateRole(req *types.UpdateRoleRequest) (resp *types.Role, err error) {
-	// todo: add your logic here and delete this line
+	uid := logic.GetOperateID(l.ctx)
+	res, err := l.svcCtx.RoleService.UpdateRole(l.ctx, &sysclient.UpdateRoleRequest{
+		RoleId:      req.RoleId,
+		RoleName:    req.RoleName,
+		RoleCode:    req.RoleCode,
+		Description: req.Description,
+		Status:      req.Status,
+		OperatorId:  uid,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "更新角色失败: %v", err)
+		return nil, err
+	}
 
-	return
+	return &types.Role{
+		RoleId:      res.RoleId,
+		RoleName:    res.RoleName,
+		RoleCode:    res.RoleCode,
+		Description: res.Description,
+		Status:      res.Status,
+	}, nil
 }

@@ -5,6 +5,8 @@ package role
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +29,14 @@ func NewBatchDeleteRolesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *BatchDeleteRolesLogic) BatchDeleteRoles(req *types.BatchDeleteRolesRequest) (resp *types.Empty, err error) {
-	// todo: add your logic here and delete this line
+	_, err = l.svcCtx.RoleService.BatchDeleteRoles(l.ctx, &roleservice.BatchDeleteRolesRequest{
+		OperatorId: req.OperatorId,
+		RoleIds:    req.RoleIds,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "删除角色失败: %v", err)
+		return nil, err
+	}
 
-	return
+	return &types.Empty{}, nil
 }

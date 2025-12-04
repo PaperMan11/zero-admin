@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/internal/logic"
 	"zero-admin/rpc/sys/internal/svc"
@@ -33,10 +34,10 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 	user, err := l.svcCtx.DB.GetUserByID(l.ctx, in.UserId)
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
-		return nil, xerr.NewErrCode(xerr.ErrorUserNotExist)
+		return nil, errors.New("用户不存在")
 	case err != nil:
 		logc.Errorf(l.ctx, "查询用户信息, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "查询用户信息异常")
 	}
 
 	// 用户角色信息

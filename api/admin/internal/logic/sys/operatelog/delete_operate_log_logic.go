@@ -5,6 +5,8 @@ package operatelog
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/rpc/sys/sysclient"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +29,14 @@ func NewDeleteOperateLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *DeleteOperateLogLogic) DeleteOperateLog(req *types.DeleteOperateLogReq) (resp *types.DeleteOperateLogResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	logResp, err := l.svcCtx.OperateLogService.DeleteOperateLog(l.ctx, &sysclient.DeleteOperateLogReq{
+		Ids: req.Ids,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "删除系统操作日志表失败: %v", err)
+		return nil, err
+	}
+	return &types.DeleteOperateLogResp{
+		Pong: logResp.Pong,
+	}, nil
 }

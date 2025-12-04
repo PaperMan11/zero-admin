@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/common"
@@ -37,13 +39,13 @@ func (l *GetRolePermsLogic) GetRolePerms(in *sysclient.Int64Value) (*sysclient.R
 			return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 		}
 		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.Value, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "获取角色权限失败")
 	}
 
 	roleScopeInfos, err := l.svcCtx.DB.GetRoleScopesPerm(l.ctx, role.RoleCode)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询角色权限失败, 角色ID：%d, 错误：%s", in.Value, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "查询角色权限失败")
 	}
 
 	scopes := make([]*sysclient.RoleScopeInfo, 0, len(roleScopeInfos))

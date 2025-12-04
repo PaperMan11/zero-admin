@@ -5,6 +5,8 @@ package auth
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/rpc/sys/client/authservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +29,15 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 }
 
 func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenRequest) (resp *types.RefreshTokenResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	res, err := l.svcCtx.AuthService.RefreshToken(l.ctx, &authservice.RefreshTokenRequest{
+		RefreshToken: req.RefreshToken,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "刷新token：%+v,异常:%s", req, err.Error())
+		return nil, err
+	}
+	return &types.RefreshTokenResponse{
+		RefreshToken: res.RefreshToken,
+		Token:        res.Token,
+	}, nil
 }

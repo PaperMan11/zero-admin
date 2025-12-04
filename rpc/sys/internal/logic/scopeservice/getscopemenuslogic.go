@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -32,16 +33,16 @@ func (l *GetScopeMenusLogic) GetScopeMenus(in *sysclient.Int64Value) (*sysclient
 	scope, err := l.svcCtx.DB.GetScopeByID(l.ctx, in.Value)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, xerr.NewErrCode(xerr.ErrorScopeNotExist)
+			return nil, errors.New("安全范围不存在")
 		}
 		logc.Errorf(l.ctx, "判断安全范围是否存在失败, scope id：%s, 错误：%s", in.Value, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "获取安全范围菜单列表失败")
 	}
 
 	menus, err := l.svcCtx.DB.GetMenusByScopeID(l.ctx, in.Value)
 	if err != nil {
 		logc.Errorf(l.ctx, "获取安全范围菜单列表, 参数：%+v, 错误：%v", in, err)
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "获取安全范围菜单列表失败")
 	}
 
 	return &sysclient.ScopeInfo{

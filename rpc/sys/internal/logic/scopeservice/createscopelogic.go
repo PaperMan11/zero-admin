@@ -2,10 +2,12 @@ package scopeservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
 	"zero-admin/pkg/convert"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/mysql/model"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -32,10 +34,10 @@ func (l *CreateScopeLogic) CreateScope(in *sysclient.CreateScopeRequest) (*syscl
 	exists, err := l.svcCtx.DB.ExistsScopeByCode(l.ctx, in.ScopeCode)
 	if err != nil {
 		logc.Errorf(l.ctx, "判断安全范围是否存在失败, scope code：%s, 错误：%s", in.ScopeCode, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "添加安全范围失败")
 	}
 	if exists {
-		return nil, xerr.NewErrCode(xerr.ErrorScopeExist)
+		return nil, errors.New("安全范围已存在")
 	}
 
 	now := time.Now()

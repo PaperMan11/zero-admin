@@ -3,7 +3,8 @@ package userservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -31,7 +32,7 @@ func (l *GetUserListLogic) GetUserList(in *sysclient.UserListRequest) (*sysclien
 	users, err := l.svcCtx.DB.GetUsersPagination(l.ctx, in.Status, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
 	if err != nil {
 		logc.Errorf(l.ctx, "获取用户列表失败: %v", err)
-		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "获取用户列表失败")
+		return nil, status.Error(codes.Internal, "获取用户列表失败")
 	}
 
 	total, _ := l.svcCtx.DB.CountUsers(l.ctx, in.Status)

@@ -3,7 +3,8 @@ package roleservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -31,7 +32,7 @@ func (l *GetRoleListLogic) GetRoleList(in *sysclient.RoleListRequest) (*sysclien
 	roles, err := l.svcCtx.DB.GetRolesPagination(l.ctx, in.Status, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
 	if err != nil {
 		logc.Errorf(l.ctx, "获取角色列表失败, 参数：%+v, 错误：%s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "获取角色列表失败")
 	}
 	total, _ := l.svcCtx.DB.CountRoles(l.ctx, in.Status)
 

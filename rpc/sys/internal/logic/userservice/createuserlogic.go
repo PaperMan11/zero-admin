@@ -2,10 +2,12 @@ package userservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	bcryptUtil "zero-admin/pkg/bcrypt"
 	"zero-admin/pkg/convert"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/pkg/utils"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/svc"
@@ -33,11 +35,11 @@ func (l *CreateUserLogic) CreateUser(in *sysclient.CreateUserRequest) (*sysclien
 	u, _ := l.svcCtx.DB.GetUserByUsername(l.ctx, in.Username)
 	if u.ID > 0 {
 		logc.Errorf(l.ctx, "用户已存在, 参数：%+v", in)
-		return nil, xerr.NewErrCode(xerr.ErrorUserExist)
+		return nil, errors.New("用户已存在")
 	}
 
 	if !bcryptUtil.ValidatePasswordLength(in.Password) {
-		return nil, xerr.NewErrCode(xerr.ErrorPasswordLength)
+		return nil, errors.New("密码长度不符合要求")
 	}
 	// 生成盐值
 	salt := utils.GetRandomString(16)
@@ -55,7 +57,7 @@ func (l *CreateUserLogic) CreateUser(in *sysclient.CreateUserRequest) (*sysclien
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建用户失败, 参数：%+v, 错误：%s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorCreateUser)
+		return nil, status.Error(codes.Internal, "创建用户失败")
 	}
 	user, _ := NewGetUserInfoLogic(l.ctx, l.svcCtx).GetUserInfo(&sysclient.GetUserInfoRequest{UserId: userID})
 	return user, nil

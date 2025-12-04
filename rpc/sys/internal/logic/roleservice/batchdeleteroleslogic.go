@@ -2,6 +2,8 @@ package roleservicelogic
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -31,7 +33,7 @@ func (l *BatchDeleteRolesLogic) BatchDeleteRoles(in *sysclient.BatchDeleteRolesR
 			Id: roleId,
 		})
 		if err != nil {
-			return nil, err
+			return nil, status.Error(codes.Internal, "批量删除角色失败")
 		}
 	}
 

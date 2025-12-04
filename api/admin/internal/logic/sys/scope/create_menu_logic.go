@@ -5,6 +5,9 @@ package scope
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,32 @@ func NewCreateMenuLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateMenuLogic) CreateMenu(req *types.CreateMenuRequest) (resp *types.Menu, err error) {
-	// todo: add your logic here and delete this line
+	res, err := l.svcCtx.ScopeService.CreateMenu(l.ctx, &scopeservice.CreateMenuRequest{
+		Menu: &scopeservice.Menu{
+			Id:        req.ScopeId,
+			ParentId:  req.ParentId,
+			MenuName:  req.MenuName,
+			MenuType:  req.MenuType,
+			Path:      req.Path,
+			Component: req.Component,
+			Redirect:  req.Redirect,
+			Icon:      req.Icon,
+			Sort:      req.Sort,
+			NoCache:   req.NoCache,
+			Affix:     req.Affix,
+			External:  req.External,
+			Hidden:    req.Hidden,
+			Status:    req.Status,
+			ScopeId:   req.ScopeId,
+			Remark:    req.Remark,
+		},
+		OperatorId: logic.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "创建菜单失败: %v", err)
+		return nil, err
+	}
 
-	return
+	menu := ConvertToTypesMenu(res)
+	return &menu, nil
 }

@@ -3,7 +3,8 @@ package scopeservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -31,7 +32,7 @@ func (l *GetMenuTreeLogic) GetMenuTree(in *sysclient.MenuListRequest) (*sysclien
 	menus, err := l.svcCtx.DB.GetMenus(l.ctx, in.Status, 0, -1)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询菜单信息, 参数：%+v, 错误：%v", in, err)
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "查询菜单信息异常")
 	}
 
 	tree := logic.BuildMenuTree(menus, 0)

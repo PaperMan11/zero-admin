@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/logic"
@@ -36,7 +38,7 @@ func (l *UpdateRoleLogic) UpdateRole(in *sysclient.UpdateRoleRequest) (*sysclien
 			return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 		}
 		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "更新角色失败")
 	}
 
 	role.RoleName = in.RoleName
@@ -45,7 +47,7 @@ func (l *UpdateRoleLogic) UpdateRole(in *sysclient.UpdateRoleRequest) (*sysclien
 	err = l.svcCtx.DB.SaveRole(l.ctx, *role)
 	if err != nil {
 		logc.Errorf(l.ctx, "更新角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "更新角色失败")
 	}
 
 	return logic.ConvertToRpcRole(role), nil

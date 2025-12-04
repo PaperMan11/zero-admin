@@ -2,9 +2,11 @@ package roleservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/pkg/convert"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -32,16 +34,16 @@ func (l *ToggleRoleStatusLogic) ToggleRoleStatus(in *sysclient.ToggleRoleStatusR
 	exists, err := l.svcCtx.DB.ExistsRoleByID(l.ctx, in.RoleId)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询role_code失败, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "禁用角色失败")
 	}
 	if !exists {
-		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
+		return nil, errors.New("角色不存在")
 	}
 
 	err = l.svcCtx.DB.ToggleRoleStatus(l.ctx, in.RoleId, in.Status, convert.ToString(in.OperatorId))
 	if err != nil {
 		logc.Errorf(l.ctx, "禁用角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "禁用/启用角色失败")
+		return nil, status.Error(codes.Internal, "禁用/启用角色失败")
 	}
 
 	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, in.RoleId)

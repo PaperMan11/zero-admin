@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/svc"
@@ -35,23 +37,23 @@ func (l *DeleteRoleLogic) DeleteRole(in *sysclient.DeleteRoleRequest) (*sysclien
 			return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 		}
 		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.Id, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "删除角色失败")
 	}
 
 	// 检查该角色是否已被用户关联，如果有则不能删除
 	count, err := l.svcCtx.DB.CountUserRoles(l.ctx, role.RoleCode)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询角色关联用户失败, 角色ID：%d, 错误：%s", in.Id, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorGetRoleAssociated)
+		return nil, status.Error(codes.Internal, "查询角色关联用户失败")
 	}
 	if count > 0 {
-		return nil, xerr.NewErrMsg("该角色已被用户关联，无法删除")
+		return nil, errors.New("该角色已被用户关联，请先解除关联关系")
 	}
 	// 同时删除角色与菜单的关联关系
 	err = l.svcCtx.DB.DeleteRoleTx(l.ctx, role.RoleCode)
 	if err != nil {
 		logc.Errorf(l.ctx, "删除角色菜单关联失败, roleId: %d, err: %v", in.Id, err)
-		return nil, xerr.NewErrMsg("删除角色菜单关联失败")
+		return nil, status.Error(codes.Internal, "删除角色菜单关联失败")
 	}
 
 	return &sysclient.Empty{}, nil

@@ -5,6 +5,9 @@ package scope
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,24 @@ func NewCreateScopeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 }
 
 func (l *CreateScopeLogic) CreateScope(req *types.CreateScopeRequest) (resp *types.Scope, err error) {
-	// todo: add your logic here and delete this line
+	res, err := l.svcCtx.ScopeService.CreateScope(l.ctx, &scopeservice.CreateScopeRequest{
+		ScopeName:   req.ScopeName,
+		ScopeCode:   req.ScopeCode,
+		Description: req.Description,
+		Sort:        req.Sort,
+		MenuIds:     req.MenuIds,
+		OperatorId:  logic.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "创建安全范围失败: %v", err)
+		return nil, err
+	}
 
-	return
+	return &types.Scope{
+		Id:          res.Id,
+		ScopeName:   res.ScopeName,
+		ScopeCode:   res.ScopeCode,
+		Description: res.Description,
+		Sort:        res.Sort,
+	}, nil
 }

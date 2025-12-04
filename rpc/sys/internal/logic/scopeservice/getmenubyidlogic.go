@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -32,10 +33,10 @@ func (l *GetMenuByIdLogic) GetMenuById(in *sysclient.Int64Value) (*sysclient.Men
 	menu, err := l.svcCtx.DB.GetMenuByID(l.ctx, in.Value)
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
-		return nil, xerr.NewErrCode(xerr.ErrorMenuNotExist)
+		return nil, errors.New("该菜单不存在")
 	case err != nil:
 		logc.Errorf(l.ctx, "查询菜单信息, 参数：%+v, 错误：%v", in, err)
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "查询菜单信息失败")
 	}
 	return logic.ConvertToRpcMenu(menu), nil
 }

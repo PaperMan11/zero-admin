@@ -76,8 +76,6 @@ type CreateMenuRequest {
 	Status    int32    `json:"status,default=1"` // 状态 (0-禁用, 1-正常)
 	ScopeId   int64    `json:"scope_id"` // 权限范围ID
 	Remark    string   `json:"remark,optional"` // 备注
-	Perms     []string `json:"perms"`
-	Children  []Menu   `json:"children"`
 }
 
 // 更新菜单请求

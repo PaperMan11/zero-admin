@@ -5,6 +5,9 @@ package scope
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,14 @@ func NewDeleteMenuLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteMenuLogic) DeleteMenu(req *types.DeleteMenuRequest) (resp *types.Empty, err error) {
-	// todo: add your logic here and delete this line
+	_, err = l.svcCtx.ScopeService.DeleteMenu(l.ctx, &scopeservice.DeleteMenuRequest{
+		Id:         req.Id,
+		OperatorId: logic.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "删除安全范围权限失败: %v", err)
+		return nil, err
+	}
 
-	return
+	return &types.Empty{}, nil
 }

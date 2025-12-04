@@ -2,9 +2,11 @@ package roleservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/pkg/convert"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/logic"
 
@@ -35,11 +37,11 @@ func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclien
 	exists, err := l.svcCtx.DB.ExistsRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询role_code失败, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "创建角色失败")
 	}
 	if exists {
 		logc.Errorf(l.ctx, "角色已存在, 参数：%+v", in)
-		return nil, xerr.NewErrCode(xerr.ErrorRoleExist)
+		return nil, errors.New("角色已存在")
 	}
 
 	// 2. 创建
@@ -53,7 +55,7 @@ func (l *CreateRoleLogic) CreateRole(in *sysclient.CreateRoleRequest) (*sysclien
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建角色失败, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "创建角色失败")
 	}
 
 	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, roleID)

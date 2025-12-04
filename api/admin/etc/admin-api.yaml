@@ -1,3 +1,33 @@
 Name: admin-api
 Host: 0.0.0.0
 Port: 8888
+
+Prometheus:
+  Host: 0.0.0.0
+  Port: 8188
+  Path: /metrics
+
+Redis:
+  Host: 192.168.241.128:6379
+  Pass: "123456"
+
+Log:
+  ServiceName: admin-api
+  Stat: false # go-zero 版本 >= 1.5.0 才支持
+  Mode: file
+  #  Encoding: plain
+  Path: logs/admin
+
+Auth:
+  AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d
+  AccessExpire: 3600
+  RefreshSecret: 5c5c5c5c-5c5c-5c5c-5c5c-5c5c5c5c5c5c
+  RefreshExpire: 86400
+
+#系统
+SysRpc:
+  Etcd:
+    Hosts:
+      - 192.168.241.128:2379
+    Key: sys.rpc
+  NonBlock: true

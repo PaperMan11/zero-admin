@@ -2,8 +2,10 @@ package roleservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -29,21 +31,21 @@ func (l *DeleteRolePermsLogic) DeleteRolePerms(in *sysclient.DeleteRolePermsRequ
 	exists, err := l.svcCtx.DB.ExistsRoleByID(l.ctx, in.RoleId)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "删除角色权限失败")
 	}
 	if !exists {
-		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
+		return nil, errors.New("角色不存在")
 	}
 
 	err = l.svcCtx.DB.DeleteRoleScopes(l.ctx, in.RoleCode, in.ScopeCodes)
 	if err != nil {
-		return nil, xerr.NewErrMsg("删除角色权限失败")
+		return nil, status.Error(codes.Internal, "删除角色权限失败")
 	}
 
 	perms, err := NewGetRolePermsLogic(l.ctx, l.svcCtx).GetRolePerms(&sysclient.Int64Value{Value: in.RoleId})
 	if err != nil {
 		logc.Errorf(l.ctx, "获取角色权限失败, 角色ID：%d, 异常: %s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorGetRolePerms)
+		return nil, status.Error(codes.Internal, "获取角色权限失败")
 	}
 
 	return perms, nil

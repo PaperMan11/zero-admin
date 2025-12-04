@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"time"
 	bcryptUtil "zero-admin/pkg/bcrypt"
@@ -39,29 +41,29 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		logc.Errorf(l.ctx, "用户不存在, 参数：%+v, 异常: %s", in, err.Error())
 		l.saveLoginLog(in, LoginStatusFail, "用户不存在")
-		return nil, xerr.NewErrCode(xerr.ErrorUserNotExist)
+		return nil, errors.New("用户不存在")
 	case err != nil:
 		logc.Errorf(l.ctx, "查询用户信息, 参数：%+v, 异常: %s", in, err.Error())
 		l.saveLoginLog(in, LoginStatusFail, fmt.Sprintf("系统异常:%s", err.Error()))
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "登录失败")
 	}
 
 	// 2.判断密码是否正确
 	if !bcryptUtil.CheckPassword(in.Password, user.Password) {
 		l.saveLoginLog(in, LoginStatusFail, "密码错误")
-		return nil, xerr.NewErrCode(xerr.ErrorUserPassword)
+		return nil, errors.New("密码错误")
 	}
 
 	// 3.生成token
 	// 用户角色信息
 	roleCodes, _ := l.svcCtx.DB.GetUserRoleCodes(l.ctx, user.ID)
 	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, l.svcCtx.Config.Name,
-		l.svcCtx.Config.Jwt.AccessSecret, l.svcCtx.Config.Jwt.AccessExpire,
-		l.svcCtx.Config.Jwt.RefreshSecret, l.svcCtx.Config.Jwt.RefreshExpire)
+		l.svcCtx.Config.Auth.AccessSecret, l.svcCtx.Config.Auth.AccessExpire,
+		l.svcCtx.Config.Auth.RefreshSecret, l.svcCtx.Config.Auth.RefreshExpire)
 	if err != nil {
 		logc.Errorf(l.ctx, "生成token异常, 登录参数：%+v, 错误：%s", in, err.Error())
 		l.saveLoginLog(in, LoginStatusFail, "生成token异常")
-		return nil, xerr.NewErrCode(xerr.ErrorTokenGenerate)
+		return nil, errors.New("登录失败")
 	}
 	// 4.更新登录时间
 	_ = l.svcCtx.DB.UpdateUserByID(l.ctx, user.ID, map[string]any{"last_login_time": time.Now()})
@@ -84,7 +86,7 @@ func (l *LoginLogic) saveLoginLog(in *sysclient.LoginRequest, status int32, msg 
 	if status == LoginStatusSuccess {
 		msg = "登录成功"
 	}
-	err := l.svcCtx.DB.CreateLoginLog(l.ctx, model.SysLoginLog{
+	_, err := l.svcCtx.DB.CreateLoginLog(l.ctx, model.SysLoginLog{
 		Username:  in.Username,
 		IP:        in.IpAddress,
 		Location:  "",

@@ -5,6 +5,9 @@ package role
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,48 @@ func NewUpdateRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 }
 
 func (l *UpdateRolePermsLogic) UpdateRolePerms(req *types.UpdateRolePermsRequest) (resp *types.RoleInfo, err error) {
-	// todo: add your logic here and delete this line
+	uid := logic.GetOperateID(l.ctx)
+	roleScopes := make([]*roleservice.RoleScope, 0, len(req.RoleScopes))
+	for _, v := range req.RoleScopes {
+		roleScopes = append(roleScopes, &roleservice.RoleScope{
+			Id:        v.Id,
+			RoleCode:  v.RoleCode,
+			ScopeCode: v.ScopeCode,
+			Perms:     v.Perms,
+		})
+	}
+	res, err := l.svcCtx.RoleService.UpdateRolePerms(l.ctx, &roleservice.UpdateRolePermsRequest{
+		RoleId:     req.RoleId,
+		RoleCode:   req.RoleCode,
+		OperatorId: uid,
+		RoleScopes: roleScopes,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "更新角色权限失败: %v", err)
+		return nil, err
+	}
 
-	return
+	scopes := make([]types.RoleScopeInfo, 0, len(res.Scopes))
+	for _, v := range res.Scopes {
+		scopes = append(scopes, types.RoleScopeInfo{
+			Scope: types.Scope{
+				Id:          v.Scope.Id,
+				ScopeName:   v.Scope.ScopeName,
+				ScopeCode:   v.Scope.ScopeCode,
+				Description: v.Scope.Description,
+				Sort:        v.Scope.Sort,
+			},
+			Perms: v.Perms,
+		})
+	}
+	return &types.RoleInfo{
+		Role: types.Role{
+			RoleId:      res.Role.RoleId,
+			RoleName:    res.Role.RoleName,
+			RoleCode:    res.Role.RoleCode,
+			Description: res.Role.Description,
+			Status:      res.Role.Status,
+		},
+		Scopes: scopes,
+	}, nil
 }

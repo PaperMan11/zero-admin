@@ -45,23 +45,21 @@ type BatchDeleteRolesRequest struct {
 }
 
 type CreateMenuRequest struct {
-	ParentId  int64    `json:"parent_id"`              // 父菜单ID
-	MenuName  string   `json:"menu_name"`              // 菜单名称
-	MenuType  string   `json:"menu_type"`              // 菜单类型 (M-目录, C-菜单, F-按钮)
-	Path      string   `json:"path,optional"`          // 路由路径
-	Component string   `json:"component"`              // 组件路径
-	Redirect  string   `json:"redirect,optional"`      // 重定向路径
-	Icon      string   `json:"icon,optional"`          // 菜单图标
-	Sort      int32    `json:"sort,default=0"`         // 排序
-	NoCache   bool     `json:"no_cache,default=false"` // 是否缓存
-	Affix     bool     `json:"affix,default=false"`    // 是否固定在标签栏
-	External  bool     `json:"external,default=false"` // 是否外部链接
-	Hidden    bool     `json:"hidden,default=false"`   // 是否隐藏
-	Status    int32    `json:"status,default=1"`       // 状态 (0-禁用, 1-正常)
-	ScopeId   int64    `json:"scope_id"`               // 权限范围ID
-	Remark    string   `json:"remark,optional"`        // 备注
-	Perms     []string `json:"perms"`
-	Children  []Menu   `json:"children"`
+	ParentId  int64  `json:"parent_id"`              // 父菜单ID
+	MenuName  string `json:"menu_name"`              // 菜单名称
+	MenuType  string `json:"menu_type"`              // 菜单类型 (M-目录, C-菜单, F-按钮)
+	Path      string `json:"path,optional"`          // 路由路径
+	Component string `json:"component"`              // 组件路径
+	Redirect  string `json:"redirect,optional"`      // 重定向路径
+	Icon      string `json:"icon,optional"`          // 菜单图标
+	Sort      int32  `json:"sort,default=0"`         // 排序
+	NoCache   bool   `json:"no_cache,default=false"` // 是否缓存
+	Affix     bool   `json:"affix,default=false"`    // 是否固定在标签栏
+	External  bool   `json:"external,default=false"` // 是否外部链接
+	Hidden    bool   `json:"hidden,default=false"`   // 是否隐藏
+	Status    int32  `json:"status,default=1"`       // 状态 (0-禁用, 1-正常)
+	ScopeId   int64  `json:"scope_id"`               // 权限范围ID
+	Remark    string `json:"remark,optional"`        // 备注
 }
 
 type CreateRoleRequest struct {

@@ -2,8 +2,10 @@ package roleservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/svc"
@@ -31,11 +33,11 @@ func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sy
 	exists, err := l.svcCtx.DB.ExistsRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询role_code失败, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "添加角色权限失败")
 	}
 	if !exists {
 		logc.Errorf(l.ctx, "角色不存在, 参数：%+v", in)
-		return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
+		return nil, errors.New("角色不存在")
 	}
 
 	roleScopes := make([]*model.SysRoleScope, 0, len(in.GetRoleScopes()))
@@ -50,13 +52,13 @@ func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sy
 	err = l.svcCtx.DB.AddRoleScopes(l.ctx, roleScopes)
 	if err != nil {
 		logc.Errorf(l.ctx, "添加角色安全范围权限失败, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorAddRoleScope)
+		return nil, status.Error(codes.Internal, "添加角色安全范围权限失败")
 	}
 
 	perms, err := NewGetRolePermsLogic(l.ctx, l.svcCtx).GetRolePerms(&sysclient.Int64Value{Value: in.RoleId})
 	if err != nil {
 		logc.Errorf(l.ctx, "获取角色权限失败, 角色ID：%d, 异常: %s", in.RoleId, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorGetRolePerms)
+		return nil, status.Error(codes.Internal, "获取角色权限失败")
 	}
 
 	return perms, nil

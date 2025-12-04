@@ -2,9 +2,11 @@ package scopeservicelogic
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/pkg/convert"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/mysql/model"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -31,14 +33,14 @@ func (l *CreateMenuLogic) CreateMenu(in *sysclient.CreateMenuRequest) (*sysclien
 	exists, err := l.svcCtx.DB.ExistsMenuByName(l.ctx, in.Menu.MenuName)
 	if err != nil {
 		logc.Errorf(l.ctx, "判断菜单是否存在失败, 菜单名：%s, 错误：%s", in.Menu.MenuName, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "创建菜单失败")
 	}
 	if exists {
-		return nil, xerr.NewErrCode(xerr.ErrorMenuExist)
+		return nil, errors.New("菜单名已存在")
 	}
 	exists, _ = l.svcCtx.DB.ExistsMenuByPath(l.ctx, in.Menu.Path)
 	if exists {
-		return nil, xerr.NewErrMsg("菜单路径已存在")
+		return nil, errors.New("菜单路径已存在")
 	}
 
 	newMenu := in.Menu
@@ -78,7 +80,7 @@ func (l *CreateMenuLogic) CreateMenu(in *sysclient.CreateMenuRequest) (*sysclien
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建菜单失败, 菜单名：%s, 错误：%s", in.Menu.MenuName, err.Error())
-		return nil, xerr.NewErrCode(xerr.ErrorDb)
+		return nil, status.Error(codes.Internal, "创建菜单失败")
 	}
 
 	return NewGetMenuByIdLogic(l.ctx, l.svcCtx).GetMenuById(&sysclient.Int64Value{Value: menuID})

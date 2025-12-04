@@ -3,8 +3,8 @@ package operatelogservicelogic
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/pkg/response/xerr"
-
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -30,7 +30,7 @@ func (l *DeleteOperateLogLogic) DeleteOperateLog(in *sysclient.DeleteOperateLogR
 	err := l.svcCtx.DB.DeleteOperateLogs(l.ctx, in.Ids)
 	if err != nil {
 		logc.Errorf(l.ctx, "删除系统操作日志表, 错误：%v", err)
-		return &sysclient.DeleteOperateLogResp{Pong: "1"}, xerr.NewErrCodeMsg(xerr.ErrorDb, "删除系统操作日志表失败")
+		return &sysclient.DeleteOperateLogResp{Pong: "1"}, status.Error(codes.Internal, "删除系统操作日志表失败")
 	}
 	return &sysclient.DeleteOperateLogResp{Pong: "0"}, nil
 }

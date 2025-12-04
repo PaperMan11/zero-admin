@@ -5,6 +5,9 @@ package role
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/logic"
+	"zero-admin/rpc/sys/sysclient"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +30,22 @@ func NewToggleRoleStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *ToggleRoleStatusLogic) ToggleRoleStatus(req *types.ToggleRoleStatusRequest) (resp *types.Role, err error) {
-	// todo: add your logic here and delete this line
+	uid := logic.GetOperateID(l.ctx)
+	res, err := l.svcCtx.RoleService.ToggleRoleStatus(l.ctx, &sysclient.ToggleRoleStatusRequest{
+		RoleId:     req.RoleId,
+		Status:     req.Status,
+		OperatorId: uid,
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "切换角色状态失败: %v", err)
+		return nil, err
+	}
 
-	return
+	return &types.Role{
+		RoleId:      res.RoleId,
+		RoleName:    res.RoleName,
+		RoleCode:    res.RoleCode,
+		Description: res.Description,
+		Status:      res.Status,
+	}, nil
 }

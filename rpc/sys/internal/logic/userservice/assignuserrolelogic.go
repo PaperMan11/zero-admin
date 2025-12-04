@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
 
@@ -34,13 +36,13 @@ func (l *AssignUserRoleLogic) AssignUserRole(in *sysclient.AssignUserRoleRequest
 			return nil, xerr.NewErrCode(xerr.ErrorUserNotExist)
 		}
 		logc.Errorf(l.ctx, "查询用户信息, 参数：%+v, 错误：%v", in, err)
-		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "查询用户信息失败")
+		return nil, status.Error(codes.Internal, "查询用户信息异常")
 	}
 
 	err = l.svcCtx.DB.AddUserRolesTx(l.ctx, user.ID, in.RoleCodes)
 	if err != nil {
 		logc.Errorf(l.ctx, "添加用户角色, 参数：%+v, 错误：%v", in, err)
-		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, "添加用户角色失败")
+		return nil, status.Error(codes.Internal, "添加用户角色异常")
 	}
 
 	return &sysclient.Empty{}, nil

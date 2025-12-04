@@ -2,7 +2,8 @@ package operatelogservicelogic
 
 import (
 	"context"
-	"zero-admin/pkg/response/xerr"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -29,7 +30,7 @@ func NewQueryOperateLogDetailLogic(ctx context.Context, svcCtx *svc.ServiceConte
 func (l *QueryOperateLogDetailLogic) QueryOperateLogDetail(in *sysclient.QueryOperateLogDetailReq) (*sysclient.OperateLog, error) {
 	log, err := l.svcCtx.DB.GetOperateLog(l.ctx, in.Id)
 	if err != nil {
-		return nil, xerr.NewErrCodeMsg(xerr.ErrorDb, err.Error())
+		return nil, status.Error(codes.Internal, "查询系统操作日志表详情失败")
 	}
 	return logic.ConvertToRpcOperateLog(log), nil
 }
