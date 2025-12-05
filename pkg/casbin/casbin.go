@@ -22,11 +22,8 @@ func GetDefaultModelText() string {
 		[policy_effect]
 		e = some(where (p.eft == allow))
 		
-		[role_definition]
-		g = _, _
-		
 		[matchers]
-		m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && myFunc(r.obj, p.obj) && regexMatch(r.act, p.act)
+		m = r.sub == p.sub && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act) && myFunc(r.obj, p.obj)
 	`
 }
 
@@ -64,7 +61,7 @@ func MustNewGormAdapter(dsn string) interface{} {
 	return adapter
 }
 
-func NewReidsWatcher(c *redis.RedisConf, callback func(data string)) (persist.Watcher, error) {
+func NewRedisWatcher(c *redis.RedisConf, callback func(data string)) (persist.Watcher, error) {
 	watcher, err := rediswatcher.NewWatcher(c.Host, rediswatcher.WatcherOptions{
 		Options: redisv9.Options{
 			Network:  "tcp",
@@ -82,8 +79,8 @@ func NewReidsWatcher(c *redis.RedisConf, callback func(data string)) (persist.Wa
 	return watcher, nil
 }
 
-func MustNewReidsWatcher(c *redis.RedisConf, callback func(data string)) persist.Watcher {
-	watcher, err := NewReidsWatcher(c, callback)
+func MustNewRedisWatcher(c *redis.RedisConf, callback func(data string)) persist.Watcher {
+	watcher, err := NewRedisWatcher(c, callback)
 	logx.Must(err)
 	return watcher
 }

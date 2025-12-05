@@ -20,10 +20,10 @@ const (
 
 type Config struct {
 	DSN          string
-	MaxOpenConns int
-	MaxIdleConns int
-	MaxLifetime  int
-	LogLevel     logger.LogLevel
+	MaxOpenConns int             `json:",default=100"`
+	MaxIdleConns int             `json:",default=10"`
+	MaxLifetime  int             `json:",default=3600"`
+	LogLevel     logger.LogLevel `json:",default=4"`
 }
 
 type ormLog struct {

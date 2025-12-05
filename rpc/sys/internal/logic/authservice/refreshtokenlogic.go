@@ -32,10 +32,10 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 // 刷新令牌
 func (l *RefreshTokenLogic) RefreshToken(in *sysclient.RefreshTokenRequest) (*sysclient.RefreshTokenResponse, error) {
 	issuer := l.svcCtx.Config.Name
-	accessSecret := l.svcCtx.Config.Auth.AccessSecret
-	accessExpire := l.svcCtx.Config.Auth.AccessExpire
-	refreshSecret := l.svcCtx.Config.Auth.RefreshSecret
-	refreshExpire := l.svcCtx.Config.Auth.RefreshExpire
+	accessSecret := l.svcCtx.Config.Jwt.AccessSecret
+	accessExpire := l.svcCtx.Config.Jwt.AccessExpire
+	refreshSecret := l.svcCtx.Config.Jwt.RefreshSecret
+	refreshExpire := l.svcCtx.Config.Jwt.RefreshExpire
 
 	userIDStr, err := jwtUtil.ParseRefreshToken(issuer, in.RefreshToken, refreshSecret)
 	if err != nil {

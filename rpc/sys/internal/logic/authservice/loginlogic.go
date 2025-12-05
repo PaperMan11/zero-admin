@@ -58,8 +58,8 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	// 用户角色信息
 	roleCodes, _ := l.svcCtx.DB.GetUserRoleCodes(l.ctx, user.ID)
 	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, l.svcCtx.Config.Name,
-		l.svcCtx.Config.Auth.AccessSecret, l.svcCtx.Config.Auth.AccessExpire,
-		l.svcCtx.Config.Auth.RefreshSecret, l.svcCtx.Config.Auth.RefreshExpire)
+		l.svcCtx.Config.Jwt.AccessSecret, l.svcCtx.Config.Jwt.AccessExpire,
+		l.svcCtx.Config.Jwt.RefreshSecret, l.svcCtx.Config.Jwt.RefreshExpire)
 	if err != nil {
 		logc.Errorf(l.ctx, "生成token异常, 登录参数：%+v, 错误：%s", in, err.Error())
 		l.saveLoginLog(in, LoginStatusFail, "生成token异常")

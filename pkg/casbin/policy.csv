@@ -1,3 +1,1 @@
-p, admin, /*, (GET)|(POST)|(PUT)|(DELETE)
-
-g, tzq, admin
+p, superuser, /*, (GET)|(POST)|(PUT)|(DELETE)

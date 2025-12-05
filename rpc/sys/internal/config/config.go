@@ -11,7 +11,7 @@ type Config struct {
 	DbMode string `json:",default=mockdb"` // 数据库模式 mysql, mockdb
 	Mysql  orm.Config
 
-	Auth struct {
+	Jwt struct {
 		AccessSecret  string
 		AccessExpire  int64
 		RefreshSecret string
