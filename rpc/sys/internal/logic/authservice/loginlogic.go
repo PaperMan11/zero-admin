@@ -12,6 +12,7 @@ import (
 	bcryptUtil "zero-admin/pkg/bcrypt"
 	jwtUtil "zero-admin/pkg/jwt"
 	"zero-admin/pkg/response/xerr"
+	uuid2 "zero-admin/pkg/uuid"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -104,10 +105,11 @@ func (l *LoginLogic) saveLoginLog(in *sysclient.LoginRequest, status int32, msg 
 func GenerateToken(userID int64, roles []string,
 	issuer string, accessSecret string, accessExpire int64,
 	refreshSecret string, refreshExpire int64) (accessToken, refreshToken string, err error) {
-	accessToken, err = jwtUtil.GenerateAccessToken(issuer, userID, roles, accessSecret, accessExpire)
+	uuid := uuid2.GetUUID()
+	accessToken, err = jwtUtil.GenerateAccessToken(uuid, issuer, userID, roles, accessSecret, accessExpire)
 	if err != nil {
 		return "", "", xerr.NewErrCode(xerr.ErrorTokenGenerate)
 	}
-	refreshToken, _ = jwtUtil.GenerateRefreshToken(issuer, userID, refreshSecret, refreshExpire)
+	refreshToken, _ = jwtUtil.GenerateRefreshToken(uuid, issuer, refreshSecret, refreshExpire)
 	return accessToken, refreshToken, nil
 }

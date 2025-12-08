@@ -5,6 +5,8 @@ package auth
 
 import (
 	"context"
+	"zero-admin/api/admin/internal/utils"
+	"zero-admin/pkg/convert"
 
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
@@ -27,7 +29,8 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 }
 
 func (l *LogoutLogic) Logout() (resp *types.Empty, err error) {
-	// todo: add your logic here and delete this line
-
+	// 添加token过期管理
+	uid := convert.ToInt64(l.ctx.Value("uid"))
+	l.svcCtx.Redis.DelCtx(l.ctx, utils.GetAccessTokenKey(uid), utils.GetRefreshTokenKey(uid))
 	return
 }

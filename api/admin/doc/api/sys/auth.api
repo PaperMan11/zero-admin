@@ -63,6 +63,10 @@ service admin-api {
 	// 用户登录
 	@handler Login
 	post /login (LoginRequest) returns (LoginResponse)
+
+	// 刷新令牌
+	@handler RefreshToken
+	post /refresh_token (RefreshTokenRequest) returns (RefreshTokenResponse)
 }
 
 @server (
@@ -74,8 +78,4 @@ service admin-api {
 	// 用户登出
 	@handler Logout
 	post /logout returns (Empty)
-
-	// 刷新令牌
-	@handler RefreshToken
-	post /refresh_token (RefreshTokenRequest) returns (RefreshTokenResponse)
 }

@@ -1,13 +1,10 @@
 package jwt
 
 import (
-	"errors"
-	"time"
-	"zero-admin/pkg/convert"
-	"zero-admin/pkg/response/xerr"
-
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/zeromicro/go-zero/core/logx"
+	"time"
+	"zero-admin/pkg/response/xerr"
 )
 
 /*
@@ -49,19 +46,21 @@ import (
 
 */
 
-type CustomClaims struct {
+type AccessClaims struct {
 	Uid  int64    `json:"uid"`
 	Role []string `json:"role"`
+	Uuid string   `json:"uuid"`
 	jwt.RegisteredClaims
 }
 
-func GenerateAccessToken(Issuer string, userID int64, role []string, secretKey string, accessExpire int64) (string, error) {
+func GenerateAccessToken(uuid string, issuer string, userID int64, role []string, secretKey string, accessExpire int64) (string, error) {
 	now := time.Now()
-	claims := CustomClaims{
+	claims := AccessClaims{
 		Uid:  userID,
 		Role: role,
+		Uuid: uuid,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    Issuer,
+			Issuer:    issuer,
 			IssuedAt:  jwt.NewNumericDate(now),
 			ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(accessExpire) * time.Second)),
 		},
@@ -70,8 +69,8 @@ func GenerateAccessToken(Issuer string, userID int64, role []string, secretKey s
 	return token.SignedString([]byte(secretKey))
 }
 
-func ParseToken(tokenString, secretKey string) (*CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(tokenString, secretKey string) (*AccessClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &AccessClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
 	if err != nil {
@@ -83,7 +82,7 @@ func ParseToken(tokenString, secretKey string) (*CustomClaims, error) {
 		return nil, xerr.NewErrCode(xerr.ErrorTokenExpire)
 	}
 
-	claims, ok := token.Claims.(*CustomClaims)
+	claims, ok := token.Claims.(*AccessClaims)
 	if !ok {
 		return nil, xerr.NewErrCode(xerr.ErrorTokenInvalid)
 	}
@@ -91,38 +90,44 @@ func ParseToken(tokenString, secretKey string) (*CustomClaims, error) {
 	return claims, nil
 }
 
+type RefreshClaims struct {
+	Uuid string `json:"uuid"`
+	jwt.RegisteredClaims
+}
+
 // 生成 Refresh Token
-func GenerateRefreshToken(Issuer string, userID int64, refreshSecretKey string, refreshExpire int64) (string, error) {
-	expireTime := time.Now().Add(time.Duration(refreshExpire) * time.Second)
-	// Refresh Token 载荷可简化（仅需用户 ID 和过期时间）
-	claims := jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(expireTime),
-		IssuedAt:  jwt.NewNumericDate(time.Now()),
-		Issuer:    Issuer,
-		Subject:   convert.ToString(userID), // 存储用户 ID（字符串格式）
+func GenerateRefreshToken(uuid string, issuer string, refreshSecretKey string, refreshExpire int64) (string, error) {
+	// Refresh Token
+	now := time.Now()
+	claims := &RefreshClaims{
+		Uuid: uuid,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    issuer,
+			IssuedAt:  jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(refreshExpire) * time.Second)),
+		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(refreshSecretKey))
 }
 
-func ParseRefreshToken(Issuer, tokenString, refreshSecretKey string) (string, error) {
-	token, err := jwt.ParseWithClaims(
-		tokenString,
-		&jwt.RegisteredClaims{},
-		func(token *jwt.Token) (interface{}, error) {
-			return []byte(refreshSecretKey), nil
-		},
-	)
+func ParseRefreshToken(tokenString, refreshSecretKey string) (*RefreshClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &RefreshClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(refreshSecretKey), nil
+	})
 	if err != nil {
-		return "", err
+		logx.Error("ParseToken: ", err)
+		return nil, err
 	}
-	claims, ok := token.Claims.(*jwt.RegisteredClaims)
-	if !ok || !token.Valid {
-		return "", errors.New("invalid refresh token")
+
+	if !token.Valid {
+		return nil, xerr.NewErrCode(xerr.ErrorTokenExpire)
 	}
-	// 验证 Issuer（可选，增强安全性）
-	if claims.Issuer != Issuer {
-		return "", errors.New("invalid issuer")
+
+	claims, ok := token.Claims.(*RefreshClaims)
+	if !ok {
+		return nil, xerr.NewErrCode(xerr.ErrorTokenInvalid)
 	}
-	return claims.Subject, nil // 返回用户 ID
+
+	return claims, nil
 }
