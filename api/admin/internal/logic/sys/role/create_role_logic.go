@@ -6,7 +6,7 @@ package role
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -30,7 +30,7 @@ func NewCreateRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateRoleLogic) CreateRole(req *types.CreateRoleRequest) (resp *types.Role, err error) {
-	uid := logic.GetOperateID(l.ctx)
+	uid := utils.GetOperateID(l.ctx)
 	res, err := l.svcCtx.RoleService.CreateRole(l.ctx, &roleservice.CreateRoleRequest{
 		RoleName:    req.RoleName,
 		RoleCode:    req.RoleCode,

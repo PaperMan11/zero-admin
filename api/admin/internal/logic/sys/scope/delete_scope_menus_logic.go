@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -33,7 +33,7 @@ func (l *DeleteScopeMenusLogic) DeleteScopeMenus(req *types.DeleteScopeMenusRequ
 	res, err := l.svcCtx.ScopeService.DeleteScopeMenus(l.ctx, &scopeservice.DeleteScopeMenusRequest{
 		ScopeId:    req.ScopeId,
 		MenuIds:    req.MenuIds,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 		DeleteAll:  req.DeleteAll,
 	})
 	if err != nil {
@@ -49,6 +49,6 @@ func (l *DeleteScopeMenusLogic) DeleteScopeMenus(req *types.DeleteScopeMenusRequ
 			Description: res.Scope.Description,
 			Sort:        res.Scope.Sort,
 		},
-		Menus: logic.ConvertToTypesMenus(res.Menus),
+		Menus: utils.ConvertToTypesMenus(res.Menus),
 	}, nil
 }

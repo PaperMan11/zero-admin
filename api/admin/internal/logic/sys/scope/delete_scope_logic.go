@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/sysclient"
 
 	"zero-admin/api/admin/internal/svc"
@@ -32,7 +32,7 @@ func NewDeleteScopeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delet
 func (l *DeleteScopeLogic) DeleteScope(req *types.DeleteScopeRequest) (resp *types.Empty, err error) {
 	_, err = l.svcCtx.ScopeService.DeleteScope(l.ctx, &sysclient.DeleteScopeRequest{
 		Id:         req.Id,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "删除安全范围失败: %v", err)

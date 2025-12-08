@@ -18,7 +18,7 @@ Log:
   ServiceName: admin-api
   Stat: false # go-zero 版本 >= 1.5.0 才支持
   Mode: file
-  #  Encoding: plain
+  Encoding: plain
   Path: logs/admin
 
 Auth:

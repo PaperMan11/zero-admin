@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -50,6 +50,6 @@ func (l *GetUserListLogic) GetUserList(req *types.UserListRequest) (resp *types.
 			PageSize:  int64(res.PageResponse.PageSize),
 			TotalPage: int64(res.PageResponse.TotalPage),
 		},
-		Users: logic.ConvertToTypesUsers(res.Users),
+		Users: utils.ConvertToTypesUsers(res.Users),
 	}, nil
 }

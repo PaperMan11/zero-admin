@@ -1,7 +1,10 @@
-package logic
+package utils
 
 import (
 	"context"
+	"fmt"
+	"path"
+	"strings"
 	"zero-admin/api/admin/internal/types"
 	"zero-admin/pkg/convert"
 	"zero-admin/rpc/sys/client/roleservice"
@@ -110,4 +113,22 @@ func ConvertToTypesUserInfo(userInfo *userservice.UserInfo) types.UserInfo {
 		Roles:    ConvertToTypesRoles(userInfo.Roles),
 		MenuTree: ConvertToTypesMenus(userInfo.MenuTree),
 	}
+}
+
+// 将scopeCode转换为url形式
+func ConvertScopeCodeToUrl(scopeCode string) string {
+	return path.Join("api", scopeCode, "*")
+}
+
+func ConvertToCasbinRule(roleCode, scopeCode string, perms []string) (rule []string) {
+	sub := roleCode
+	obj := ConvertScopeCodeToUrl(scopeCode)
+
+	// 将 []{"GET","DELETE"} -> (GET)|(DELETE)
+	var parts []string
+	for _, m := range perms {
+		parts = append(parts, fmt.Sprintf("(%s)", m))
+	}
+	act := strings.Join(parts, "|")
+	return []string{sub, obj, act}
 }

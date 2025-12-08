@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	AuthService_Register_FullMethodName     = "/sysclient.AuthService/Register"
 	AuthService_Login_FullMethodName        = "/sysclient.AuthService/Login"
 	AuthService_RefreshToken_FullMethodName = "/sysclient.AuthService/RefreshToken"
 )
@@ -29,6 +30,8 @@ const (
 //
 // 认证服务
 type AuthServiceClient interface {
+	// 注册
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	// 用户登录
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// 刷新令牌
@@ -41,6 +44,16 @@ type authServiceClient struct {
 
 func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
+}
+
+func (c *authServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, AuthService_Register_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
@@ -69,6 +82,8 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRe
 //
 // 认证服务
 type AuthServiceServer interface {
+	// 注册
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	// 用户登录
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// 刷新令牌
@@ -83,6 +98,9 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
+func (UnimplementedAuthServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
 func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
@@ -108,6 +126,24 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&AuthService_ServiceDesc, srv)
+}
+
+func _AuthService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -153,6 +189,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "sysclient.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Register",
+			Handler:    _AuthService_Register_Handler,
+		},
 		{
 			MethodName: "Login",
 			Handler:    _AuthService_Login_Handler,
@@ -395,16 +435,17 @@ var OperateLogService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RoleService_GetRoleList_FullMethodName      = "/sysclient.RoleService/GetRoleList"
-	RoleService_CreateRole_FullMethodName       = "/sysclient.RoleService/CreateRole"
-	RoleService_UpdateRole_FullMethodName       = "/sysclient.RoleService/UpdateRole"
-	RoleService_ToggleRoleStatus_FullMethodName = "/sysclient.RoleService/ToggleRoleStatus"
-	RoleService_DeleteRole_FullMethodName       = "/sysclient.RoleService/DeleteRole"
-	RoleService_BatchDeleteRoles_FullMethodName = "/sysclient.RoleService/BatchDeleteRoles"
-	RoleService_AddRolePerms_FullMethodName     = "/sysclient.RoleService/AddRolePerms"
-	RoleService_UpdateRolePerms_FullMethodName  = "/sysclient.RoleService/UpdateRolePerms"
-	RoleService_DeleteRolePerms_FullMethodName  = "/sysclient.RoleService/DeleteRolePerms"
-	RoleService_GetRolePerms_FullMethodName     = "/sysclient.RoleService/GetRolePerms"
+	RoleService_GetRoleList_FullMethodName          = "/sysclient.RoleService/GetRoleList"
+	RoleService_CreateRole_FullMethodName           = "/sysclient.RoleService/CreateRole"
+	RoleService_UpdateRole_FullMethodName           = "/sysclient.RoleService/UpdateRole"
+	RoleService_ToggleRoleStatus_FullMethodName     = "/sysclient.RoleService/ToggleRoleStatus"
+	RoleService_DeleteRole_FullMethodName           = "/sysclient.RoleService/DeleteRole"
+	RoleService_BatchDeleteRoles_FullMethodName     = "/sysclient.RoleService/BatchDeleteRoles"
+	RoleService_AddRolePerms_FullMethodName         = "/sysclient.RoleService/AddRolePerms"
+	RoleService_UpdateRolePerms_FullMethodName      = "/sysclient.RoleService/UpdateRolePerms"
+	RoleService_DeleteRolePerms_FullMethodName      = "/sysclient.RoleService/DeleteRolePerms"
+	RoleService_GetRolePerms_FullMethodName         = "/sysclient.RoleService/GetRolePerms"
+	RoleService_GetRoleListByRoleIDs_FullMethodName = "/sysclient.RoleService/GetRoleListByRoleIDs"
 )
 
 // RoleServiceClient is the client API for RoleService service.
@@ -429,7 +470,9 @@ type RoleServiceClient interface {
 	// 删除角色权限
 	DeleteRolePerms(ctx context.Context, in *DeleteRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 	// 获取角色权限
-	GetRolePerms(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
+	GetRolePerms(ctx context.Context, in *GetRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+	// 获取角色列表
+	GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error)
 }
 
 type roleServiceClient struct {
@@ -530,10 +573,20 @@ func (c *roleServiceClient) DeleteRolePerms(ctx context.Context, in *DeleteRoleP
 	return out, nil
 }
 
-func (c *roleServiceClient) GetRolePerms(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
+func (c *roleServiceClient) GetRolePerms(ctx context.Context, in *GetRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RoleInfo)
 	err := c.cc.Invoke(ctx, RoleService_GetRolePerms_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleServiceClient) GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRoleByRoleCodesResponse)
+	err := c.cc.Invoke(ctx, RoleService_GetRoleListByRoleIDs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -562,7 +615,9 @@ type RoleServiceServer interface {
 	// 删除角色权限
 	DeleteRolePerms(context.Context, *DeleteRolePermsRequest) (*RoleInfo, error)
 	// 获取角色权限
-	GetRolePerms(context.Context, *Int64Value) (*RoleInfo, error)
+	GetRolePerms(context.Context, *GetRolePermsRequest) (*RoleInfo, error)
+	// 获取角色列表
+	GetRoleListByRoleIDs(context.Context, *GetRoleByRoleCodesRequest) (*GetRoleByRoleCodesResponse, error)
 	mustEmbedUnimplementedRoleServiceServer()
 }
 
@@ -600,8 +655,11 @@ func (UnimplementedRoleServiceServer) UpdateRolePerms(context.Context, *UpdateRo
 func (UnimplementedRoleServiceServer) DeleteRolePerms(context.Context, *DeleteRolePermsRequest) (*RoleInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRolePerms not implemented")
 }
-func (UnimplementedRoleServiceServer) GetRolePerms(context.Context, *Int64Value) (*RoleInfo, error) {
+func (UnimplementedRoleServiceServer) GetRolePerms(context.Context, *GetRolePermsRequest) (*RoleInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRolePerms not implemented")
+}
+func (UnimplementedRoleServiceServer) GetRoleListByRoleIDs(context.Context, *GetRoleByRoleCodesRequest) (*GetRoleByRoleCodesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleListByRoleIDs not implemented")
 }
 func (UnimplementedRoleServiceServer) mustEmbedUnimplementedRoleServiceServer() {}
 func (UnimplementedRoleServiceServer) testEmbeddedByValue()                     {}
@@ -787,7 +845,7 @@ func _RoleService_DeleteRolePerms_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _RoleService_GetRolePerms_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Int64Value)
+	in := new(GetRolePermsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -799,7 +857,25 @@ func _RoleService_GetRolePerms_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: RoleService_GetRolePerms_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RoleServiceServer).GetRolePerms(ctx, req.(*Int64Value))
+		return srv.(RoleServiceServer).GetRolePerms(ctx, req.(*GetRolePermsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RoleService_GetRoleListByRoleIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoleByRoleCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).GetRoleListByRoleIDs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_GetRoleListByRoleIDs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).GetRoleListByRoleIDs(ctx, req.(*GetRoleByRoleCodesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -850,6 +926,10 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRolePerms",
 			Handler:    _RoleService_GetRolePerms_Handler,
+		},
+		{
+			MethodName: "GetRoleListByRoleIDs",
+			Handler:    _RoleService_GetRoleListByRoleIDs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

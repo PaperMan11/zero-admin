@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -39,6 +39,6 @@ func (l *GetMenuTreeLogic) GetMenuTree(req *types.MenuListRequest) (resp *types.
 		return nil, err
 	}
 
-	menuTree := logic.ConvertToTypesMenus(res.Menus)
+	menuTree := utils.ConvertToTypesMenus(res.Menus)
 	return &types.MenuTreeResponse{Menus: menuTree}, nil
 }

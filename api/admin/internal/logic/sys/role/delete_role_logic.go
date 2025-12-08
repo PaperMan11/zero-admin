@@ -6,7 +6,7 @@ package role
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -30,14 +30,20 @@ func NewDeleteRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteRoleLogic) DeleteRole(req *types.DeleteRoleRequest) (resp *types.Empty, err error) {
-	uid := logic.GetOperateID(l.ctx)
+	uid := utils.GetOperateID(l.ctx)
 	_, err = l.svcCtx.RoleService.DeleteRole(l.ctx, &roleservice.DeleteRoleRequest{
-		Id:         req.Id,
+		RoleCode:   req.RoleCode,
 		OperatorId: uid,
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "删除角色失败: %v", err)
 		return nil, err
 	}
+
+	ok, err := l.svcCtx.CasbinEnforcer.RemoveFilteredNamedPolicy("p", 0, req.RoleCode)
+	if err != nil || !ok {
+		logc.Errorf(l.ctx, "删除角色casbin权限失败: %v", err)
+	}
+
 	return &types.Empty{}, nil
 }

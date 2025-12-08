@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -36,7 +36,7 @@ func (l *CreateScopeLogic) CreateScope(req *types.CreateScopeRequest) (resp *typ
 		Description: req.Description,
 		Sort:        req.Sort,
 		MenuIds:     req.MenuIds,
-		OperatorId:  logic.GetOperateID(l.ctx),
+		OperatorId:  utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建安全范围失败: %v", err)

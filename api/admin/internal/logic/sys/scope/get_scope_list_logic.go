@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -45,8 +45,8 @@ func (l *GetScopeListLogic) GetScopeList(req *types.ScopeListRequest) (resp *typ
 	scopeInfos := make([]types.ScopeInfo, 0, len(res.Scopes))
 	for _, v := range res.Scopes {
 		scopeInfos = append(scopeInfos, types.ScopeInfo{
-			Scope: logic.ConvertToTypesScope(v.Scope),
-			Menus: logic.ConvertToTypesMenus(v.Menus),
+			Scope: utils.ConvertToTypesScope(v.Scope),
+			Menus: utils.ConvertToTypesMenus(v.Menus),
 		})
 	}
 	return &types.ScopeListResponse{

@@ -6,6 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 	"zero-admin/pkg/convert"
 	"zero-admin/rpc/sys/internal/logic"
 
@@ -31,21 +32,21 @@ func NewToggleRoleStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // 禁用角色
 func (l *ToggleRoleStatusLogic) ToggleRoleStatus(in *sysclient.ToggleRoleStatusRequest) (*sysclient.Role, error) {
-	exists, err := l.svcCtx.DB.ExistsRoleByID(l.ctx, in.RoleId)
+	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("角色不存在")
+		}
 		logc.Errorf(l.ctx, "查询role_code失败, 参数：%+v, 异常: %s", in, err.Error())
 		return nil, status.Error(codes.Internal, "禁用角色失败")
 	}
-	if !exists {
-		return nil, errors.New("角色不存在")
-	}
 
-	err = l.svcCtx.DB.ToggleRoleStatus(l.ctx, in.RoleId, in.Status, convert.ToString(in.OperatorId))
+	err = l.svcCtx.DB.ToggleRoleStatus(l.ctx, role.ID, in.Status, convert.ToString(in.OperatorId))
 	if err != nil {
-		logc.Errorf(l.ctx, "禁用角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
+		logc.Errorf(l.ctx, "禁用角色失败, 角色ID：%d, 错误：%s", role.ID, err.Error())
 		return nil, status.Error(codes.Internal, "禁用/启用角色失败")
 	}
 
-	role, _ := l.svcCtx.DB.GetRoleByID(l.ctx, in.RoleId)
-	return logic.ConvertToRpcRole(role), nil
+	newRole, _ := l.svcCtx.DB.GetRoleByID(l.ctx, role.ID)
+	return logic.ConvertToRpcRole(newRole), nil
 }

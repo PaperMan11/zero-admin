@@ -15,43 +15,47 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type LoginLogic struct {
+type RegisterLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic {
-	return &LoginLogic{
+func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RegisterLogic {
+	return &RegisterLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *LoginLogic) Login(req *types.LoginRequest, ip, os, browser string) (resp *types.LoginResponse, err error) {
-	res, err := l.svcCtx.AuthService.Login(l.ctx, &authservice.LoginRequest{
+func (l *RegisterLogic) Register(req *types.RegisterRequest, ip, os, browser string) (resp *types.RegisterResponse, err error) {
+	res, err := l.svcCtx.AuthService.Register(l.ctx, &authservice.RegisterRequest{
 		Username:  req.Username,
 		Password:  req.Password,
 		IpAddress: ip,
+		Email:     req.Email,
+		Mobile:    req.Mobile,
+		RealName:  req.RealName,
+		Gender:    req.Gender,
+		Avatar:    req.Avatar,
 		Os:        os,
 		Browser:   browser,
 	})
 	if err != nil {
-		logc.Errorf(l.ctx, "用户登录：%+v,异常:%s", req, err.Error())
+		logc.Errorf(l.ctx, "用户注册：%+v,异常:%s", req, err.Error())
 		return nil, err
 	}
-
 	// 添加token过期管理
 	accessTokenExpire := l.svcCtx.Config.Auth.AccessExpire
 	refreshTokenExpire := l.svcCtx.Config.Auth.RefreshExpire
 	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetAccessTokenKey(res.Id), res.Token, int(accessTokenExpire))
 	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetRefreshTokenKey(res.Id), res.RefreshToken, int(refreshTokenExpire))
 
-	return &types.LoginResponse{
-		AccessToken:  res.Token,
+	return &types.RegisterResponse{
 		Id:           res.Id,
 		RefreshToken: res.RefreshToken,
+		Token:        res.Token,
 		Username:     res.Username,
 	}, nil
 }

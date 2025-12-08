@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -37,13 +37,13 @@ func (l *UpdateUserLogic) UpdateUser(req *types.UpdateUserRequest) (resp *types.
 		RealName:   req.RealName,
 		Gender:     req.Gender,
 		Avatar:     req.Avatar,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "更新用户信息, 参数: %v, 异常: %v", req, err)
 		return nil, err
 	}
 
-	user := logic.ConvertToTypesUser(res)
+	user := utils.ConvertToTypesUser(res)
 	return &user, nil
 }

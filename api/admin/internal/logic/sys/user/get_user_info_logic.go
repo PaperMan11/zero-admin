@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -36,6 +36,6 @@ func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoRequest) (resp *typ
 		return nil, err
 	}
 
-	userInfo := logic.ConvertToTypesUserInfo(res)
+	userInfo := utils.ConvertToTypesUserInfo(res)
 	return &userInfo, nil
 }

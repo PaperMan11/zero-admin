@@ -6,6 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/svc"
@@ -30,14 +31,15 @@ func NewAddRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddR
 
 // 添加角色权限
 func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sysclient.RoleInfo, error) {
-	exists, err := l.svcCtx.DB.ExistsRoleByCode(l.ctx, in.RoleCode)
+	//exists, err := l.svcCtx.DB.ExistsRoleByCode(l.ctx, in.RoleCode)
+	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			logc.Errorf(l.ctx, "角色不存在, 参数：%+v", in)
+			return nil, errors.New("角色不存在")
+		}
 		logc.Errorf(l.ctx, "查询role_code失败, 参数：%+v, 异常: %s", in, err.Error())
 		return nil, status.Error(codes.Internal, "添加角色权限失败")
-	}
-	if !exists {
-		logc.Errorf(l.ctx, "角色不存在, 参数：%+v", in)
-		return nil, errors.New("角色不存在")
 	}
 
 	roleScopes := make([]*model.SysRoleScope, 0, len(in.GetRoleScopes()))
@@ -55,9 +57,9 @@ func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sy
 		return nil, status.Error(codes.Internal, "添加角色安全范围权限失败")
 	}
 
-	perms, err := NewGetRolePermsLogic(l.ctx, l.svcCtx).GetRolePerms(&sysclient.Int64Value{Value: in.RoleId})
+	perms, err := NewGetRolePermsLogic(l.ctx, l.svcCtx).GetRolePerms(&sysclient.GetRolePermsRequest{RoleCode: role.RoleCode})
 	if err != nil {
-		logc.Errorf(l.ctx, "获取角色权限失败, 角色ID：%d, 异常: %s", in.RoleId, err.Error())
+		logc.Errorf(l.ctx, "获取角色权限失败, 角色：%s, 异常: %s", role.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "获取角色权限失败")
 	}
 

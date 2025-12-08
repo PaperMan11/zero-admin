@@ -32,8 +32,31 @@ message RefreshTokenResponse {
   string refresh_token = 2; // 新的刷新令牌
 }
 
+message RegisterRequest {
+  string username = 1;  // 用户名
+  string password = 2;  // 密码
+  string ip_address = 3;  // IP地址
+  string email = 5; // 邮箱
+  string mobile = 6; // 手机号
+  string real_name = 7; // 真实姓名
+  int32 gender = 8; // 性别
+  string avatar = 9; // 头像
+  string os = 10;
+  string browser = 11;
+}
+
+message RegisterResponse {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string token = 3;       // JWT令牌
+  string refresh_token = 4; // 刷新令牌
+}
+
 // 认证服务
 service AuthService {
+  // 注册
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
   // 用户登录
   rpc Login(LoginRequest) returns (LoginResponse);
 
@@ -203,55 +226,61 @@ message CreateRoleRequest {
 
 // 更新角色请求
 message UpdateRoleRequest {
-  int64 role_id = 1;           // 角色ID
-  string role_name = 2;   // 角色名称
-  string role_code = 3;   // 角色编码
-  string description = 4; // 角色描述
-  int32 status = 5;       // 状态 (0-禁用, 1-正常)
-  int64 operator_id = 6;  // 操作者
+  string role_name = 1;   // 角色名称
+  string role_code = 2;   // 角色编码
+  string description = 3; // 角色描述
+  int32 status = 4;       // 状态 (0-禁用, 1-正常)
+  int64 operator_id = 5;  // 操作者
 }
 
 // 删除角色请求
 message DeleteRoleRequest {
-  int64 id = 1;           // 角色ID
+  string role_code = 1;    // 角色编码
   int64 operator_id = 2;  // 操作者
 }
 
 message AddRolePermsRequest {
-  int64 role_id = 1;           // 角色ID
-  string role_code = 2;   // 角色code
-  int64 operator_id = 3;  // 操作者
-  repeated RoleScope role_scopes = 4;
+  string role_code = 1;   // 角色code
+  int64 operator_id = 2;  // 操作者
+  repeated RoleScope role_scopes = 3;
 }
 
 message UpdateRolePermsRequest {
-  int64 role_id = 1;      // 角色ID
-  string role_code = 2;   // 角色code
-  int64 operator_id = 3;  // 操作者
-  repeated RoleScope role_scopes = 4;
+  string role_code = 1;   // 角色code
+  int64 operator_id = 2;  // 操作者
+  repeated RoleScope role_scopes = 3;
 }
 
 message DeleteRolePermsRequest {
-  int64 role_id = 1;      // 角色ID
-  string role_code = 2;   // 角色code
-  int64 operator_id = 3;  // 操作者
-  repeated string scope_codes = 4;
+  string role_code = 1;   // 角色code
+  int64 operator_id = 2;  // 操作者
+  repeated string scope_codes = 3;
 }
 
 // 启用/禁用角色请求
 message ToggleRoleStatusRequest {
-  int64 role_id = 1;
+  string role_code = 1;
   int32 status = 2;          // 目标状态: 0=禁用, 1=启用
   int64 operator_id = 3;
 }
 
 // 批量删除角色
 message BatchDeleteRolesRequest {
-  repeated int64 role_ids = 1;
+  repeated string role_codes = 1;
   int64 operator_id = 2;
 }
 
+message GetRoleByRoleCodesRequest {
+  repeated string role_codes = 1;
+}
 
+message GetRoleByRoleCodesResponse {
+  repeated Role roles = 1;
+}
+
+message GetRolePermsRequest {
+  string role_code = 1;
+}
 
 service RoleService {
   // 角色列表
@@ -272,7 +301,9 @@ service RoleService {
   // 删除角色权限
   rpc DeleteRolePerms(DeleteRolePermsRequest) returns (RoleInfo);
   // 获取角色权限
-  rpc GetRolePerms(Int64Value) returns (RoleInfo);
+  rpc GetRolePerms(GetRolePermsRequest) returns (RoleInfo);
+  // 获取角色列表
+  rpc GetRoleListByRoleIDs(GetRoleByRoleCodesRequest) returns (GetRoleByRoleCodesResponse);
 }
 
 

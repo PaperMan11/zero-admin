@@ -49,7 +49,7 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	}
 
 	// 2.判断密码是否正确
-	if !bcryptUtil.CheckPassword(in.Password, user.Password) {
+	if !bcryptUtil.CheckPassword(in.Password+user.Salt, user.Password) {
 		l.saveLoginLog(in, LoginStatusFail, "密码错误")
 		return nil, errors.New("密码错误")
 	}

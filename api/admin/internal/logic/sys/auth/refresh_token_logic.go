@@ -6,6 +6,8 @@ package auth
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/utils"
+	"zero-admin/pkg/convert"
 	"zero-admin/rpc/sys/client/authservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -36,6 +38,14 @@ func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenRequest) (resp *
 		logc.Errorf(l.ctx, "刷新token：%+v,异常:%s", req, err.Error())
 		return nil, err
 	}
+
+	// 添加token过期管理
+	uid := convert.ToInt64(l.ctx.Value("uid"))
+	accessTokenExpire := l.svcCtx.Config.Auth.AccessExpire
+	refreshTokenExpire := l.svcCtx.Config.Auth.RefreshExpire
+	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetAccessTokenKey(uid), res.Token, int(accessTokenExpire))
+	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetRefreshTokenKey(uid), res.RefreshToken, int(refreshTokenExpire))
+
 	return &types.RefreshTokenResponse{
 		RefreshToken: res.RefreshToken,
 		Token:        res.Token,

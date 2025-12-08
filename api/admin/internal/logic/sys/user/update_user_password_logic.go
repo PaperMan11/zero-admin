@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -34,7 +34,7 @@ func (l *UpdateUserPasswordLogic) UpdateUserPassword(req *types.UpdateUserPasswo
 		UserId:      req.UserId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,
-		OperatorId:  logic.GetOperateID(l.ctx),
+		OperatorId:  utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "更新用户密码, 参数: %v, 异常: %v", req, err)

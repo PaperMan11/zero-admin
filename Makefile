@@ -46,7 +46,7 @@ start: ## 运行目标
 stop: ## 停止目标
 	-pkill -f admin-api
 	-pkill -f sys-rpc
-	@for i in 5 4 3 2 1; do\
+	@for i in 3 2 1; do\
       echo -n "stop $$i";\
       sleep 1; \
       echo " "; \

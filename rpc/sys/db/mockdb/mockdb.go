@@ -245,6 +245,36 @@ func (m *MockDB) GetRoleByID(ctx context.Context, roleID int64) (*model.SysRole,
 	return nil, nil
 }
 
+func (m *MockDB) GetRoleByIDs(ctx context.Context, roleIDs []int64) ([]*model.SysRole, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	var result []*model.SysRole
+	for _, id := range roleIDs {
+		if role, exists := m.roles[id]; exists {
+			result = append(result, role)
+		}
+	}
+	return result, nil
+}
+
+func (m *MockDB) GetRoleByCode(ctx context.Context, roleCode string) (*model.SysRole, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return m.roles[m.roleCodes[roleCode]], nil
+}
+
+func (m *MockDB) GetRoleByCodes(ctx context.Context, roleCodes []string) ([]*model.SysRole, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	var result []*model.SysRole
+	for _, code := range roleCodes {
+		if role, exists := m.roles[m.roleCodes[code]]; exists {
+			result = append(result, role)
+		}
+	}
+	return result, nil
+}
+
 func (m *MockDB) GetRoleByName(ctx context.Context, roleName string) (*model.SysRole, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

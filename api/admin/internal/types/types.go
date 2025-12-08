@@ -24,7 +24,6 @@ type AddOperateLogResp struct {
 }
 
 type AddRolePermsRequest struct {
-	RoleId     int64       `json:"role_id"`   // 角色ID
 	RoleCode   string      `json:"role_code"` // 角色code
 	RoleScopes []RoleScope `json:"role_scopes,optional"`
 }
@@ -40,8 +39,8 @@ type AssignUserRoleRequest struct {
 }
 
 type BatchDeleteRolesRequest struct {
-	RoleIds    []int64 `json:"role_ids"`
-	OperatorId int64   `json:"operator_id"`
+	RoleCodes  []string `json:"role_codes"`
+	OperatorId int64    `json:"operator_id"`
 }
 
 type CreateMenuRequest struct {
@@ -101,13 +100,12 @@ type DeleteOperateLogResp struct {
 }
 
 type DeleteRolePermsRequest struct {
-	RoleId     int64    `json:"role_id"`   // 角色ID
 	RoleCode   string   `json:"role_code"` // 角色code
 	ScopeCodes []string `json:"scope_codes"`
 }
 
 type DeleteRoleRequest struct {
-	Id int64 `json:"id"` // 角色ID
+	RoleCode string `json:"role_code"` // 角色ID
 }
 
 type DeleteScopeMenusRequest struct {
@@ -136,8 +134,8 @@ type IdValue struct {
 }
 
 type LoginRequest struct {
-	Username string `json:"username" form:"username"` // 用户名
-	Password string `json:"password" form:"password"` // 密码
+	Username string `json:"username"` // 用户名
+	Password string `json:"password"` // 密码
 }
 
 type LoginResponse struct {
@@ -234,12 +232,29 @@ type QueryOperateLogListReq struct {
 }
 
 type RefreshTokenRequest struct {
-	RefreshToken string `json:"refresh_token" form:"refresh_token"` // 刷新令牌
+	RefreshToken string `json:"refresh_token"` // 刷新令牌
 }
 
 type RefreshTokenResponse struct {
 	Token        string `json:"token"`         // 新的JWT令牌
 	RefreshToken string `json:"refresh_token"` // 新的刷新令牌
+}
+
+type RegisterRequest struct {
+	Username string `json:"username"`           // 用户名
+	Password string `json:"password"`           // 密码
+	Email    string `json:"email,optional"`     // 邮箱
+	Mobile   string `json:"mobile,optional"`    // 手机号
+	RealName string `json:"real_name,optional"` // 真实姓名
+	Gender   int32  `json:"gender,optional"`    // 性别
+	Avatar   string `json:"avatar,optional"`    // 头像
+}
+
+type RegisterResponse struct {
+	Id           int64  `json:"id"`            // 用户ID
+	Username     string `json:"username"`      // 用户名
+	Token        string `json:"token"`         // JWT令牌
+	RefreshToken string `json:"refresh_token"` // 刷新令牌
 }
 
 type Role struct {
@@ -299,9 +314,13 @@ type ScopeListResponse struct {
 	Scopes []ScopeInfo `json:"scopes"`
 }
 
+type StringValue struct {
+	Value string `path:"value"`
+}
+
 type ToggleRoleStatusRequest struct {
-	RoleId int64 `json:"role_id"`
-	Status int32 `json:"status"` // 目标状态: 0=禁用, 1=启用
+	RoleCode string `json:"role_code"`
+	Status   int32  `json:"status"` // 目标状态: 0=禁用, 1=启用
 }
 
 type ToggleUserStatusRequest struct {
@@ -328,13 +347,11 @@ type UpdateMenuRequest struct {
 }
 
 type UpdateRolePermsRequest struct {
-	RoleId     int64       `json:"role_id"`   // 角色ID
 	RoleCode   string      `json:"role_code"` // 角色code
 	RoleScopes []RoleScope `json:"role_scopes"`
 }
 
 type UpdateRoleRequest struct {
-	RoleId      int64  `json:"role_id"`     // 角色ID
 	RoleName    string `json:"role_name"`   // 角色名称
 	RoleCode    string `json:"role_code"`   // 角色编码
 	Description string `json:"description"` // 角色描述

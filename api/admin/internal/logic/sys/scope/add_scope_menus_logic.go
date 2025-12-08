@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -33,7 +33,7 @@ func (l *AddScopeMenusLogic) AddScopeMenus(req *types.AddScopeMenusRequest) (res
 	res, err := l.svcCtx.ScopeService.AddScopeMenus(l.ctx, &scopeservice.AddScopeMenusRequest{
 		ScopeId:    req.ScopeId,
 		MenuIds:    req.MenuIds,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "添加安全范围权限失败: %v", err)
@@ -41,7 +41,7 @@ func (l *AddScopeMenusLogic) AddScopeMenus(req *types.AddScopeMenusRequest) (res
 	}
 
 	return &types.ScopeInfo{
-		Scope: logic.ConvertToTypesScope(res.Scope),
-		Menus: logic.ConvertToTypesMenus(res.Menus),
+		Scope: utils.ConvertToTypesScope(res.Scope),
+		Menus: utils.ConvertToTypesMenus(res.Menus),
 	}, nil
 }

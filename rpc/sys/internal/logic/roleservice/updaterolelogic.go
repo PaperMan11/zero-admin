@@ -32,12 +32,12 @@ func NewUpdateRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 
 // 更新角色
 func (l *UpdateRoleLogic) UpdateRole(in *sysclient.UpdateRoleRequest) (*sysclient.Role, error) {
-	role, err := l.svcCtx.DB.GetRoleByID(l.ctx, in.RoleId)
+	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 		}
-		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
+		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%s, 错误：%s", in.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "更新角色失败")
 	}
 
@@ -46,7 +46,7 @@ func (l *UpdateRoleLogic) UpdateRole(in *sysclient.UpdateRoleRequest) (*sysclien
 	role.Status = in.Status
 	err = l.svcCtx.DB.SaveRole(l.ctx, *role)
 	if err != nil {
-		logc.Errorf(l.ctx, "更新角色失败, 角色ID：%d, 错误：%s", in.RoleId, err.Error())
+		logc.Errorf(l.ctx, "更新角色失败, 角色ID：%s, 错误：%s", in.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "更新角色失败")
 	}
 

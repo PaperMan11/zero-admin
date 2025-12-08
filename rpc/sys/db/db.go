@@ -36,7 +36,10 @@ type DB interface {
 	DeleteRoleScopes(ctx context.Context, roleCode string, scopeCodes []string) error
 	// 根据ID获取角色
 	GetRoleByID(ctx context.Context, roleID int64) (*model.SysRole, error)
+	GetRoleByIDs(ctx context.Context, roleIDs []int64) ([]*model.SysRole, error)
 	GetRoleByName(ctx context.Context, roleName string) (*model.SysRole, error)
+	GetRoleByCode(ctx context.Context, roleCode string) (*model.SysRole, error)
+	GetRoleByCodes(ctx context.Context, roleCodes []string) ([]*model.SysRole, error)
 	// 判断角色是否存在
 	ExistsRoleByName(ctx context.Context, roleName string) (bool, error)
 	ExistsRoleByCode(ctx context.Context, roleCode string) (bool, error)

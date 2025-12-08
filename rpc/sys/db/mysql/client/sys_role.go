@@ -29,6 +29,18 @@ func (m *MysqlDB) GetRoleByID(ctx context.Context, roleID int64) (*model.SysRole
 	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.ID.Eq(roleID)).First()
 }
 
+func (m *MysqlDB) GetRoleByIDs(ctx context.Context, roleIDs []int64) ([]*model.SysRole, error) {
+	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.ID.In(roleIDs...)).Find()
+}
+
+func (m *MysqlDB) GetRoleByCode(ctx context.Context, roleCode string) (*model.SysRole, error) {
+	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.RoleCode.Eq(roleCode)).First()
+}
+
+func (m *MysqlDB) GetRoleByCodes(ctx context.Context, roleCodes []string) ([]*model.SysRole, error) {
+	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.RoleCode.In(roleCodes...)).Find()
+}
+
 func (m *MysqlDB) GetRoleByName(ctx context.Context, roleName string) (*model.SysRole, error) {
 	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.RoleName.Eq(roleName)).First()
 }

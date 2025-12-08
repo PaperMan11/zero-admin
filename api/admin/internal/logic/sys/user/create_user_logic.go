@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -39,13 +39,13 @@ func (l *CreateUserLogic) CreateUser(req *types.CreateUserRequest) (resp *types.
 		Gender:     req.Gender,
 		Status:     req.Status,
 		RoleIds:    req.RoleIds,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建用户失败: %v", err)
 		return nil, err
 	}
 
-	userInfo := logic.ConvertToTypesUserInfo(res)
+	userInfo := utils.ConvertToTypesUserInfo(res)
 	return &userInfo, nil
 }

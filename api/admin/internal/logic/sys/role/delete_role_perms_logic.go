@@ -5,7 +5,8 @@ package role
 
 import (
 	"context"
-	"zero-admin/api/admin/internal/logic"
+	"github.com/zeromicro/go-zero/core/logc"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -29,9 +30,14 @@ func NewDeleteRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 }
 
 func (l *DeleteRolePermsLogic) DeleteRolePerms(req *types.DeleteRolePermsRequest) (resp *types.RoleInfo, err error) {
-	uid := logic.GetOperateID(l.ctx)
+	rolePerms, err := l.svcCtx.RoleService.GetRolePerms(l.ctx, &roleservice.GetRolePermsRequest{RoleCode: req.RoleCode})
+	if err != nil {
+		logc.Errorf(l.ctx, "获取角色权限失败：%v", err)
+		return nil, err
+	}
+
+	uid := utils.GetOperateID(l.ctx)
 	res, err := l.svcCtx.RoleService.DeleteRolePerms(l.ctx, &roleservice.DeleteRolePermsRequest{
-		RoleId:     req.RoleId,
 		RoleCode:   req.RoleCode,
 		OperatorId: uid,
 		ScopeCodes: req.ScopeCodes,
@@ -40,12 +46,27 @@ func (l *DeleteRolePermsLogic) DeleteRolePerms(req *types.DeleteRolePermsRequest
 	scopes := make([]types.RoleScopeInfo, 0, len(res.Scopes))
 	for _, v := range res.Scopes {
 		scopes = append(scopes, types.RoleScopeInfo{
-			Scope: logic.ConvertToTypesScope(v.Scope),
+			Scope: utils.ConvertToTypesScope(v.Scope),
 			Perms: v.Perms,
 		})
 	}
+
+	// 删除casbin权限
+	rules := make([][]string, 0, len(req.ScopeCodes))
+	for _, scopeCode := range req.ScopeCodes {
+		for _, v := range rolePerms.Scopes {
+			if v.Scope.ScopeCode == scopeCode {
+				rules = append(rules, utils.ConvertToCasbinRule(res.Role.RoleCode, scopeCode, v.Perms))
+			}
+		}
+	}
+	ok, err := l.svcCtx.CasbinEnforcer.RemoveNamedPolicies("p", rules)
+	if err != nil || !ok {
+		logc.Errorf(l.ctx, "删除casbin权限失败: %v", err)
+	}
+
 	return &types.RoleInfo{
-		Role:   logic.ConvertToTypesRole(res.Role),
+		Role:   utils.ConvertToTypesRole(res.Role),
 		Scopes: scopes,
 	}, nil
 }

@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -33,13 +33,13 @@ func (l *ToggleUserStatusLogic) ToggleUserStatus(req *types.ToggleUserStatusRequ
 	res, err := l.svcCtx.UserService.ToggleUserStatus(l.ctx, &userservice.ToggleUserStatusRequest{
 		UserId:     req.UserId,
 		Status:     req.Status,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "修改用户启用状态失败: %v", err)
 		return nil, err
 	}
 
-	user := logic.ConvertToTypesUser(res)
+	user := utils.ConvertToTypesUser(res)
 	return &user, nil
 }

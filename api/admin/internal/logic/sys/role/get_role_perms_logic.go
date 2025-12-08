@@ -6,7 +6,7 @@ package role
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/roleservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -29,8 +29,8 @@ func NewGetRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetR
 	}
 }
 
-func (l *GetRolePermsLogic) GetRolePerms(req *types.IdValue) (resp *types.RoleInfo, err error) {
-	res, err := l.svcCtx.RoleService.GetRolePerms(l.ctx, &roleservice.Int64Value{Value: req.Id})
+func (l *GetRolePermsLogic) GetRolePerms(req *types.StringValue) (resp *types.RoleInfo, err error) {
+	res, err := l.svcCtx.RoleService.GetRolePerms(l.ctx, &roleservice.GetRolePermsRequest{RoleCode: req.Value})
 	if err != nil {
 		logc.Errorf(l.ctx, "获取角色权限失败: %v", err)
 		return nil, err
@@ -39,12 +39,12 @@ func (l *GetRolePermsLogic) GetRolePerms(req *types.IdValue) (resp *types.RoleIn
 	scopes := make([]types.RoleScopeInfo, 0, len(res.Scopes))
 	for _, v := range res.Scopes {
 		scopes = append(scopes, types.RoleScopeInfo{
-			Scope: logic.ConvertToTypesScope(v.Scope),
+			Scope: utils.ConvertToTypesScope(v.Scope),
 			Perms: v.Perms,
 		})
 	}
 	return &types.RoleInfo{
-		Role:   logic.ConvertToTypesRole(res.Role),
+		Role:   utils.ConvertToTypesRole(res.Role),
 		Scopes: scopes,
 	}, nil
 }

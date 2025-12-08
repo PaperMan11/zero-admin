@@ -1,0 +1,44 @@
+###用户注册
+POST {{host}}/api/sys/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "email": "test@example.com",
+  "mobile": "13800138000",
+  "real_name": "测试用户",
+  "gender": 1
+}
+> {%
+client.global.set("token", response.body.data.token);
+client.global.set("refresh_token",response.body.data.refresh_token);
+%}
+
+
+###用户登录
+POST {{host}}/api/sys/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456"
+}
+> {%
+client.global.set("token", response.body.data.access_token);
+client.global.set("refresh_token",response.body.data.refresh_token);
+%}
+
+
+### 刷新令牌
+POST {{host}}/api/sys/auth/refresh_token
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "refresh_token": "{{refresh_token}}"
+}
+> {%
+client.global.set("token", response.body.data.token);
+client.global.set("refresh_token",response.body.data.refresh_token);
+%}

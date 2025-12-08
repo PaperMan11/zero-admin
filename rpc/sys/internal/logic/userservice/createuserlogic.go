@@ -33,7 +33,7 @@ func NewCreateUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 func (l *CreateUserLogic) CreateUser(in *sysclient.CreateUserRequest) (*sysclient.UserInfo, error) {
 	operator := convert.ToString(in.GetOperatorId())
 	u, _ := l.svcCtx.DB.GetUserByUsername(l.ctx, in.Username)
-	if u.ID > 0 {
+	if u != nil && u.ID > 0 {
 		logc.Errorf(l.ctx, "用户已存在, 参数：%+v", in)
 		return nil, errors.New("用户已存在")
 	}

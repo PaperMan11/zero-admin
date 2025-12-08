@@ -14,62 +14,67 @@ import (
 )
 
 type (
-	AddOperateLogReq          = sysclient.AddOperateLogReq
-	AddOperateLogResp         = sysclient.AddOperateLogResp
-	AddRolePermsRequest       = sysclient.AddRolePermsRequest
-	AddScopeMenusRequest      = sysclient.AddScopeMenusRequest
-	AssignUserRoleRequest     = sysclient.AssignUserRoleRequest
-	BatchDeleteRolesRequest   = sysclient.BatchDeleteRolesRequest
-	CreateMenuRequest         = sysclient.CreateMenuRequest
-	CreateRoleRequest         = sysclient.CreateRoleRequest
-	CreateScopeRequest        = sysclient.CreateScopeRequest
-	CreateUserRequest         = sysclient.CreateUserRequest
-	DeleteMenuRequest         = sysclient.DeleteMenuRequest
-	DeleteOperateLogReq       = sysclient.DeleteOperateLogReq
-	DeleteOperateLogResp      = sysclient.DeleteOperateLogResp
-	DeleteRolePermsRequest    = sysclient.DeleteRolePermsRequest
-	DeleteRoleRequest         = sysclient.DeleteRoleRequest
-	DeleteScopeMenusRequest   = sysclient.DeleteScopeMenusRequest
-	DeleteScopeRequest        = sysclient.DeleteScopeRequest
-	DeleteUserRequest         = sysclient.DeleteUserRequest
-	Empty                     = sysclient.Empty
-	GetUserInfoRequest        = sysclient.GetUserInfoRequest
-	Int64Value                = sysclient.Int64Value
-	LoginRequest              = sysclient.LoginRequest
-	LoginResponse             = sysclient.LoginResponse
-	Menu                      = sysclient.Menu
-	MenuListRequest           = sysclient.MenuListRequest
-	MenuTreeResponse          = sysclient.MenuTreeResponse
-	OperateLog                = sysclient.OperateLog
-	OperateLogListData        = sysclient.OperateLogListData
-	PageRequest               = sysclient.PageRequest
-	PageResponse              = sysclient.PageResponse
-	QueryOperateLogDetailReq  = sysclient.QueryOperateLogDetailReq
-	QueryOperateLogListReq    = sysclient.QueryOperateLogListReq
-	RefreshTokenRequest       = sysclient.RefreshTokenRequest
-	RefreshTokenResponse      = sysclient.RefreshTokenResponse
-	Role                      = sysclient.Role
-	RoleInfo                  = sysclient.RoleInfo
-	RoleListRequest           = sysclient.RoleListRequest
-	RoleListResponse          = sysclient.RoleListResponse
-	RoleScope                 = sysclient.RoleScope
-	RoleScopeInfo             = sysclient.RoleScopeInfo
-	Scope                     = sysclient.Scope
-	ScopeInfo                 = sysclient.ScopeInfo
-	ScopeListRequest          = sysclient.ScopeListRequest
-	ScopeListResponse         = sysclient.ScopeListResponse
-	ToggleRoleStatusRequest   = sysclient.ToggleRoleStatusRequest
-	ToggleUserStatusRequest   = sysclient.ToggleUserStatusRequest
-	UpdateMenuRequest         = sysclient.UpdateMenuRequest
-	UpdateRolePermsRequest    = sysclient.UpdateRolePermsRequest
-	UpdateRoleRequest         = sysclient.UpdateRoleRequest
-	UpdateScopeRequest        = sysclient.UpdateScopeRequest
-	UpdateUserPasswordRequest = sysclient.UpdateUserPasswordRequest
-	UpdateUserRequest         = sysclient.UpdateUserRequest
-	User                      = sysclient.User
-	UserInfo                  = sysclient.UserInfo
-	UserListRequest           = sysclient.UserListRequest
-	UserListResponse          = sysclient.UserListResponse
+	AddOperateLogReq           = sysclient.AddOperateLogReq
+	AddOperateLogResp          = sysclient.AddOperateLogResp
+	AddRolePermsRequest        = sysclient.AddRolePermsRequest
+	AddScopeMenusRequest       = sysclient.AddScopeMenusRequest
+	AssignUserRoleRequest      = sysclient.AssignUserRoleRequest
+	BatchDeleteRolesRequest    = sysclient.BatchDeleteRolesRequest
+	CreateMenuRequest          = sysclient.CreateMenuRequest
+	CreateRoleRequest          = sysclient.CreateRoleRequest
+	CreateScopeRequest         = sysclient.CreateScopeRequest
+	CreateUserRequest          = sysclient.CreateUserRequest
+	DeleteMenuRequest          = sysclient.DeleteMenuRequest
+	DeleteOperateLogReq        = sysclient.DeleteOperateLogReq
+	DeleteOperateLogResp       = sysclient.DeleteOperateLogResp
+	DeleteRolePermsRequest     = sysclient.DeleteRolePermsRequest
+	DeleteRoleRequest          = sysclient.DeleteRoleRequest
+	DeleteScopeMenusRequest    = sysclient.DeleteScopeMenusRequest
+	DeleteScopeRequest         = sysclient.DeleteScopeRequest
+	DeleteUserRequest          = sysclient.DeleteUserRequest
+	Empty                      = sysclient.Empty
+	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
+	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
+	GetRolePermsRequest        = sysclient.GetRolePermsRequest
+	GetUserInfoRequest         = sysclient.GetUserInfoRequest
+	Int64Value                 = sysclient.Int64Value
+	LoginRequest               = sysclient.LoginRequest
+	LoginResponse              = sysclient.LoginResponse
+	Menu                       = sysclient.Menu
+	MenuListRequest            = sysclient.MenuListRequest
+	MenuTreeResponse           = sysclient.MenuTreeResponse
+	OperateLog                 = sysclient.OperateLog
+	OperateLogListData         = sysclient.OperateLogListData
+	PageRequest                = sysclient.PageRequest
+	PageResponse               = sysclient.PageResponse
+	QueryOperateLogDetailReq   = sysclient.QueryOperateLogDetailReq
+	QueryOperateLogListReq     = sysclient.QueryOperateLogListReq
+	RefreshTokenRequest        = sysclient.RefreshTokenRequest
+	RefreshTokenResponse       = sysclient.RefreshTokenResponse
+	RegisterRequest            = sysclient.RegisterRequest
+	RegisterResponse           = sysclient.RegisterResponse
+	Role                       = sysclient.Role
+	RoleInfo                   = sysclient.RoleInfo
+	RoleListRequest            = sysclient.RoleListRequest
+	RoleListResponse           = sysclient.RoleListResponse
+	RoleScope                  = sysclient.RoleScope
+	RoleScopeInfo              = sysclient.RoleScopeInfo
+	Scope                      = sysclient.Scope
+	ScopeInfo                  = sysclient.ScopeInfo
+	ScopeListRequest           = sysclient.ScopeListRequest
+	ScopeListResponse          = sysclient.ScopeListResponse
+	ToggleRoleStatusRequest    = sysclient.ToggleRoleStatusRequest
+	ToggleUserStatusRequest    = sysclient.ToggleUserStatusRequest
+	UpdateMenuRequest          = sysclient.UpdateMenuRequest
+	UpdateRolePermsRequest     = sysclient.UpdateRolePermsRequest
+	UpdateRoleRequest          = sysclient.UpdateRoleRequest
+	UpdateScopeRequest         = sysclient.UpdateScopeRequest
+	UpdateUserPasswordRequest  = sysclient.UpdateUserPasswordRequest
+	UpdateUserRequest          = sysclient.UpdateUserRequest
+	User                       = sysclient.User
+	UserInfo                   = sysclient.UserInfo
+	UserListRequest            = sysclient.UserListRequest
+	UserListResponse           = sysclient.UserListResponse
 
 	RoleService interface {
 		// 角色列表
@@ -90,7 +95,9 @@ type (
 		// 删除角色权限
 		DeleteRolePerms(ctx context.Context, in *DeleteRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 		// 获取角色权限
-		GetRolePerms(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error)
+		GetRolePerms(ctx context.Context, in *GetRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
+		// 获取角色列表
+		GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error)
 	}
 
 	defaultRoleService struct {
@@ -158,7 +165,13 @@ func (m *defaultRoleService) DeleteRolePerms(ctx context.Context, in *DeleteRole
 }
 
 // 获取角色权限
-func (m *defaultRoleService) GetRolePerms(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*RoleInfo, error) {
+func (m *defaultRoleService) GetRolePerms(ctx context.Context, in *GetRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
 	return client.GetRolePerms(ctx, in, opts...)
+}
+
+// 获取角色列表
+func (m *defaultRoleService) GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.GetRoleListByRoleIDs(ctx, in, opts...)
 }

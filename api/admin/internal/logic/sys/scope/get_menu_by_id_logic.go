@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -36,6 +36,6 @@ func (l *GetMenuByIdLogic) GetMenuById(req *types.IdValue) (resp *types.Menu, er
 		return nil, err
 	}
 
-	menu := logic.ConvertToTypesMenu(res)
+	menu := utils.ConvertToTypesMenu(res)
 	return &menu, nil
 }

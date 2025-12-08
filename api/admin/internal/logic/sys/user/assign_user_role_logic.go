@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -33,7 +33,7 @@ func (l *AssignUserRoleLogic) AssignUserRole(req *types.AssignUserRoleRequest) (
 	_, err = l.svcCtx.UserService.AssignUserRole(l.ctx, &userservice.AssignUserRoleRequest{
 		UserId:     req.UserId,
 		RoleCodes:  req.RoleCodes,
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "分配用户角色, 参数: %v, 异常: %v", req, err)

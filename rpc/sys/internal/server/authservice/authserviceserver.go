@@ -23,6 +23,12 @@ func NewAuthServiceServer(svcCtx *svc.ServiceContext) *AuthServiceServer {
 	}
 }
 
+// 注册
+func (s *AuthServiceServer) Register(ctx context.Context, in *sysclient.RegisterRequest) (*sysclient.RegisterResponse, error) {
+	l := authservicelogic.NewRegisterLogic(ctx, s.svcCtx)
+	return l.Register(in)
+}
+
 // 用户登录
 func (s *AuthServiceServer) Login(ctx context.Context, in *sysclient.LoginRequest) (*sysclient.LoginResponse, error) {
 	l := authservicelogic.NewLoginLogic(ctx, s.svcCtx)

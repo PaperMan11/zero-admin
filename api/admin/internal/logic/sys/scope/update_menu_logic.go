@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -48,13 +48,13 @@ func (l *UpdateMenuLogic) UpdateMenu(req *types.UpdateMenuRequest) (resp *types.
 			Status:    req.Status,
 			Remark:    req.Remark,
 		},
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "更新菜单失败: %v", err)
 		return nil, err
 	}
 
-	menu := logic.ConvertToTypesMenu(res)
+	menu := utils.ConvertToTypesMenu(res)
 	return &menu, nil
 }

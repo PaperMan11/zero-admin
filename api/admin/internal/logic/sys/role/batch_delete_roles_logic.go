@@ -31,11 +31,16 @@ func NewBatchDeleteRolesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 func (l *BatchDeleteRolesLogic) BatchDeleteRoles(req *types.BatchDeleteRolesRequest) (resp *types.Empty, err error) {
 	_, err = l.svcCtx.RoleService.BatchDeleteRoles(l.ctx, &roleservice.BatchDeleteRolesRequest{
 		OperatorId: req.OperatorId,
-		RoleIds:    req.RoleIds,
+		RoleCodes:  req.RoleCodes,
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "删除角色失败: %v", err)
 		return nil, err
+	}
+
+	ok, err := l.svcCtx.CasbinEnforcer.RemoveFilteredNamedPolicy("p", 0, req.RoleCodes...)
+	if err != nil || !ok {
+		logc.Errorf(l.ctx, "删除角色casbin权限失败: %v", err)
 	}
 
 	return &types.Empty{}, nil

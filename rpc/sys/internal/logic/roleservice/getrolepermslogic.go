@@ -32,19 +32,19 @@ func NewGetRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetR
 }
 
 // 获取角色权限
-func (l *GetRolePermsLogic) GetRolePerms(in *sysclient.Int64Value) (*sysclient.RoleInfo, error) {
-	role, err := l.svcCtx.DB.GetRoleByID(l.ctx, in.Value)
+func (l *GetRolePermsLogic) GetRolePerms(in *sysclient.GetRolePermsRequest) (*sysclient.RoleInfo, error) {
+	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
 		}
-		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%d, 错误：%s", in.Value, err.Error())
+		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%s, 错误：%s", in.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "获取角色权限失败")
 	}
 
 	roleScopeInfos, err := l.svcCtx.DB.GetRoleScopesPerm(l.ctx, role.RoleCode)
 	if err != nil {
-		logc.Errorf(l.ctx, "查询角色权限失败, 角色ID：%d, 错误：%s", in.Value, err.Error())
+		logc.Errorf(l.ctx, "查询角色权限失败, 角色ID：%s, 错误：%s", in.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "查询角色权限失败")
 	}
 

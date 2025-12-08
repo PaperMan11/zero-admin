@@ -1,29 +1,20 @@
 // Code scaffolded by goctl. Safe to edit.
 // goctl 1.9.2
 
-package role
+package auth
 
 import (
 	"net/http"
 
-	"github.com/zeromicro/go-zero/rest/httpx"
 	xhttp "github.com/zeromicro/x/http"
-	"zero-admin/api/admin/internal/logic/sys/role"
+	"zero-admin/api/admin/internal/logic/sys/auth"
 	"zero-admin/api/admin/internal/svc"
-	"zero-admin/api/admin/internal/types"
 )
 
-func GetRolePermsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func LogoutHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.StringValue
-		if err := httpx.Parse(r, &req); err != nil {
-			// httpx.ErrorCtx(r.Context(), w, err)
-			xhttp.JsonBaseResponseCtx(r.Context(), w, err)
-			return
-		}
-
-		l := role.NewGetRolePermsLogic(r.Context(), svcCtx)
-		resp, err := l.GetRolePerms(&req)
+		l := auth.NewLogoutLogic(r.Context(), svcCtx)
+		resp, err := l.Logout()
 		if err != nil {
 			// httpx.ErrorCtx(r.Context(), w, err)
 			// code-data 响应格式

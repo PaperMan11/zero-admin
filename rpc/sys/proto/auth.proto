@@ -32,8 +32,31 @@ message RefreshTokenResponse {
   string refresh_token = 2; // 新的刷新令牌
 }
 
+message RegisterRequest {
+  string username = 1;  // 用户名
+  string password = 2;  // 密码
+  string ip_address = 3;  // IP地址
+  string email = 5; // 邮箱
+  string mobile = 6; // 手机号
+  string real_name = 7; // 真实姓名
+  int32 gender = 8; // 性别
+  string avatar = 9; // 头像
+  string os = 10;
+  string browser = 11;
+}
+
+message RegisterResponse {
+  int64 id = 1;           // 用户ID
+  string username = 2;    // 用户名
+  string token = 3;       // JWT令牌
+  string refresh_token = 4; // 刷新令牌
+}
+
 // 认证服务
 service AuthService {
+  // 注册
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
   // 用户登录
   rpc Login(LoginRequest) returns (LoginResponse);
 

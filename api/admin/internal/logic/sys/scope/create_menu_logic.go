@@ -6,7 +6,7 @@ package scope
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/logic"
+	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/scopeservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -49,13 +49,13 @@ func (l *CreateMenuLogic) CreateMenu(req *types.CreateMenuRequest) (resp *types.
 			ScopeId:   req.ScopeId,
 			Remark:    req.Remark,
 		},
-		OperatorId: logic.GetOperateID(l.ctx),
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "创建菜单失败: %v", err)
 		return nil, err
 	}
 
-	menu := logic.ConvertToTypesMenu(res)
+	menu := utils.ConvertToTypesMenu(res)
 	return &menu, nil
 }

@@ -28,9 +28,9 @@ func NewBatchDeleteRolesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 func (l *BatchDeleteRolesLogic) BatchDeleteRoles(in *sysclient.BatchDeleteRolesRequest) (*sysclient.Empty, error) {
 
 	delRoleSvc := NewDeleteRoleLogic(l.ctx, l.svcCtx)
-	for _, roleId := range in.RoleIds {
+	for _, roleCode := range in.RoleCodes {
 		_, err := delRoleSvc.DeleteRole(&sysclient.DeleteRoleRequest{
-			Id: roleId,
+			RoleCode: roleCode,
 		})
 		if err != nil {
 			return nil, status.Error(codes.Internal, "批量删除角色失败")

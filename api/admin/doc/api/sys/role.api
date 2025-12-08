@@ -58,7 +58,6 @@ type CreateRoleRequest {
 
 // 更新角色请求
 type UpdateRoleRequest {
-	RoleId      int64  `json:"role_id"` // 角色ID
 	RoleName    string `json:"role_name"` // 角色名称
 	RoleCode    string `json:"role_code"` // 角色编码
 	Description string `json:"description"` // 角色描述
@@ -67,36 +66,33 @@ type UpdateRoleRequest {
 
 // 删除角色请求
 type DeleteRoleRequest {
-	Id int64 `json:"id"` // 角色ID
+	RoleCode string `json:"role_code"` // 角色ID
 }
 
 type AddRolePermsRequest {
-	RoleId     int64       `json:"role_id"` // 角色ID
 	RoleCode   string      `json:"role_code"` // 角色code
 	RoleScopes []RoleScope `json:"role_scopes,optional"`
 }
 
 type UpdateRolePermsRequest {
-	RoleId     int64       `json:"role_id"` // 角色ID
 	RoleCode   string      `json:"role_code"` // 角色code
 	RoleScopes []RoleScope `json:"role_scopes"`
 }
 
 type DeleteRolePermsRequest {
-	RoleId     int64    `json:"role_id"` // 角色ID
 	RoleCode   string   `json:"role_code"` // 角色code
 	ScopeCodes []string `json:"scope_codes"`
 }
 
 // 启用/禁用角色请求
 type ToggleRoleStatusRequest {
-	RoleId int64 `json:"role_id"`
+	RoleCode string `json:"role_code"`
 	Status int32 `json:"status"` // 目标状态: 0=禁用, 1=启用
 }
 
 // 批量删除角色
 type BatchDeleteRolesRequest {
-	RoleIds    []int64 `json:"role_ids"`
+	RoleCodes    []string `json:"role_codes"`
 	OperatorId int64   `json:"operator_id"`
 }
 
@@ -145,6 +141,6 @@ service admin-api {
 
 	// 获取角色权限
 	@handler GetRolePerms
-	get /role/perms/:id (IdValue) returns (RoleInfo)
+	get /role/perms/:value (StringValue) returns (RoleInfo)
 }
 

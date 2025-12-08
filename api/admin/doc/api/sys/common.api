@@ -23,5 +23,9 @@ type IdValue {
 	Id int64 `path:"id"`
 }
 
+type StringValue {
+	Value string `path:"value"`
+}
+
 type Empty {}
 

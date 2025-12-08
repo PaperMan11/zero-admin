@@ -77,7 +77,13 @@ func (s *RoleServiceServer) DeleteRolePerms(ctx context.Context, in *sysclient.D
 }
 
 // 获取角色权限
-func (s *RoleServiceServer) GetRolePerms(ctx context.Context, in *sysclient.Int64Value) (*sysclient.RoleInfo, error) {
+func (s *RoleServiceServer) GetRolePerms(ctx context.Context, in *sysclient.GetRolePermsRequest) (*sysclient.RoleInfo, error) {
 	l := roleservicelogic.NewGetRolePermsLogic(ctx, s.svcCtx)
 	return l.GetRolePerms(in)
+}
+
+// 获取角色列表
+func (s *RoleServiceServer) GetRoleListByRoleIDs(ctx context.Context, in *sysclient.GetRoleByRoleCodesRequest) (*sysclient.GetRoleByRoleCodesResponse, error) {
+	l := roleservicelogic.NewGetRoleListByRoleIDsLogic(ctx, s.svcCtx)
+	return l.GetRoleListByRoleIDs(in)
 }
