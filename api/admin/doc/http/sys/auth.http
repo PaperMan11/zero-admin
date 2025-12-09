@@ -29,6 +29,13 @@ client.global.set("token", response.body.data.access_token);
 client.global.set("refresh_token",response.body.data.refresh_token);
 %}
 
+### 用户登出
+POST {{host}}/api/sys/auth/logout
+Authorization: Bearer {{token}}
+
+> {%
+client.log("Error message: " + JSON.stringify(response.body));
+%}
 
 ### 刷新令牌
 POST {{host}}/api/sys/auth/refresh_token
@@ -36,6 +43,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
+  "uid": 1,
   "refresh_token": "{{refresh_token}}"
 }
 > {%

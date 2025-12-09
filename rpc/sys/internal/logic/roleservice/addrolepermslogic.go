@@ -31,6 +31,10 @@ func NewAddRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddR
 
 // 添加角色权限
 func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sysclient.RoleInfo, error) {
+	if common.IsSuperUser(in.RoleCode) {
+		logc.Errorf(l.ctx, "超级管理员角色不允许修改, 角色：%s", in.RoleCode)
+		return nil, status.Error(codes.PermissionDenied, common.ErrSuperUserDoNotEdit.Error())
+	}
 	//exists, err := l.svcCtx.DB.ExistsRoleByCode(l.ctx, in.RoleCode)
 	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
@@ -42,19 +46,26 @@ func (l *AddRolePermsLogic) AddRolePerms(in *sysclient.AddRolePermsRequest) (*sy
 		return nil, status.Error(codes.Internal, "添加角色权限失败")
 	}
 
-	roleScopes := make([]*model.SysRoleScope, 0, len(in.GetRoleScopes()))
+	scopesCodes := make([]string, 0, len(in.GetRoleScopes()))
 	for _, roleScope := range in.GetRoleScopes() {
-		roleScopes = append(roleScopes, &model.SysRoleScope{
+		scopesCodes = append(scopesCodes, roleScope.ScopeCode)
+	}
+	scopes, _ := l.svcCtx.DB.GetScopesByCodes(l.ctx, scopesCodes)
+	if len(scopes) != len(scopesCodes) {
+		logc.Errorf(l.ctx, "角色安全范围不存在, 参数：%+v", in)
+		return nil, status.Error(codes.InvalidArgument, "角色安全范围不存在")
+	}
+
+	for _, roleScope := range in.GetRoleScopes() {
+		err = l.svcCtx.DB.UpsertRoleScopes(l.ctx, model.SysRoleScope{
 			RoleCode:  roleScope.RoleCode,
 			ScopeCode: roleScope.ScopeCode,
 			Perm:      common.ParsePermission(roleScope.Perms),
 		})
-	}
-
-	err = l.svcCtx.DB.AddRoleScopes(l.ctx, roleScopes)
-	if err != nil {
-		logc.Errorf(l.ctx, "添加角色安全范围权限失败, 参数：%+v, 异常: %s", in, err.Error())
-		return nil, status.Error(codes.Internal, "添加角色安全范围权限失败")
+		if err != nil {
+			logc.Errorf(l.ctx, "添加角色安全范围权限失败, 参数：%+v, 异常: %s", in, err.Error())
+			return nil, status.Error(codes.Internal, "添加角色安全范围权限失败")
+		}
 	}
 
 	perms, err := NewGetRolePermsLogic(l.ctx, l.svcCtx).GetRolePerms(&sysclient.GetRolePermsRequest{RoleCode: role.RoleCode})

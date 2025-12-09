@@ -5,6 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"zero-admin/rpc/sys/internal/logic"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -34,17 +35,6 @@ func (l *GetScopeListLogic) GetScopeList(in *sysclient.ScopeListRequest) (*syscl
 	}
 
 	total, _ := l.svcCtx.DB.CountScopes(l.ctx)
-	scopeInfos := make([]*sysclient.ScopeInfo, 0, len(scopes))
-	getScopeInfosLogic := NewGetScopeMenusLogic(l.ctx, l.svcCtx)
-	for _, scope := range scopes {
-		scopeInfo, err := getScopeInfosLogic.GetScopeMenus(&sysclient.Int64Value{Value: scope.ID})
-		if err != nil {
-			logc.Errorf(l.ctx, "获取安全范围菜单列表失败: %v", err)
-			continue
-		}
-		scopeInfos = append(scopeInfos, scopeInfo)
-	}
-
 	return &sysclient.ScopeListResponse{
 		PageResponse: &sysclient.PageResponse{
 			Total:     int32(total),
@@ -52,6 +42,6 @@ func (l *GetScopeListLogic) GetScopeList(in *sysclient.ScopeListRequest) (*syscl
 			PageSize:  in.PageRequest.PageSize,
 			TotalPage: int32(total)/in.PageRequest.GetPageSize() + 1,
 		},
-		Scopes: scopeInfos,
+		Scopes: logic.ConvertToRpcScopes(scopes),
 	}, nil
 }

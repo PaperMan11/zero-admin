@@ -1,42 +1,33 @@
 // Code scaffolded by goctl. Safe to edit.
 // goctl 1.9.2
 
-package auth
+package user
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 	xhttp "github.com/zeromicro/x/http"
-	"zero-admin/api/admin/internal/logic/sys/auth"
+	"zero-admin/api/admin/internal/logic/sys/user"
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
 )
 
-func RefreshTokenHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func UpdatePasswordHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.RefreshTokenRequest
+		var req types.UpdatePasswordRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			// httpx.ErrorCtx(r.Context(), w, err)
 			xhttp.JsonBaseResponseCtx(r.Context(), w, err)
 			return
 		}
 
-		l := auth.NewRefreshTokenLogic(r.Context(), svcCtx)
-		resp, err := l.RefreshToken(&req)
+		l := user.NewUpdatePasswordLogic(r.Context(), svcCtx)
+		resp, err := l.UpdatePassword(&req)
 		if err != nil {
 			// httpx.ErrorCtx(r.Context(), w, err)
 			// code-data 响应格式
-			if errors.Is(err, auth.ErrRefreshTokenExpired) || errors.Is(err, auth.ErrRefreshTokenError) {
-				//xhttp.JsonBaseResponseCtx(r.Context(), w, err)
-				httpx.WriteJson(w, http.StatusUnauthorized, map[string]interface{}{
-					"code": -1,
-					"msg":  err.Error(),
-				})
-			} else {
-				xhttp.JsonBaseResponseCtx(r.Context(), w, err)
-			}
+			xhttp.JsonBaseResponseCtx(r.Context(), w, err)
 		} else {
 			// httpx.OkJsonCtx(r.Context(), w, resp)
 			// code-data 响应格式

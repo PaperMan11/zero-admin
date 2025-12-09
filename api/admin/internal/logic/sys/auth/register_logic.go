@@ -6,7 +6,6 @@ package auth
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
-	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/authservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -46,11 +45,9 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest, ip, os, browser str
 		logc.Errorf(l.ctx, "用户注册：%+v,异常:%s", req, err.Error())
 		return nil, err
 	}
+
 	// 添加token过期管理
-	accessTokenExpire := l.svcCtx.Config.Auth.AccessExpire
-	refreshTokenExpire := l.svcCtx.Config.Auth.RefreshExpire
-	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetAccessTokenKey(res.Id), res.Token, int(accessTokenExpire))
-	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetRefreshTokenKey(res.Id), res.RefreshToken, int(refreshTokenExpire))
+	SetTokenCache(l.ctx, l.svcCtx, res.Id, res.TokenUuid, res.RefreshToken)
 
 	return &types.RegisterResponse{
 		Id:           res.Id,

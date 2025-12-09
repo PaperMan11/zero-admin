@@ -1,0 +1,126 @@
+### 获取安全范围列表
+POST {{host}}/api/sys/scope/list
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "page": 1,
+  "limit": 10
+}
+
+### 根据ID获取安全范围
+GET {{host}}/api/sys/scope/{{scopeId}}
+Authorization: Bearer {{token}}
+
+### 创建安全范围
+POST {{host}}/api/sys/scope
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "scope_name": "测试范围",
+  "scope_code": "TEST_SCOPE",
+  "description": "这是一个测试范围",
+  "sort": 1
+}
+
+> {%
+client.global.set("scopeId", response.body.data.id);
+client.global.set("scopeCode", response.body.data.scope_code);
+%}
+
+### 更新安全范围
+PUT {{host}}/api/sys/scope
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": {{scopeId}},
+  "scope_code": "{{scopeCode}}",
+  "scope_name": "更新后的范围",
+  "description": "更新后的描述"
+}
+
+### 添加安全范围菜单
+POST {{host}}/api/sys/scope/menus
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "scope_id": {{scopeId}},
+  "menu_ids": [1, 2, 3]
+}
+
+### 获取安全范围菜单
+GET {{host}}/api/sys/scope/menus/{{scopeId}}
+Authorization: Bearer {{token}}
+
+### 删除安全范围菜单
+DELETE {{host}}/api/sys/scope/menus
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "scope_id": {{scopeId}},
+  "delete_all": true
+}
+
+### 删除安全范围
+DELETE {{host}}/api/sys/scope
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": {{scopeId}}
+}
+
+### 获取菜单树
+POST {{host}}/api/sys/scope/menu/tree
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "status": 1
+}
+
+### 根据ID获取菜单
+GET {{host}}/api/sys/scope/menu/{{menuId}}
+Authorization: Bearer {{token}}
+
+### 创建菜单
+POST {{host}}/api/sys/scope/menu
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "parent_id": 0,
+  "menu_name": "测试菜单",
+  "menu_type": "C",
+  "component": "test/index",
+  "scope_id": {{scopeId}},
+  "sort": 1
+}
+
+> {%
+client.global.set("menuId", response.body.data.id);
+%}
+
+### 更新菜单
+PUT {{host}}/api/sys/scope/menu
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": {{menuId}},
+  "menu_name": "更新后的菜单",
+  "sort": 2
+}
+
+### 删除菜单
+DELETE {{host}}/api/sys/scope/menu
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": {{menuId}}
+}

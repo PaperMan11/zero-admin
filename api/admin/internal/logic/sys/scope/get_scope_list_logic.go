@@ -42,13 +42,6 @@ func (l *GetScopeListLogic) GetScopeList(req *types.ScopeListRequest) (resp *typ
 		return nil, err
 	}
 
-	scopeInfos := make([]types.ScopeInfo, 0, len(res.Scopes))
-	for _, v := range res.Scopes {
-		scopeInfos = append(scopeInfos, types.ScopeInfo{
-			Scope: utils.ConvertToTypesScope(v.Scope),
-			Menus: utils.ConvertToTypesMenus(v.Menus),
-		})
-	}
 	return &types.ScopeListResponse{
 		PageResponse: types.PageResponse{
 			Total:     int64(res.PageResponse.Total),
@@ -56,6 +49,6 @@ func (l *GetScopeListLogic) GetScopeList(req *types.ScopeListRequest) (resp *typ
 			PageSize:  int64(res.PageResponse.PageSize),
 			TotalPage: int64(res.PageResponse.TotalPage),
 		},
-		Scopes: scopeInfos,
+		Scopes: utils.ConvertToTypesScopes(res.Scopes),
 	}, nil
 }

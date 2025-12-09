@@ -39,34 +39,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/logout",
-				Handler: sysauth.LogoutHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtExpireAuth},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/logout",
+					Handler: sysauth.LogoutHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/sys/auth"),
 	)
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.VerifyPermission},
+			[]rest.Middleware{serverCtx.JwtExpireAuth, serverCtx.VerifyPermission},
 			[]rest.Route{
 				{
 					Method:  http.MethodDelete,
-					Path:    "/operate-log",
+					Path:    "/",
 					Handler: sysoperatelog.DeleteOperateLogHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/operate-log/:id",
+					Path:    "/:id",
 					Handler: sysoperatelog.QueryOperateLogDetailHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/operate-log/list",
+					Path:    "/list",
 					Handler: sysoperatelog.QueryOperateLogListHandler(serverCtx),
 				},
 			}...,
@@ -77,56 +80,56 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.VerifyPermission},
+			[]rest.Middleware{serverCtx.JwtExpireAuth, serverCtx.VerifyPermission},
 			[]rest.Route{
 				{
 					Method:  http.MethodPost,
-					Path:    "/role",
+					Path:    "/",
 					Handler: sysrole.CreateRoleHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPut,
-					Path:    "/role",
+					Path:    "/",
 					Handler: sysrole.UpdateRoleHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
-					Path:    "/role",
+					Path:    "/",
 					Handler: sysrole.DeleteRoleHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/role/batch-delete",
+					Path:    "/batch-delete",
 					Handler: sysrole.BatchDeleteRolesHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/role/list",
+					Path:    "/list",
 					Handler: sysrole.GetRoleListHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/role/perms",
+					Path:    "/perms",
 					Handler: sysrole.AddRolePermsHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPut,
-					Path:    "/role/perms",
+					Path:    "/perms",
 					Handler: sysrole.UpdateRolePermsHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
-					Path:    "/role/perms",
+					Path:    "/perms",
 					Handler: sysrole.DeleteRolePermsHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/role/perms/:value",
+					Path:    "/perms/:value",
 					Handler: sysrole.GetRolePermsHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPut,
-					Path:    "/role/status",
+					Path:    "/status",
 					Handler: sysrole.ToggleRoleStatusHandler(serverCtx),
 				},
 			}...,
@@ -137,8 +140,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.VerifyPermission},
+			[]rest.Middleware{serverCtx.JwtExpireAuth, serverCtx.VerifyPermission},
 			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: sysscope.CreateScopeHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/",
+					Handler: sysscope.UpdateScopeHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/",
+					Handler: sysscope.DeleteScopeHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: sysscope.GetScopeByIdHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/list",
+					Handler: sysscope.GetScopeListHandler(serverCtx),
+				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/menu",
@@ -166,42 +194,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/scope",
-					Handler: sysscope.CreateScopeHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPut,
-					Path:    "/scope",
-					Handler: sysscope.UpdateScopeHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodDelete,
-					Path:    "/scope",
-					Handler: sysscope.DeleteScopeHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/scope/:id",
-					Handler: sysscope.GetScopeByIdHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/scope/list",
-					Handler: sysscope.GetScopeListHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/scope/menus",
+					Path:    "/menus",
 					Handler: sysscope.AddScopeMenusHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
-					Path:    "/scope/menus",
+					Path:    "/menus",
 					Handler: sysscope.DeleteScopeMenusHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/scope/menus/:id",
+					Path:    "/menus/:id",
 					Handler: sysscope.GetScopeMenusHandler(serverCtx),
 				},
 			}...,
@@ -212,52 +215,67 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.VerifyPermission},
+			[]rest.Middleware{serverCtx.JwtExpireAuth, serverCtx.VerifyPermission},
 			[]rest.Route{
 				{
 					Method:  http.MethodPost,
-					Path:    "/user",
+					Path:    "/",
 					Handler: sysuser.CreateUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPut,
-					Path:    "/user",
+					Path:    "/",
 					Handler: sysuser.UpdateUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
-					Path:    "/user",
+					Path:    "/",
 					Handler: sysuser.DeleteUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/user/:id",
+					Path:    "/:id",
 					Handler: sysuser.GetUserByIdHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/user/assign-role",
+					Path:    "/assign-role",
 					Handler: sysuser.AssignUserRoleHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/list",
+					Handler: sysuser.GetUserListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/password",
+					Handler: sysuser.UpdatePasswordHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/status",
+					Handler: sysuser.ToggleUserStatusHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/sys/user"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtExpireAuth},
+			[]rest.Route{
 				{
 					Method:  http.MethodGet,
 					Path:    "/user/info",
 					Handler: sysuser.GetUserInfoHandler(serverCtx),
 				},
 				{
-					Method:  http.MethodPost,
-					Path:    "/user/list",
-					Handler: sysuser.GetUserListHandler(serverCtx),
-				},
-				{
 					Method:  http.MethodPut,
 					Path:    "/user/password",
 					Handler: sysuser.UpdateUserPasswordHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPut,
-					Path:    "/user/status",
-					Handler: sysuser.ToggleUserStatusHandler(serverCtx),
 				},
 			}...,
 		),

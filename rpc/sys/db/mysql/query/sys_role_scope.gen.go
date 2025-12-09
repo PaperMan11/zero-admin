@@ -33,6 +33,7 @@ func newSysRoleScope(db *gorm.DB, opts ...gen.DOOption) sysRoleScope {
 	_sysRoleScope.ScopeCode = field.NewString(tableName, "scope_code")
 	_sysRoleScope.Perm = field.NewInt32(tableName, "perm")
 	_sysRoleScope.CreateTime = field.NewTime(tableName, "create_time")
+	_sysRoleScope.UpdateTime = field.NewTime(tableName, "update_time")
 
 	_sysRoleScope.fillFieldMap()
 
@@ -49,6 +50,7 @@ type sysRoleScope struct {
 	ScopeCode  field.String // 范围
 	Perm       field.Int32  // 权限（0-无权限，1-读，2-写，4-创建，8-删除）
 	CreateTime field.Time   // 创建时间
+	UpdateTime field.Time   // 更新时间
 
 	fieldMap map[string]field.Expr
 }
@@ -70,6 +72,7 @@ func (s *sysRoleScope) updateTableName(table string) *sysRoleScope {
 	s.ScopeCode = field.NewString(table, "scope_code")
 	s.Perm = field.NewInt32(table, "perm")
 	s.CreateTime = field.NewTime(table, "create_time")
+	s.UpdateTime = field.NewTime(table, "update_time")
 
 	s.fillFieldMap()
 
@@ -98,12 +101,13 @@ func (s *sysRoleScope) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 }
 
 func (s *sysRoleScope) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 5)
+	s.fieldMap = make(map[string]field.Expr, 6)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["role_code"] = s.RoleCode
 	s.fieldMap["scope_code"] = s.ScopeCode
 	s.fieldMap["perm"] = s.Perm
 	s.fieldMap["create_time"] = s.CreateTime
+	s.fieldMap["update_time"] = s.UpdateTime
 }
 
 func (s sysRoleScope) clone(db *gorm.DB) sysRoleScope {

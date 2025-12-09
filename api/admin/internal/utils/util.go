@@ -59,6 +59,14 @@ func ConvertToTypesScope(scope *scopeservice.Scope) types.Scope {
 	}
 }
 
+func ConvertToTypesScopes(scope []*scopeservice.Scope) []types.Scope {
+	res := make([]types.Scope, 0, len(scope))
+	for _, v := range scope {
+		res = append(res, ConvertToTypesScope(v))
+	}
+	return res
+}
+
 func ConvertToTypesRole(role *roleservice.Role) types.Role {
 	return types.Role{
 		RoleId:      role.RoleId,

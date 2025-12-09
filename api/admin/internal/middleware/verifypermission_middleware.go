@@ -10,6 +10,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	xhttp "github.com/zeromicro/x/http"
 	"net/http"
+	"strings"
 	"zero-admin/pkg/convert"
 )
 
@@ -68,7 +69,7 @@ func (m *VerifyPermissionMiddleware) skipPermissionCheck(url string) bool {
 
 func parseUserInfo(r *http.Request) (userId string, userRoles []string, err error) {
 	userId = convert.ToString(r.Context().Value("uid"))
-	userRoles = r.Context().Value("role").([]string)
+	userRoles = strings.Split(convert.ToString(r.Context().Value("roles")), ",")
 	return userId, userRoles, nil
 }
 

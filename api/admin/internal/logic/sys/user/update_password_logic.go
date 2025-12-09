@@ -7,7 +7,6 @@ import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
 	"zero-admin/api/admin/internal/utils"
-	"zero-admin/pkg/convert"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -16,27 +15,25 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type UpdateUserPasswordLogic struct {
+type UpdatePasswordLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewUpdateUserPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateUserPasswordLogic {
-	return &UpdateUserPasswordLogic{
+func NewUpdatePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdatePasswordLogic {
+	return &UpdatePasswordLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *UpdateUserPasswordLogic) UpdateUserPassword(req *types.UpdateUserPasswordRequest) (resp *types.Empty, err error) {
-	uid := convert.ToInt64(convert.ToString(l.ctx.Value("uid")))
-	_, err = l.svcCtx.UserService.UpdateUserPassword(l.ctx, &userservice.UpdateUserPasswordRequest{
-		UserId:      uid,
-		OldPassword: req.OldPassword,
-		NewPassword: req.NewPassword,
-		OperatorId:  utils.GetOperateID(l.ctx),
+func (l *UpdatePasswordLogic) UpdatePassword(req *types.UpdatePasswordRequest) (resp *types.Empty, err error) {
+	_, err = l.svcCtx.UserService.UpdatePassword(l.ctx, &userservice.UpdatePasswordRequest{
+		UserId:     req.UserId,
+		Password:   req.Password,
+		OperatorId: utils.GetOperateID(l.ctx),
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "管理员更新用户密码, 参数: %v, 异常: %v", req, err)

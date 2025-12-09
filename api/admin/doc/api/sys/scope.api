@@ -110,7 +110,7 @@ type ScopeListRequest {
 // 安全范围列表响应
 type ScopeListResponse {
 	PageResponse
-	Scopes []ScopeInfo `json:"scopes"`
+	Scopes []Scope `json:"scopes"`
 }
 
 // 创建安全范围请求
@@ -152,35 +152,35 @@ type DeleteScopeMenusRequest {
 // 安全范围服务
 @server (
 	jwt:        Auth
-	middleware: VerifyPermission
+	middleware: JwtExpireAuth,VerifyPermission
 	group:      sys/scope
 	prefix:     /api/sys/scope
 )
 service admin-api {
 	// 安全范围管理
 	@handler GetScopeList
-	post /scope/list (ScopeListRequest) returns (ScopeListResponse)
+	post /list (ScopeListRequest) returns (ScopeListResponse)
 
 	@handler GetScopeById
-	get /scope/:id (IdValue) returns (Scope)
+	get /:id (IdValue) returns (Scope)
 
 	@handler CreateScope
-	post /scope (CreateScopeRequest) returns (Scope)
+	post / (CreateScopeRequest) returns (Scope)
 
 	@handler UpdateScope
-	put /scope (UpdateScopeRequest) returns (Scope)
+	put / (UpdateScopeRequest) returns (Scope)
 
 	@handler DeleteScope
-	delete /scope (DeleteScopeRequest) returns (Empty)
+	delete / (DeleteScopeRequest) returns (Empty)
 
 	@handler AddScopeMenus
-	post /scope/menus (AddScopeMenusRequest) returns (ScopeInfo)
+	post /menus (AddScopeMenusRequest) returns (ScopeInfo)
 
 	@handler DeleteScopeMenus
-	delete /scope/menus (DeleteScopeMenusRequest) returns (ScopeInfo)
+	delete /menus (DeleteScopeMenusRequest) returns (ScopeInfo)
 
 	@handler GetScopeMenus
-	get /scope/menus/:id (IdValue) returns (ScopeInfo)
+	get /menus/:id (IdValue) returns (ScopeInfo)
 
 	// 菜单管理
 	@handler GetMenuTree

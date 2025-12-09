@@ -46,6 +46,14 @@ func (m *MysqlDB) GetScopeByID(ctx context.Context, scopeID int64) (*model.SysSc
 	return m.q.SysScope.WithContext(ctx).Where(m.q.SysScope.ID.Eq(scopeID)).First()
 }
 
+func (m *MysqlDB) GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysScope, error) {
+	return m.q.SysScope.WithContext(ctx).Where(m.q.SysScope.ID.In(scopeIDs...)).Find()
+}
+
+func (m *MysqlDB) GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error) {
+	return m.q.SysScope.WithContext(ctx).Where(m.q.SysScope.ScopeCode.In(scopeCodes...)).Find()
+}
+
 func (m *MysqlDB) GetScopesPagination(ctx context.Context, page, pageSize int) ([]*model.SysScope, error) {
 	return m.q.SysScope.WithContext(ctx).Order(m.q.SysScope.Sort.Desc()).Offset((page - 1) * pageSize).Limit(pageSize).Find()
 }

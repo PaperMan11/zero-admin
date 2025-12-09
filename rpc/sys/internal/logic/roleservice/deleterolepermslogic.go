@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
+	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
 
@@ -29,6 +30,11 @@ func NewDeleteRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 
 // 删除角色权限
 func (l *DeleteRolePermsLogic) DeleteRolePerms(in *sysclient.DeleteRolePermsRequest) (*sysclient.RoleInfo, error) {
+	if common.IsSuperUser(in.RoleCode) {
+		logc.Errorf(l.ctx, "超级管理员角色不允许修改, 角色：%s", in.RoleCode)
+		return nil, status.Error(codes.PermissionDenied, common.ErrSuperUserDoNotEdit.Error())
+	}
+	
 	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

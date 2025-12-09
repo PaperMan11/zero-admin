@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"gorm.io/gorm/clause"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/db/mysql/query"
 )
@@ -31,6 +32,16 @@ func (m *MysqlDB) UpdateRoleScopesTx(ctx context.Context, roleCode string, roleS
 		}
 		return rc.WithContext(ctx).Create(newRoleScopes...)
 	})
+}
+
+func (m *MysqlDB) UpsertRoleScopes(ctx context.Context, roleScope model.SysRoleScope) error {
+	rs := m.q.SysRoleScope
+	return rs.WithContext(ctx).Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "role_code"}, {Name: "scope_code"}},
+		DoUpdates: clause.Set{
+			{Column: clause.Column{Name: "perm"}, Value: roleScope.Perm},
+		},
+	}).Create(&roleScope)
 }
 
 func (m *MysqlDB) AddRoleScopes(ctx context.Context, roleScopes []*model.SysRoleScope) error {

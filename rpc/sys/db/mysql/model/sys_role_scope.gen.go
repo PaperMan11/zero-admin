@@ -17,6 +17,7 @@ type SysRoleScope struct {
 	ScopeCode  string    `gorm:"column:scope_code;not null;comment:范围" json:"scope_code"`                               // 范围
 	Perm       int32     `gorm:"column:perm;not null;comment:权限（0-无权限，1-读，2-写，4-创建，8-删除）" json:"perm"`                  // 权限（0-无权限，1-读，2-写，4-创建，8-删除）
 	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
+	UpdateTime time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_time"` // 更新时间
 }
 
 // TableName SysRoleScope's table name

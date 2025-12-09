@@ -37,12 +37,12 @@ func (l *RefreshTokenLogic) RefreshToken(in *sysclient.RefreshTokenRequest) (*sy
 	refreshSecret := l.svcCtx.Config.Jwt.RefreshSecret
 	refreshExpire := l.svcCtx.Config.Jwt.RefreshExpire
 
-	userIDStr, err := jwtUtil.ParseRefreshToken(issuer, in.RefreshToken, refreshSecret)
+	claims, err := jwtUtil.ParseRefreshToken(in.RefreshToken, refreshSecret)
 	if err != nil {
 		logc.Debug(l.ctx, "refresh token error: %v", err)
 		return nil, status.Error(codes.Unauthenticated, "请重新登录")
 	}
-	userID := convert.ToInt64(userIDStr)
+	userID := convert.ToInt64(claims.Uid)
 
 	user, err := l.svcCtx.DB.GetUserByID(l.ctx, userID)
 	// 判断用户是否存在
@@ -57,14 +57,17 @@ func (l *RefreshTokenLogic) RefreshToken(in *sysclient.RefreshTokenRequest) (*sy
 
 	// 用户角色信息
 	roleCodes, _ := l.svcCtx.DB.GetUserRoleCodes(l.ctx, user.ID)
-	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, issuer, accessSecret, accessExpire, refreshSecret, refreshExpire)
+	uuid, accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, issuer, accessSecret, accessExpire, refreshSecret, refreshExpire)
 	if err != nil {
 		logc.Errorf(l.ctx, "生成token异常, 用户id：%+v, 错误：%s", user.ID, err.Error())
 		return nil, status.Error(codes.Internal, "生成token异常")
 	}
 
 	return &sysclient.RefreshTokenResponse{
+		Id:           user.ID,
+		Username:     user.Username,
 		Token:        accessToken,
 		RefreshToken: refreshToken,
+		TokenUuid:    uuid,
 	}, nil
 }

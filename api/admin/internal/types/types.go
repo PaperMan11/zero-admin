@@ -232,6 +232,7 @@ type QueryOperateLogListReq struct {
 }
 
 type RefreshTokenRequest struct {
+	Uid          int64  `json:"uid"`           // 用户ID
 	RefreshToken string `json:"refresh_token"` // 刷新令牌
 }
 
@@ -311,7 +312,7 @@ type ScopeListRequest struct {
 
 type ScopeListResponse struct {
 	PageResponse
-	Scopes []ScopeInfo `json:"scopes"`
+	Scopes []Scope `json:"scopes"`
 }
 
 type StringValue struct {
@@ -346,6 +347,11 @@ type UpdateMenuRequest struct {
 	Remark    string `json:"remark,optional"`    // 备注
 }
 
+type UpdatePasswordRequest struct {
+	UserId   int64  `json:"user_id"`  // 用户ID
+	Password string `json:"password"` // 新密码
+}
+
 type UpdateRolePermsRequest struct {
 	RoleCode   string      `json:"role_code"` // 角色code
 	RoleScopes []RoleScope `json:"role_scopes"`
@@ -367,7 +373,6 @@ type UpdateScopeRequest struct {
 }
 
 type UpdateUserPasswordRequest struct {
-	UserId      int64  `json:"user_id"`      // 用户ID
 	OldPassword string `json:"old_password"` // 旧密码
 	NewPassword string `json:"new_password"` // 新密码
 }

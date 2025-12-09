@@ -24,6 +24,7 @@ type LoginResponse {
 
 // 刷新令牌请求
 type RefreshTokenRequest {
+	Uid int64  `json:"uid"` // 用户ID
 	RefreshToken string `json:"refresh_token"` // 刷新令牌
 }
 
@@ -71,6 +72,7 @@ service admin-api {
 
 @server (
 	jwt:    Auth
+	middleware: JwtExpireAuth
 	group:  sys/auth
 	prefix: /api/sys/auth
 )

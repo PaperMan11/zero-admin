@@ -86,3 +86,9 @@ CREATE TABLE `sys_role_scope` (
     KEY `idx_role_id` (`role_id`),
     KEY `idx_scope_id` (`scope_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统角色-安全范围关联表';
+
+
+INSERT INTO `zeroadmin`.`sys_user`(`id`, `username`, `password`, `salt`, `email`, `mobile`, `avatar`, `real_name`, `gender`, `status`, `last_login_time`, `last_login_ip`, `login_count`, `creator`, `create_time`, `updater`, `update_time`, `del_flag`, `remark`) VALUES (1, 'admin', '$2a$10$0PeuGGGsaCocmOuKeYE7KOqBEhuW95O5j7.TyL0TkYg0kvpVbCVcS', 'pDmFnN6Q0jJwcIck', 'test@example.com', '13800138000', '', '超级管理员', 1, 1, '2025-12-09 15:44:45', '192.168.241.1:60767', 1, '', '2025-12-08 09:29:13', '', '2025-12-09 07:48:06', 0, '');
+INSERT INTO `zeroadmin`.`sys_user_role`(`id`, `user_id`, `role_code`, `create_time`) VALUES (1, 1, 'SUPERUSER', '2025-12-09 07:50:43');
+-- casbin rule
+INSERT INTO `zeroadmin`.`casbin_rule`(`id`, `ptype`, `v0`, `v1`, `v2`, `v3`, `v4`, `v5`) VALUES (1, 'p', 'SUPERUSER', '/*', '(GET)|(POST)|(PUT)|(DELETE)', NULL, NULL, NULL);

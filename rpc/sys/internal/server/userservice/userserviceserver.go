@@ -54,6 +54,11 @@ func (s *UserServiceServer) UpdateUserPassword(ctx context.Context, in *sysclien
 	return l.UpdateUserPassword(in)
 }
 
+func (s *UserServiceServer) UpdatePassword(ctx context.Context, in *sysclient.UpdatePasswordRequest) (*sysclient.Empty, error) {
+	l := userservicelogic.NewUpdatePasswordLogic(ctx, s.svcCtx)
+	return l.UpdatePassword(in)
+}
+
 func (s *UserServiceServer) AssignUserRole(ctx context.Context, in *sysclient.AssignUserRoleRequest) (*sysclient.Empty, error) {
 	l := userservicelogic.NewAssignUserRoleLogic(ctx, s.svcCtx)
 	return l.AssignUserRole(in)

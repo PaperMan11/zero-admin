@@ -6,6 +6,7 @@ package auth
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
+	"time"
 	"zero-admin/api/admin/internal/utils"
 	"zero-admin/rpc/sys/client/authservice"
 
@@ -43,10 +44,7 @@ func (l *LoginLogic) Login(req *types.LoginRequest, ip, os, browser string) (res
 	}
 
 	// 添加token过期管理
-	accessTokenExpire := l.svcCtx.Config.Auth.AccessExpire
-	refreshTokenExpire := l.svcCtx.Config.Auth.RefreshExpire
-	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetAccessTokenKey(res.Id), res.Token, int(accessTokenExpire))
-	l.svcCtx.Redis.SetexCtx(l.ctx, utils.GetRefreshTokenKey(res.Id), res.RefreshToken, int(refreshTokenExpire))
+	SetTokenCache(l.ctx, l.svcCtx, res.Id, res.TokenUuid, res.RefreshToken)
 
 	return &types.LoginResponse{
 		AccessToken:  res.Token,
@@ -54,4 +52,24 @@ func (l *LoginLogic) Login(req *types.LoginRequest, ip, os, browser string) (res
 		RefreshToken: res.RefreshToken,
 		Username:     res.Username,
 	}, nil
+}
+
+// 添加token过期管理
+func SetTokenCache(ctx context.Context, svcCtx *svc.ServiceContext, uid int64, tokenUuid, refreshToken string) {
+	accessTokenExpire := svcCtx.Config.Auth.AccessExpire
+	refreshTokenExpire := svcCtx.Config.Auth.RefreshExpire
+	aTokenKey := utils.GetAccessTokenKey(uid)
+	rTokenKey := utils.GetRefreshTokenKey(uid)
+	svcCtx.LocalCache.SetWithExpire(aTokenKey, tokenUuid, time.Duration(accessTokenExpire)*time.Second)
+	svcCtx.LocalCache.SetWithExpire(rTokenKey, refreshToken, time.Duration(refreshTokenExpire)*time.Second)
+	svcCtx.Redis.SetexCtx(ctx, aTokenKey, tokenUuid, int(accessTokenExpire))
+	svcCtx.Redis.SetexCtx(ctx, rTokenKey, refreshToken, int(refreshTokenExpire))
+}
+
+func DelTokenCache(ctx context.Context, svcCtx *svc.ServiceContext, uid int64) {
+	aTokenKey := utils.GetAccessTokenKey(uid)
+	rTokenKey := utils.GetRefreshTokenKey(uid)
+	svcCtx.LocalCache.Del(aTokenKey)
+	svcCtx.LocalCache.Del(rTokenKey)
+	svcCtx.Redis.DelCtx(ctx, aTokenKey, rTokenKey)
 }

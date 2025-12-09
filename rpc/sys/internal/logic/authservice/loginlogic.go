@@ -58,7 +58,7 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	// 3.生成token
 	// 用户角色信息
 	roleCodes, _ := l.svcCtx.DB.GetUserRoleCodes(l.ctx, user.ID)
-	accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, l.svcCtx.Config.Name,
+	uuid, accessToken, refreshToken, err := GenerateToken(user.ID, roleCodes, l.svcCtx.Config.Name,
 		l.svcCtx.Config.Jwt.AccessSecret, l.svcCtx.Config.Jwt.AccessExpire,
 		l.svcCtx.Config.Jwt.RefreshSecret, l.svcCtx.Config.Jwt.RefreshExpire)
 	if err != nil {
@@ -75,6 +75,7 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 		Username:     user.Username,
 		Token:        accessToken,
 		RefreshToken: refreshToken,
+		TokenUuid:    uuid,
 	}, nil
 }
 
@@ -104,12 +105,12 @@ func (l *LoginLogic) saveLoginLog(in *sysclient.LoginRequest, status int32, msg 
 
 func GenerateToken(userID int64, roles []string,
 	issuer string, accessSecret string, accessExpire int64,
-	refreshSecret string, refreshExpire int64) (accessToken, refreshToken string, err error) {
-	uuid := uuid2.GetUUID()
+	refreshSecret string, refreshExpire int64) (uuid, accessToken, refreshToken string, err error) {
+	uuid = uuid2.GetUUID()
 	accessToken, err = jwtUtil.GenerateAccessToken(uuid, issuer, userID, roles, accessSecret, accessExpire)
 	if err != nil {
-		return "", "", xerr.NewErrCode(xerr.ErrorTokenGenerate)
+		return "", "", "", xerr.NewErrCode(xerr.ErrorTokenGenerate)
 	}
-	refreshToken, _ = jwtUtil.GenerateRefreshToken(uuid, issuer, refreshSecret, refreshExpire)
-	return accessToken, refreshToken, nil
+	refreshToken, _ = jwtUtil.GenerateRefreshToken(uuid, issuer, userID, roles, refreshSecret, refreshExpire)
+	return uuid, accessToken, refreshToken, nil
 }

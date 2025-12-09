@@ -61,6 +61,13 @@ message UpdateUserPasswordRequest {
   int64 operator_id = 4;  // 操作者
 }
 
+// 管理员更新用户密码
+message UpdatePasswordRequest {
+  int64 user_id = 1;
+  string password = 2;
+  int64 operator_id = 3;
+}
+
 // 分配用户角色
 message AssignUserRoleRequest {
   int64 user_id = 1;
@@ -109,6 +116,7 @@ service UserService {
   rpc UpdateUser(UpdateUserRequest) returns (User);
   rpc DeleteUser(DeleteUserRequest) returns (Empty);
   rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (Empty);
+  rpc UpdatePassword(UpdatePasswordRequest) returns (Empty);
   rpc AssignUserRole(AssignUserRoleRequest) returns (Empty);
   rpc ToggleUserStatus(ToggleUserStatusRequest) returns (User);  // 禁用/启用用户
   // 获取当前用户信息

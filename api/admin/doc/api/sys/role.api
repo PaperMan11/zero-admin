@@ -99,48 +99,48 @@ type BatchDeleteRolesRequest {
 // 角色服务
 @server (
 	jwt:        Auth
-	middleware: VerifyPermission
+	middleware: JwtExpireAuth,VerifyPermission
 	group:      sys/role
 	prefix:     /api/sys/role
 )
 service admin-api {
 	// 角色列表
 	@handler GetRoleList
-	post /role/list (RoleListRequest) returns (RoleListResponse)
+	post /list (RoleListRequest) returns (RoleListResponse)
 
 	// 创建角色
 	@handler CreateRole
-	post /role (CreateRoleRequest) returns (Role)
+	post / (CreateRoleRequest) returns (Role)
 
 	// 更新角色
 	@handler UpdateRole
-	put /role (UpdateRoleRequest) returns (Role)
+	put / (UpdateRoleRequest) returns (Role)
 
 	// 禁用角色
 	@handler ToggleRoleStatus
-	put /role/status (ToggleRoleStatusRequest) returns (Role)
+	put /status (ToggleRoleStatusRequest) returns (Role)
 
 	// 删除角色
 	@handler DeleteRole
-	delete /role (DeleteRoleRequest) returns (Empty)
+	delete / (DeleteRoleRequest) returns (Empty)
 
 	@handler BatchDeleteRoles
-	post /role/batch-delete (BatchDeleteRolesRequest) returns (Empty)
+	post /batch-delete (BatchDeleteRolesRequest) returns (Empty)
 
 	// 添加角色权限
 	@handler AddRolePerms
-	post /role/perms (AddRolePermsRequest) returns (RoleInfo)
+	post /perms (AddRolePermsRequest) returns (RoleInfo)
 
 	// 更新角色权限
 	@handler UpdateRolePerms
-	put /role/perms (UpdateRolePermsRequest) returns (RoleInfo)
+	put /perms (UpdateRolePermsRequest) returns (RoleInfo)
 
 	// 删除角色权限
 	@handler DeleteRolePerms
-	delete /role/perms (DeleteRolePermsRequest) returns (RoleInfo)
+	delete /perms (DeleteRolePermsRequest) returns (RoleInfo)
 
 	// 获取角色权限
 	@handler GetRolePerms
-	get /role/perms/:value (StringValue) returns (RoleInfo)
+	get /perms/:value (StringValue) returns (RoleInfo)
 }
 

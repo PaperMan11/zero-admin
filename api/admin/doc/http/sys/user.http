@@ -1,0 +1,98 @@
+### 获取用户列表
+POST {{host}}/api/sys/user/list
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "page": 1,
+  "limit": 10,
+  "status": 1
+}
+
+### 根据ID获取用户信息
+GET {{host}}/api/sys/user/{{userId}}
+Authorization: Bearer {{token}}
+
+### 创建用户
+POST {{host}}/api/sys/user
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "username": "testuser",
+  "password": "123456",
+  "email": "test@example.com",
+  "mobile": "13800138000",
+  "real_name": "测试用户",
+  "gender": 1,
+  "status": 1
+}
+
+> {%
+client.global.set("userId", response.body.data.user.id);
+%}
+
+### 更新用户信息
+PUT {{host}}/api/sys/user
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": {{userId}},
+  "email": "updated@example.com",
+  "real_name": "更新用户",
+  "gender": 2
+}
+
+### 禁用/启用用户
+PUT {{host}}/api/sys/user/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "user_id": {{userId}},
+  "status": 0
+}
+
+### 分配用户角色
+POST {{host}}/api/sys/user/assign-role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "user_id": {{userId}},
+  "role_codes": ["ADMIN"]
+}
+
+### 更新用户密码（管理员）
+PUT {{host}}/api/sys/user/password
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "user_id": {{userId}},
+  "new_password": "newpassword"
+}
+
+### 获取当前用户信息
+GET {{host}}/api/sys/user/user/info
+Authorization: Bearer {{token}}
+
+### 更新当前用户密码
+PUT {{host}}/api/sys/user/user/password
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "old_password": "123456",
+  "new_password": "newpassword"
+}
+
+### 删除用户
+DELETE {{host}}/api/sys/user
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": {{userId}}
+}

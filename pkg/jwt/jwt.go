@@ -3,7 +3,9 @@ package jwt
 import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strings"
 	"time"
+	"zero-admin/pkg/convert"
 	"zero-admin/pkg/response/xerr"
 )
 
@@ -47,18 +49,18 @@ import (
 */
 
 type AccessClaims struct {
-	Uid  int64    `json:"uid"`
-	Role []string `json:"role"`
-	Uuid string   `json:"uuid"`
+	Uid   string `json:"uid"`
+	Roles string `json:"roles"`
+	Uuid  string `json:"uuid"`
 	jwt.RegisteredClaims
 }
 
-func GenerateAccessToken(uuid string, issuer string, userID int64, role []string, secretKey string, accessExpire int64) (string, error) {
+func GenerateAccessToken(uuid string, issuer string, userID int64, roles []string, secretKey string, accessExpire int64) (string, error) {
 	now := time.Now()
 	claims := AccessClaims{
-		Uid:  userID,
-		Role: role,
-		Uuid: uuid,
+		Uid:   convert.ToString(userID),
+		Roles: strings.Join(roles, ","),
+		Uuid:  uuid,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			IssuedAt:  jwt.NewNumericDate(now),
@@ -91,16 +93,20 @@ func ParseToken(tokenString, secretKey string) (*AccessClaims, error) {
 }
 
 type RefreshClaims struct {
-	Uuid string `json:"uuid"`
+	Uid   string `json:"uid"`
+	Roles string `json:"roles"`
+	Uuid  string `json:"uuid"`
 	jwt.RegisteredClaims
 }
 
 // 生成 Refresh Token
-func GenerateRefreshToken(uuid string, issuer string, refreshSecretKey string, refreshExpire int64) (string, error) {
+func GenerateRefreshToken(uuid string, issuer string, userID int64, roles []string, refreshSecretKey string, refreshExpire int64) (string, error) {
 	// Refresh Token
 	now := time.Now()
 	claims := &RefreshClaims{
-		Uuid: uuid,
+		Uuid:  uuid,
+		Uid:   convert.ToString(userID),
+		Roles: strings.Join(roles, ","),
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			IssuedAt:  jwt.NewNumericDate(now),

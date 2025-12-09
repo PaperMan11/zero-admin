@@ -1,0 +1,114 @@
+### 获取角色列表
+POST {{host}}/api/sys/role/list
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "page_request": {
+    "page": 1,
+    "limit": 10
+  },
+  "status": 1
+}
+
+### 创建角色
+POST {{host}}/api/sys/role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_name": "测试角色",
+  "role_code": "TEST_ROLE",
+  "description": "测试角色"
+}
+
+> {%
+client.global.set("roleCode", response.body.data.role_code);
+%}
+
+### 更新角色
+PUT {{host}}/api/sys/role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_name": "测试角色_修改",
+  "role_code": "{{roleCode}}",
+  "description": "测试角色_修改"
+}
+
+### 启用/禁用角色
+PUT {{host}}/api/sys/role/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_code": "{{roleCode}}",
+  "status": 0
+}
+
+### 添加角色权限
+POST {{host}}/api/sys/role/perms
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_code": "{{roleCode}}",
+  "role_scopes": [
+    {
+      "id": {{scopeId}},
+      "role_code": "{{roleCode}}",
+      "scope_code": "TEST_SCOPE",
+      "perms": ["create", "read", "update"]
+    }
+  ]
+}
+
+### 更新角色权限
+PUT {{host}}/api/sys/role/perms
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_code": "{{roleCode}}",
+  "role_scopes": [
+    {
+      "role_code": "{{roleCode}}",
+      "scope_code": "USER_MANAGEMENT",
+      "perms": ["create", "update"]
+    }
+  ]
+}
+
+### 获取角色权限
+GET {{host}}/api/sys/role/perms/{{roleCode}}
+Authorization: Bearer {{token}}
+
+### 删除角色权限
+DELETE {{host}}/api/sys/role/perms
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_code": "{{roleCode}}",
+  "scope_codes": ["USER_MANAGEMENT"]
+}
+
+### 批量删除角色
+POST {{host}}/api/sys/role/batch-delete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_codes": ["{{roleCode}}"],
+  "operator_id": 1
+}
+
+### 删除角色
+DELETE {{host}}/api/sys/role
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role_code": "{{roleCode}}"
+}

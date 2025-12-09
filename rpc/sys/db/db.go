@@ -57,6 +57,7 @@ type DB interface {
 	SaveRole(ctx context.Context, role model.SysRole) error
 	UpdateRoleScopesTx(ctx context.Context, roleCode string, roleScopes []model.SysRoleScope) error
 	AddRoleScopes(ctx context.Context, roleScopes []*model.SysRoleScope) error
+	UpsertRoleScopes(ctx context.Context, roleScope model.SysRoleScope) error
 	ToggleRoleStatus(ctx context.Context, roleID int64, status int32, operator string) error
 
 	// ---------------------菜单 & 权限---------------------
@@ -87,6 +88,8 @@ type DB interface {
 	CountScopes(ctx context.Context) (int64, error)
 	SaveScope(ctx context.Context, scope model.SysScope) error
 	GetScopeByID(ctx context.Context, scopeID int64) (*model.SysScope, error)
+	GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysScope, error)
+	GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error)
 	GetScopesPagination(ctx context.Context, page, pageSize int) ([]*model.SysScope, error)
 	AddScopeMenus(ctx context.Context, scopeID int64, menus []int64) error // 先删除再添加
 	DeleteScope(ctx context.Context, scopeID int64) error

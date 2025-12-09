@@ -5,7 +5,7 @@ package auth
 
 import (
 	"context"
-	"zero-admin/api/admin/internal/utils"
+	"github.com/zeromicro/go-zero/core/logc"
 	"zero-admin/pkg/convert"
 
 	"zero-admin/api/admin/internal/svc"
@@ -30,7 +30,8 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 
 func (l *LogoutLogic) Logout() (resp *types.Empty, err error) {
 	// 添加token过期管理
-	uid := convert.ToInt64(l.ctx.Value("uid"))
-	l.svcCtx.Redis.DelCtx(l.ctx, utils.GetAccessTokenKey(uid), utils.GetRefreshTokenKey(uid))
+	uid := convert.ToInt64(convert.ToString(l.ctx.Value("uid")))
+	logc.Infof(l.ctx, "uid: %d", uid)
+	DelTokenCache(l.ctx, l.svcCtx, uid)
 	return
 }

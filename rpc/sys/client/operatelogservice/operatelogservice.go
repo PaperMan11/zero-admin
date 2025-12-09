@@ -66,6 +66,7 @@ type (
 	ToggleRoleStatusRequest    = sysclient.ToggleRoleStatusRequest
 	ToggleUserStatusRequest    = sysclient.ToggleUserStatusRequest
 	UpdateMenuRequest          = sysclient.UpdateMenuRequest
+	UpdatePasswordRequest      = sysclient.UpdatePasswordRequest
 	UpdateRolePermsRequest     = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest          = sysclient.UpdateRoleRequest
 	UpdateScopeRequest         = sysclient.UpdateScopeRequest

@@ -83,21 +83,21 @@ type OperateLogListData {
 // 系统操作日志服务
 @server (
 	jwt:        Auth
-	middleware: VerifyPermission
+	middleware: JwtExpireAuth,VerifyPermission
 	group:      sys/operatelog
 	prefix:     /api/sys/operatelog
 )
 service admin-api {
 	// 删除系统操作日志表
 	@handler DeleteOperateLog
-	delete /operate-log (DeleteOperateLogReq) returns (DeleteOperateLogResp)
+	delete / (DeleteOperateLogReq) returns (DeleteOperateLogResp)
 
 	// 查询系统操作日志表详情
 	@handler QueryOperateLogDetail
-	get /operate-log/:id (QueryOperateLogDetailReq) returns (OperateLog)
+	get /:id (QueryOperateLogDetailReq) returns (OperateLog)
 
 	// 查询系统操作日志表列表
 	@handler QueryOperateLogList
-	post /operate-log/list (QueryOperateLogListReq) returns (OperateLogListData)
+	post /list (QueryOperateLogListReq) returns (OperateLogListData)
 }
 

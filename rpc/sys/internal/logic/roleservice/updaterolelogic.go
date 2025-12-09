@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
+	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -32,6 +33,11 @@ func NewUpdateRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 
 // 更新角色
 func (l *UpdateRoleLogic) UpdateRole(in *sysclient.UpdateRoleRequest) (*sysclient.Role, error) {
+	if common.IsSuperUser(in.RoleCode) {
+		logc.Errorf(l.ctx, "超级管理员角色不允许修改, 角色：%s", in.RoleCode)
+		return nil, status.Error(codes.PermissionDenied, common.ErrSuperUserDoNotEdit.Error())
+	}
+
 	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

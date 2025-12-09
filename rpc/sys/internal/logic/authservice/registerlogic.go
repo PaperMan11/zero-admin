@@ -79,5 +79,6 @@ func (l *RegisterLogic) Register(in *sysclient.RegisterRequest) (*sysclient.Regi
 		Username:     loginResp.Username,
 		Token:        loginResp.Token,
 		RefreshToken: loginResp.RefreshToken,
+		TokenUuid:    loginResp.TokenUuid,
 	}, nil
 }

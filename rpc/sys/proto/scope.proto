@@ -85,7 +85,7 @@ message ScopeListRequest {
 // 安全范围列表响应
 message ScopeListResponse {
   PageResponse page_response = 1;
-  repeated ScopeInfo scopes = 2;
+  repeated Scope scopes = 2;
 }
 
 // 创建安全范围请求

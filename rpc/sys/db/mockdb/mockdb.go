@@ -696,6 +696,52 @@ func (m *MockDB) GetScopeByID(ctx context.Context, scopeID int64) (*model.SysSco
 	return nil, nil
 }
 
+func (m *MockDB) GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysScope, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	scopes := make([]*model.SysScope, 0)
+
+	for _, id := range scopeIDs {
+		for _, scope := range m.scopes {
+			if scope.ID == id {
+				scopes = append(scopes, scope)
+			}
+		}
+	}
+
+	return scopes, nil
+}
+
+func (m *MockDB) GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	scopes := make([]*model.SysScope, 0)
+	for _, code := range scopeCodes {
+		for _, scope := range m.scopes {
+			if scope.ScopeCode == code {
+				scopes = append(scopes, scope)
+			}
+		}
+	}
+	return scopes, nil
+}
+
+func (m *MockDB) UpsertRoleScopes(ctx context.Context, roleScope model.SysRoleScope) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	roleScopes, ok := m.roleScopes[roleScope.RoleCode]
+	if !ok {
+		roleScopes = append(roleScopes, &roleScope)
+	} else {
+		for _, v := range roleScopes {
+			if v.ScopeCode == roleScope.ScopeCode {
+				roleScope.Perm = v.Perm
+			}
+		}
+	}
+	return nil
+}
+
 func (m *MockDB) GetScopesPagination(ctx context.Context, page, pageSize int) ([]*model.SysScope, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

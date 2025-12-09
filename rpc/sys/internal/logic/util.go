@@ -123,9 +123,11 @@ func ConvertToModelMenu(operatorID int64, menu *sysclient.Menu) *model.SysMenu {
 
 func ConvertToRpcRole(role *model.SysRole) *sysclient.Role {
 	return &sysclient.Role{
-		RoleId:   role.ID,
-		RoleName: role.RoleName,
-		RoleCode: role.RoleCode,
+		RoleId:      role.ID,
+		RoleName:    role.RoleName,
+		RoleCode:    role.RoleCode,
+		Status:      role.Status,
+		Description: role.Description,
 	}
 }
 

@@ -57,9 +57,14 @@ type DeleteUserRequest {
 
 // 更新用户密码请求
 type UpdateUserPasswordRequest {
-	UserId      int64  `json:"user_id"` // 用户ID
 	OldPassword string `json:"old_password"` // 旧密码
 	NewPassword string `json:"new_password"` // 新密码
+}
+
+// 管理员更新用户密码请求
+type UpdatePasswordRequest {
+	UserId      int64  `json:"user_id"` // 用户ID
+	Password string `json:"password"` // 新密码
 }
 
 // 分配用户角色
@@ -96,38 +101,48 @@ type User {
 // 用户服务
 @server (
 	jwt:        Auth
-	middleware: VerifyPermission
+	middleware: JwtExpireAuth,VerifyPermission
 	group:      sys/user
 	prefix:     /api/sys/user
 )
 service admin-api {
 	// 用户管理
 	@handler GetUserList
-	post /user/list (UserListRequest) returns (UserListResponse)
+	post /list (UserListRequest) returns (UserListResponse)
 
 	@handler GetUserById
-	get /user/:id (IdValue) returns (UserInfo)
+	get /:id (IdValue) returns (UserInfo)
 
 	@handler CreateUser
-	post /user (CreateUserRequest) returns (UserInfo)
+	post / (CreateUserRequest) returns (UserInfo)
 
 	@handler UpdateUser
-	put /user (UpdateUserRequest) returns (User)
+	put / (UpdateUserRequest) returns (User)
 
 	@handler DeleteUser
-	delete /user (DeleteUserRequest) returns (Empty)
+	delete / (DeleteUserRequest) returns (Empty)
 
-	@handler UpdateUserPassword
-	put /user/password (UpdateUserPasswordRequest) returns (Empty)
+	@handler UpdatePassword
+	put /password (UpdatePasswordRequest) returns (Empty)
 
 	@handler AssignUserRole
-	post /user/assign-role (AssignUserRoleRequest) returns (Empty)
+	post /assign-role (AssignUserRoleRequest) returns (Empty)
 
 	@handler ToggleUserStatus
-	put /user/status (ToggleUserStatusRequest) returns (User)
+	put /status (ToggleUserStatusRequest) returns (User)
+}
 
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      sys/user
+	prefix:     /api/sys/user
+)
+service admin-api {
 	// 获取当前用户信息
 	@handler GetUserInfo
 	get /user/info (GetUserInfoRequest) returns (UserInfo)
+	// 修改当前用户密码
+	@handler UpdateUserPassword
+	put /user/password (UpdateUserPasswordRequest) returns (Empty)
 }
-

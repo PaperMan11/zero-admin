@@ -66,6 +66,7 @@ type (
 	ToggleRoleStatusRequest    = sysclient.ToggleRoleStatusRequest
 	ToggleUserStatusRequest    = sysclient.ToggleUserStatusRequest
 	UpdateMenuRequest          = sysclient.UpdateMenuRequest
+	UpdatePasswordRequest      = sysclient.UpdatePasswordRequest
 	UpdateRolePermsRequest     = sysclient.UpdateRolePermsRequest
 	UpdateRoleRequest          = sysclient.UpdateRoleRequest
 	UpdateScopeRequest         = sysclient.UpdateScopeRequest
@@ -84,6 +85,7 @@ type (
 		UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
 		DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*Empty, error)
 		UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error)
+		UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*Empty, error)
 		AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error)
 		ToggleUserStatus(ctx context.Context, in *ToggleUserStatusRequest, opts ...grpc.CallOption) (*User, error)
 		// 获取当前用户信息
@@ -130,6 +132,11 @@ func (m *defaultUserService) DeleteUser(ctx context.Context, in *DeleteUserReque
 func (m *defaultUserService) UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
 	client := sysclient.NewUserServiceClient(m.cli.Conn())
 	return client.UpdateUserPassword(ctx, in, opts...)
+}
+
+func (m *defaultUserService) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*Empty, error) {
+	client := sysclient.NewUserServiceClient(m.cli.Conn())
+	return client.UpdatePassword(ctx, in, opts...)
 }
 
 func (m *defaultUserService) AssignUserRole(ctx context.Context, in *AssignUserRoleRequest, opts ...grpc.CallOption) (*Empty, error) {
