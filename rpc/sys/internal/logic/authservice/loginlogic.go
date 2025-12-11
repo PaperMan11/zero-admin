@@ -42,7 +42,7 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		logc.Errorf(l.ctx, "用户不存在, 参数：%+v, 异常: %s", in, err.Error())
 		l.saveLoginLog(in, LoginStatusFail, "用户不存在")
-		return nil, errors.New("用户不存在")
+		return nil, status.Error(codes.NotFound, "用户或密码错误")
 	case err != nil:
 		logc.Errorf(l.ctx, "查询用户信息, 参数：%+v, 异常: %s", in, err.Error())
 		l.saveLoginLog(in, LoginStatusFail, fmt.Sprintf("系统异常:%s", err.Error()))
@@ -52,7 +52,7 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 	// 2.判断密码是否正确
 	if !bcryptUtil.CheckPassword(in.Password+user.Salt, user.Password) {
 		l.saveLoginLog(in, LoginStatusFail, "密码错误")
-		return nil, errors.New("密码错误")
+		return nil, status.Error(codes.NotFound, "用户或密码错误")
 	}
 
 	// 3.生成token

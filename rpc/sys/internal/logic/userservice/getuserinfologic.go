@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"zero-admin/rpc/sys/db/common"
+	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/logic"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -41,22 +42,34 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 	}
 
 	// 用户角色信息
+	var isSuperuser bool
 	userRoles, _ := l.svcCtx.DB.GetRolesByUserID(l.ctx, user.ID)
 	roleCodes := make([]string, 0, len(userRoles))
 	for _, role := range userRoles {
+		if common.IsSuperUser(role.RoleCode) {
+			isSuperuser = true
+		}
 		roleCodes = append(roleCodes, role.RoleCode)
 	}
-	// menus
-	menus, _ := l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
-	menuTree := logic.BuildMenuTree(menus, 0)
-	userPerms, _ := l.svcCtx.DB.GetRolesScopesPerm(l.ctx, roleCodes)
 
 	// 映射用户权限
 	userPermMap := make(map[int64][]string)
-	for _, userPerm := range userPerms {
-		userPermMap[userPerm.ID] = common.PermissionMap[userPerm.Perm]
+	var menus []*model.SysMenu
+	if isSuperuser {
+		menus, _ = l.svcCtx.DB.GetAllMenus(l.ctx)
+		for _, menu := range menus {
+			userPermMap[menu.ScopeID] = common.PermissionMap[common.PERM_ALL]
+		}
+	} else {
+		// menus
+		menus, _ = l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
+		userPerms, _ := l.svcCtx.DB.GetRolesScopesPerm(l.ctx, roleCodes)
+		for _, userPerm := range userPerms {
+			userPermMap[userPerm.ID] = common.PermissionMap[userPerm.Perm]
+		}
 	}
 
+	menuTree := logic.BuildMenuTree(menus, 0)
 	// 添加菜单权限
 	for _, menu := range menuTree {
 		menu.Perms = userPermMap[menu.ScopeId]

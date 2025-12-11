@@ -39,13 +39,13 @@ func ConvertToTypesMenu(menu *scopeservice.Menu) types.Menu {
 		ScopeId:   menu.ScopeId,
 		Remark:    menu.Remark,
 		Meta: types.MenuMeta{
-			MenuName: menu.MenuName,
-			Icon:     menu.Icon,
-			NoCache:  menu.NoCache,
-			Affix:    menu.Affix,
+			Title:   menu.MenuName,
+			Icon:    menu.Icon,
+			NoCache: menu.NoCache,
+			Affix:   menu.Affix,
+			Perms:   menu.Perms,
 		},
 		Children: ConvertToTypesMenus(menu.Children),
-		Perms:    menu.Perms,
 	}
 }
 

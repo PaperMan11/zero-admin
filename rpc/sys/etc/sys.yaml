@@ -2,7 +2,7 @@ Name: sys.rpc
 ListenOn: 0.0.0.0:8070
 Etcd:
   Hosts:
-    - 192.168.241.128:2379
+    - 127.0.0.1:2379
   Key: sys.rpc
 
 Log:
@@ -19,7 +19,7 @@ Prometheus:
 
 DbMode: mysql
 Mysql:
-  DSN: root:123456@tcp(192.168.241.128:3306)/zeroadmin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DSN: root:123456@tcp(127.0.0.1:3306)/zeroadmin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Jwt:
   AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d

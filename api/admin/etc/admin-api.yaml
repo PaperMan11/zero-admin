@@ -8,11 +8,11 @@ Prometheus:
   Path: /metrics
 
 Redis:
-  Host: 192.168.241.128:6379
+  Host: 127.0.0.1:6379
   Pass: "123456"
 
 Mysql:
-  DSN: root:123456@tcp(192.168.241.128:3306)/zeroadmin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DSN: root:123456@tcp(127.0.0.1:3306)/zeroadmin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Log:
   ServiceName: admin-api
@@ -31,6 +31,6 @@ Auth:
 SysRpc:
   Etcd:
     Hosts:
-      - 192.168.241.128:2379
+      - 127.0.0.1:2379
     Key: sys.rpc
   NonBlock: true

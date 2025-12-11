@@ -5,13 +5,13 @@ package auth
 
 import (
 	"errors"
-	"net/http"
-
 	"github.com/zeromicro/go-zero/rest/httpx"
 	xhttp "github.com/zeromicro/x/http"
+	"net/http"
 	"zero-admin/api/admin/internal/logic/sys/auth"
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
+	"zero-admin/pkg/response/xerr"
 )
 
 func RefreshTokenHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -28,14 +28,17 @@ func RefreshTokenHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		if err != nil {
 			// httpx.ErrorCtx(r.Context(), w, err)
 			// code-data 响应格式
-			if errors.Is(err, auth.ErrRefreshTokenExpired) || errors.Is(err, auth.ErrRefreshTokenError) {
+			if errors.Is(err, auth.ErrRefreshTokenExpired) {
 				//xhttp.JsonBaseResponseCtx(r.Context(), w, err)
-				httpx.WriteJson(w, http.StatusUnauthorized, map[string]interface{}{
-					"code": -1,
-					"msg":  err.Error(),
+				httpx.WriteJson(w, http.StatusOK, map[string]interface{}{
+					"code": xerr.ErrorRefreshTokenExpired,
+					"msg":  xerr.MapErrMsg(xerr.ErrorRefreshTokenExpired),
 				})
 			} else {
-				xhttp.JsonBaseResponseCtx(r.Context(), w, err)
+				httpx.WriteJson(w, http.StatusOK, map[string]interface{}{
+					"code": xerr.ErrorTokenInvalid,
+					"msg":  xerr.MapErrMsg(xerr.ErrorTokenInvalid),
+				})
 			}
 		} else {
 			// httpx.OkJsonCtx(r.Context(), w, resp)

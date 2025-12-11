@@ -125,10 +125,6 @@ type DeleteUserRequest struct {
 type Empty struct {
 }
 
-type GetUserInfoRequest struct {
-	UserId int64 `json:"user_id"`
-}
-
 type IdValue struct {
 	Id int64 `path:"id"`
 }
@@ -160,7 +156,6 @@ type Menu struct {
 	Remark    string   `json:"remark"`    // 备注
 	Meta      MenuMeta `json:"meta"`      // 元数据
 	Children  []Menu   `json:"children"`
-	Perms     []string `json:"perms"`
 }
 
 type MenuListRequest struct {
@@ -169,10 +164,11 @@ type MenuListRequest struct {
 }
 
 type MenuMeta struct {
-	MenuName string `json:"menu_name"` // 菜单标题
-	Icon     string `json:"icon"`      // 菜单图标
-	NoCache  bool   `json:"no_cache"`  // 是否缓存
-	Affix    bool   `json:"affix"`     // 是否固定在标签栏
+	Title   string   `json:"title"`   // 菜单标题
+	Icon    string   `json:"icon"`    // 菜单图标
+	NoCache bool     `json:"noCache"` // 是否缓存
+	Affix   bool     `json:"affix"`   // 是否固定在标签栏
+	Perms   []string `json:"perms"`
 }
 
 type MenuTreeResponse struct {
@@ -237,7 +233,7 @@ type RefreshTokenRequest struct {
 }
 
 type RefreshTokenResponse struct {
-	Token        string `json:"token"`         // 新的JWT令牌
+	AccessToken  string `json:"access_token"`  // 新的JWT令牌
 	RefreshToken string `json:"refresh_token"` // 新的刷新令牌
 }
 
@@ -254,7 +250,7 @@ type RegisterRequest struct {
 type RegisterResponse struct {
 	Id           int64  `json:"id"`            // 用户ID
 	Username     string `json:"username"`      // 用户名
-	Token        string `json:"token"`         // JWT令牌
+	AccessToken  string `json:"access_token"`  // JWT令牌
 	RefreshToken string `json:"refresh_token"` // 刷新令牌
 }
 

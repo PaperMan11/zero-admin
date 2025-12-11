@@ -63,6 +63,7 @@ type DB interface {
 	// ---------------------菜单 & 权限---------------------
 	// 菜单
 	GetMenus(ctx context.Context, status int32, page, pageSize int) ([]*model.SysMenu, error)
+	GetAllMenus(ctx context.Context) ([]*model.SysMenu, error)
 	// 根据id获取菜单
 	GetMenuByID(ctx context.Context, menuID int64) (*model.SysMenu, error)
 	// 根据角色获取有权限的菜单

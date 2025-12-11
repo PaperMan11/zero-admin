@@ -6,24 +6,15 @@ package user
 import (
 	"net/http"
 
-	"github.com/zeromicro/go-zero/rest/httpx"
 	xhttp "github.com/zeromicro/x/http"
 	"zero-admin/api/admin/internal/logic/sys/user"
 	"zero-admin/api/admin/internal/svc"
-	"zero-admin/api/admin/internal/types"
 )
 
 func GetUserInfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetUserInfoRequest
-		if err := httpx.Parse(r, &req); err != nil {
-			// httpx.ErrorCtx(r.Context(), w, err)
-			xhttp.JsonBaseResponseCtx(r.Context(), w, err)
-			return
-		}
-
 		l := user.NewGetUserInfoLogic(r.Context(), svcCtx)
-		resp, err := l.GetUserInfo(&req)
+		resp, err := l.GetUserInfo()
 		if err != nil {
 			// httpx.ErrorCtx(r.Context(), w, err)
 			// code-data 响应格式

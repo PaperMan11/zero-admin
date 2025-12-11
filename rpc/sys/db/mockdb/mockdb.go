@@ -477,6 +477,16 @@ func (m *MockDB) GetMenus(ctx context.Context, status int32, page, pageSize int)
 	return result, nil
 }
 
+func (m *MockDB) GetAllMenus(ctx context.Context) ([]*model.SysMenu, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	menus := make([]*model.SysMenu, 0, len(m.menus))
+	for _, menu := range m.menus {
+		menus = append(menus, menu)
+	}
+	return menus, nil
+}
+
 func (m *MockDB) GetMenuByID(ctx context.Context, menuID int64) (*model.SysMenu, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

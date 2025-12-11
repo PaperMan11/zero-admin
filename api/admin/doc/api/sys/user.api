@@ -23,10 +23,6 @@ type UserListResponse {
 	Users []User `json:"users"`
 }
 
-// 获取当前用户信息请求
-type GetUserInfoRequest {
-	UserId int64 `json:"user_id"`
-}
 
 // 创建用户请求
 type CreateUserRequest {
@@ -141,7 +137,7 @@ service admin-api {
 service admin-api {
 	// 获取当前用户信息
 	@handler GetUserInfo
-	get /user/info (GetUserInfoRequest) returns (UserInfo)
+	get /user/info () returns (UserInfo)
 	// 修改当前用户密码
 	@handler UpdateUserPassword
 	put /user/password (UpdateUserPasswordRequest) returns (Empty)

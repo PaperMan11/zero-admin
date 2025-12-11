@@ -24,14 +24,14 @@ type Menu {
 	Remark    string   `json:"remark"` // 备注
 	Meta      MenuMeta `json:"meta"` // 元数据
 	Children  []Menu   `json:"children"`
-	Perms     []string `json:"perms"`
 }
 
 type MenuMeta {
-	MenuName string `json:"menu_name"` // 菜单标题
+	Title string `json:"title"` // 菜单标题
 	Icon     string `json:"icon"` // 菜单图标
-	NoCache  bool   `json:"no_cache"` // 是否缓存
+	NoCache  bool   `json:"noCache"` // 是否缓存
 	Affix    bool   `json:"affix"` // 是否固定在标签栏
+	Perms     []string `json:"perms"`
 }
 
 // 安全范围

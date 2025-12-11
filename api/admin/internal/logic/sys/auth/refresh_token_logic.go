@@ -61,6 +61,6 @@ func (l *RefreshTokenLogic) RefreshToken(req *types.RefreshTokenRequest) (resp *
 
 	return &types.RefreshTokenResponse{
 		RefreshToken: res.RefreshToken,
-		Token:        res.Token,
+		AccessToken:  res.Token,
 	}, nil
 }

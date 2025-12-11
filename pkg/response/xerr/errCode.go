@@ -9,7 +9,7 @@ const OK uint32 = 200
 const (
 	ErrorServerCommon         uint32 = 100001
 	ErrorRequestParam         uint32 = 100002
-	ErrorTokenExpire          uint32 = 100003
+	ErrorTokenExpired         uint32 = 100003
 	ErrorTokenGenerate        uint32 = 100004
 	ErrorTokenInvalid         uint32 = 100005
 	ErrorDb                   uint32 = 100006
@@ -17,6 +17,7 @@ const (
 	ErrorPermissionDenied     uint32 = 100008
 	ErrorInvalidInput         uint32 = 100009
 	ErrorCaptcha              uint32 = 100010
+	ErrorRefreshTokenExpired  uint32 = 100011
 )
 
 // sys_base 模块

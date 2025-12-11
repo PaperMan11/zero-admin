@@ -52,7 +52,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest, ip, os, browser str
 	return &types.RegisterResponse{
 		Id:           res.Id,
 		RefreshToken: res.RefreshToken,
-		Token:        res.Token,
+		AccessToken:  res.Token,
 		Username:     res.Username,
 	}, nil
 }

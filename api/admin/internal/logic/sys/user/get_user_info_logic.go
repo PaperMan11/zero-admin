@@ -7,6 +7,7 @@ import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logc"
 	"zero-admin/api/admin/internal/utils"
+	"zero-admin/pkg/convert"
 	"zero-admin/rpc/sys/client/userservice"
 
 	"zero-admin/api/admin/internal/svc"
@@ -29,8 +30,9 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 	}
 }
 
-func (l *GetUserInfoLogic) GetUserInfo(req *types.GetUserInfoRequest) (resp *types.UserInfo, err error) {
-	res, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{UserId: req.UserId})
+func (l *GetUserInfoLogic) GetUserInfo() (resp *types.UserInfo, err error) {
+	uid := convert.ToInt64(convert.ToString(l.ctx.Value("uid")))
+	res, err := l.svcCtx.UserService.GetUserInfo(l.ctx, &userservice.GetUserInfoRequest{UserId: uid})
 	if err != nil {
 		logc.Errorf(l.ctx, "获取用户信息失败: %v", err)
 		return nil, err

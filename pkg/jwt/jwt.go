@@ -81,7 +81,7 @@ func ParseToken(tokenString, secretKey string) (*AccessClaims, error) {
 	}
 
 	if !token.Valid {
-		return nil, xerr.NewErrCode(xerr.ErrorTokenExpire)
+		return nil, xerr.NewErrCode(xerr.ErrorTokenExpired)
 	}
 
 	claims, ok := token.Claims.(*AccessClaims)
@@ -127,7 +127,7 @@ func ParseRefreshToken(tokenString, refreshSecretKey string) (*RefreshClaims, er
 	}
 
 	if !token.Valid {
-		return nil, xerr.NewErrCode(xerr.ErrorTokenExpire)
+		return nil, xerr.NewErrCode(xerr.ErrorTokenExpired)
 	}
 
 	claims, ok := token.Claims.(*RefreshClaims)

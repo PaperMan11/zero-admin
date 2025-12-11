@@ -5,11 +5,12 @@ package middleware
 
 import (
 	"github.com/zeromicro/go-zero/core/collection"
-	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"zero-admin/api/admin/internal/utils"
 	"zero-admin/pkg/convert"
+	"zero-admin/pkg/response/xerr"
 )
 
 type JwtExpireAuthMiddleware struct {
@@ -33,8 +34,10 @@ func (m *JwtExpireAuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc
 			return m.redis.GetCtx(r.Context(), key)
 		})
 		if uuid != tokenID {
-			logc.Infof(r.Context(), "token已过期, uid=%d, uuid=%s, tokenID=%s", uid, uuid, tokenID)
-			w.WriteHeader(http.StatusUnauthorized)
+			httpx.WriteJson(w, http.StatusOK, map[string]interface{}{
+				"code": xerr.ErrorTokenExpired,
+				"msg":  xerr.MapErrMsg(xerr.ErrorTokenExpired),
+			})
 			return
 		}
 		next(w, r)
