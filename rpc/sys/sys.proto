@@ -190,10 +190,9 @@ message Role {
 }
 
 message RoleScope {
-  int64 id = 1;
-  string role_code = 2;
-  string scope_code = 3;
-  repeated string perms = 4;
+  string role_code = 1;
+  string scope_code = 2;
+  repeated string perms = 3;
 }
 
 message RoleScopeInfo {
@@ -287,7 +286,16 @@ message GetRolePermsRequest {
   string role_code = 1;
 }
 
+message GetAllRolesRequest {
+}
+
+message GetAllRolesResponse {
+  repeated Role roles = 1;
+}
+
 service RoleService {
+  // 全部角色
+  rpc GetAllRoles(GetAllRolesRequest) returns (GetAllRolesResponse);
   // 角色列表
   rpc GetRoleList(RoleListRequest) returns (RoleListResponse);
   // 创建角色

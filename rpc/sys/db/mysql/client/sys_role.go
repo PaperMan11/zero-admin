@@ -20,6 +20,10 @@ func (m *MysqlDB) DeleteRoleTx(ctx context.Context, roleCode string) error {
 			return err
 		}
 		_, err = tx.SysUserRole.WithContext(ctx).Where(tx.SysUserRole.RoleCode.Eq(roleCode)).Delete()
+		if err != nil {
+			return err
+		}
+		_, err = tx.SysRoleScope.WithContext(ctx).Where(tx.SysRoleScope.RoleCode.Eq(roleCode)).Delete()
 		return err
 	})
 }
@@ -90,4 +94,8 @@ func (m *MysqlDB) ToggleRoleStatus(ctx context.Context, roleID int64, status int
 		"updater": operator,
 	})
 	return err
+}
+
+func (m *MysqlDB) GetAllRoles(ctx context.Context) ([]*model.SysRole, error) {
+	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0), m.q.SysRole.Status.Eq(1)).Find()
 }

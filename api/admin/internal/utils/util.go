@@ -125,7 +125,7 @@ func ConvertToTypesUserInfo(userInfo *userservice.UserInfo) types.UserInfo {
 
 // 将scopeCode转换为url形式
 func ConvertScopeCodeToUrl(scopeCode string) string {
-	return path.Join("api", scopeCode, "*")
+	return path.Join("/api", scopeCode, "*")
 }
 
 func ConvertToCasbinRule(roleCode, scopeCode string, perms []string) (rule []string) {

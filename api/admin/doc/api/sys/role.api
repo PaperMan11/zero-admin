@@ -20,7 +20,6 @@ type Role {
 }
 
 type RoleScope {
-	Id        int64    `json:"id"`
 	RoleCode  string   `json:"role_code"`
 	ScopeCode string   `json:"scope_code"`
 	Perms     []string `json:"perms"`
@@ -34,6 +33,13 @@ type RoleScopeInfo {
 type RoleInfo {
 	Role   Role            `json:"role"`
 	Scopes []RoleScopeInfo `json:"scopes"`
+}
+
+type GetAllRolesRequest {
+}
+
+type GetAllRolesResponse {
+	Roles []Role `json:"roles"`
 }
 
 // 角色列表请求
@@ -104,6 +110,10 @@ type BatchDeleteRolesRequest {
 	prefix:     /api/sys/role
 )
 service admin-api {
+	// 全部角色
+	@handler GetAllRoles
+	get /roles (GetAllRolesRequest) returns (GetAllRolesResponse)
+
 	// 角色列表
 	@handler GetRoleList
 	post /list (RoleListRequest) returns (RoleListResponse)
@@ -125,7 +135,7 @@ service admin-api {
 	delete / (DeleteRoleRequest) returns (Empty)
 
 	@handler BatchDeleteRoles
-	post /batch-delete (BatchDeleteRolesRequest) returns (Empty)
+	delete /roles (BatchDeleteRolesRequest) returns (Empty)
 
 	// 添加角色权限
 	@handler AddRolePerms

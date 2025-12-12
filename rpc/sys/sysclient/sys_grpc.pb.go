@@ -435,6 +435,7 @@ var OperateLogService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	RoleService_GetAllRoles_FullMethodName          = "/sysclient.RoleService/GetAllRoles"
 	RoleService_GetRoleList_FullMethodName          = "/sysclient.RoleService/GetRoleList"
 	RoleService_CreateRole_FullMethodName           = "/sysclient.RoleService/CreateRole"
 	RoleService_UpdateRole_FullMethodName           = "/sysclient.RoleService/UpdateRole"
@@ -452,6 +453,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RoleServiceClient interface {
+	// 全部角色
+	GetAllRoles(ctx context.Context, in *GetAllRolesRequest, opts ...grpc.CallOption) (*GetAllRolesResponse, error)
 	// 角色列表
 	GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error)
 	// 创建角色
@@ -481,6 +484,16 @@ type roleServiceClient struct {
 
 func NewRoleServiceClient(cc grpc.ClientConnInterface) RoleServiceClient {
 	return &roleServiceClient{cc}
+}
+
+func (c *roleServiceClient) GetAllRoles(ctx context.Context, in *GetAllRolesRequest, opts ...grpc.CallOption) (*GetAllRolesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllRolesResponse)
+	err := c.cc.Invoke(ctx, RoleService_GetAllRoles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *roleServiceClient) GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error) {
@@ -597,6 +610,8 @@ func (c *roleServiceClient) GetRoleListByRoleIDs(ctx context.Context, in *GetRol
 // All implementations must embed UnimplementedRoleServiceServer
 // for forward compatibility.
 type RoleServiceServer interface {
+	// 全部角色
+	GetAllRoles(context.Context, *GetAllRolesRequest) (*GetAllRolesResponse, error)
 	// 角色列表
 	GetRoleList(context.Context, *RoleListRequest) (*RoleListResponse, error)
 	// 创建角色
@@ -628,6 +643,9 @@ type RoleServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRoleServiceServer struct{}
 
+func (UnimplementedRoleServiceServer) GetAllRoles(context.Context, *GetAllRolesRequest) (*GetAllRolesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllRoles not implemented")
+}
 func (UnimplementedRoleServiceServer) GetRoleList(context.Context, *RoleListRequest) (*RoleListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoleList not implemented")
 }
@@ -680,6 +698,24 @@ func RegisterRoleServiceServer(s grpc.ServiceRegistrar, srv RoleServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&RoleService_ServiceDesc, srv)
+}
+
+func _RoleService_GetAllRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServiceServer).GetAllRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RoleService_GetAllRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServiceServer).GetAllRoles(ctx, req.(*GetAllRolesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _RoleService_GetRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -887,6 +923,10 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "sysclient.RoleService",
 	HandlerType: (*RoleServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetAllRoles",
+			Handler:    _RoleService_GetAllRoles_Handler,
+		},
 		{
 			MethodName: "GetRoleList",
 			Handler:    _RoleService_GetRoleList_Handler,

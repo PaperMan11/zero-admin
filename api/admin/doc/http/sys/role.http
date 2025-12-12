@@ -56,7 +56,6 @@ Authorization: Bearer {{token}}
   "role_code": "{{roleCode}}",
   "role_scopes": [
     {
-      "id": {{scopeId}},
       "role_code": "{{roleCode}}",
       "scope_code": "TEST_SCOPE",
       "perms": ["create", "read", "update"]
@@ -70,12 +69,17 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "role_code": "{{roleCode}}",
+  "role_code": "TEST_ROLE",
   "role_scopes": [
     {
-      "role_code": "{{roleCode}}",
-      "scope_code": "USER_MANAGEMENT",
-      "perms": ["create", "update"]
+      "role_code": "TEST_ROLE",
+      "scope_code": "TEST_SCOPE",
+      "perms": ["create", "read", "update", "delete"]
+    },
+    {
+      "role_code": "TEST_ROLE",
+      "scope_code": "example",
+      "perms": ["create", "read", "delete"]
     }
   ]
 }
@@ -95,12 +99,12 @@ Authorization: Bearer {{token}}
 }
 
 ### 批量删除角色
-POST {{host}}/api/sys/role/batch-delete
+DELETE {{host}}/api/sys/role/roles
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "role_codes": ["{{roleCode}}"],
+  "role_codes": ["TEST_ROLE"],
   "operator_id": 1
 }
 

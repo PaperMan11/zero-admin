@@ -33,6 +33,8 @@ type (
 	DeleteScopeRequest         = sysclient.DeleteScopeRequest
 	DeleteUserRequest          = sysclient.DeleteUserRequest
 	Empty                      = sysclient.Empty
+	GetAllRolesRequest         = sysclient.GetAllRolesRequest
+	GetAllRolesResponse        = sysclient.GetAllRolesResponse
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest
@@ -78,6 +80,8 @@ type (
 	UserListResponse           = sysclient.UserListResponse
 
 	RoleService interface {
+		// 全部角色
+		GetAllRoles(ctx context.Context, in *GetAllRolesRequest, opts ...grpc.CallOption) (*GetAllRolesResponse, error)
 		// 角色列表
 		GetRoleList(ctx context.Context, in *RoleListRequest, opts ...grpc.CallOption) (*RoleListResponse, error)
 		// 创建角色
@@ -110,6 +114,12 @@ func NewRoleService(cli zrpc.Client) RoleService {
 	return &defaultRoleService{
 		cli: cli,
 	}
+}
+
+// 全部角色
+func (m *defaultRoleService) GetAllRoles(ctx context.Context, in *GetAllRolesRequest, opts ...grpc.CallOption) (*GetAllRolesResponse, error) {
+	client := sysclient.NewRoleServiceClient(m.cli.Conn())
+	return client.GetAllRoles(ctx, in, opts...)
 }
 
 // 角色列表

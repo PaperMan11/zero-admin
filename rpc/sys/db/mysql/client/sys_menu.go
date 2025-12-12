@@ -35,6 +35,10 @@ func (m *MysqlDB) GetMenusByRoles(ctx context.Context, roleCodes []string) ([]*m
 	return menu.WithContext(ctx).Where(menu.ID.In(scopeIDs...)).Find()
 }
 
+func (m *MysqlDB) GetMenusByScopeIDs(ctx context.Context, scopeIDs []int64) ([]*model.SysMenu, error) {
+	return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.ScopeID.In(scopeIDs...)).Find()
+}
+
 // 创建菜单
 func (m *MysqlDB) CreateMenu(ctx context.Context, menu model.SysMenu) (int64, error) {
 	err := m.q.SysMenu.WithContext(ctx).Create(&menu)

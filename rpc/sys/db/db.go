@@ -48,6 +48,7 @@ type DB interface {
 	GetRolesByUserID(ctx context.Context, userID int64) ([]*model.SysRole, error)
 	// 分页查询角色
 	GetRolesPagination(ctx context.Context, status int32, page, pageSize int) ([]*model.SysRole, error)
+	GetAllRoles(ctx context.Context) ([]*model.SysRole, error)
 	// 角色总数量
 	CountRoles(ctx context.Context, status int32) (int64, error)
 	// 查询角色被用户关联数量
@@ -77,6 +78,7 @@ type DB interface {
 	UpdateMenu(ctx context.Context, menuID int64, updates interface{}) error
 	SaveMenu(ctx context.Context, menu model.SysMenu) error
 	GetMenusByScopeID(ctx context.Context, scopeID int64) ([]*model.SysMenu, error)
+	GetMenusByScopeIDs(ctx context.Context, scopeIDs []int64) ([]*model.SysMenu, error)
 	ExistsMenuByName(ctx context.Context, menuName string) (bool, error)
 	ExistsMenuByPath(ctx context.Context, menuPath string) (bool, error)
 	ExistsMenu(ctx context.Context, menuID int64) (bool, error)
@@ -90,6 +92,7 @@ type DB interface {
 	SaveScope(ctx context.Context, scope model.SysScope) error
 	GetScopeByID(ctx context.Context, scopeID int64) (*model.SysScope, error)
 	GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysScope, error)
+	GetAllScopes(ctx context.Context) ([]*model.SysScope, error)
 	GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error)
 	GetScopesPagination(ctx context.Context, page, pageSize int) ([]*model.SysScope, error)
 	AddScopeMenus(ctx context.Context, scopeID int64, menus []int64) error // 先删除再添加

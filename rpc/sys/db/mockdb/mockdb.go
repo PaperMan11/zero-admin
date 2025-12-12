@@ -245,6 +245,16 @@ func (m *MockDB) GetRoleByID(ctx context.Context, roleID int64) (*model.SysRole,
 	return nil, nil
 }
 
+func (m *MockDB) GetAllRoles(ctx context.Context) ([]*model.SysRole, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	var result []*model.SysRole
+	for _, role := range m.roles {
+		result = append(result, role)
+	}
+	return result, nil
+}
+
 func (m *MockDB) GetRoleByIDs(ctx context.Context, roleIDs []int64) ([]*model.SysRole, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
@@ -512,6 +522,23 @@ func (m *MockDB) GetMenusByRoles(ctx context.Context, roleCodes []string) ([]*mo
 	return result, nil
 }
 
+func (m *MockDB) GetMenusByScopeIDs(ctx context.Context, scopeIDs []int64) ([]*model.SysMenu, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	var result []*model.SysMenu
+	for _, menu := range m.menus {
+		for _, scopeID := range scopeIDs {
+			if menu.ScopeID == scopeID {
+				result = append(result, menu)
+				break
+			}
+		}
+	}
+
+	return result, nil
+}
+
 func (m *MockDB) CreateMenu(ctx context.Context, menu model.SysMenu) (int64, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -720,6 +747,16 @@ func (m *MockDB) GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysS
 	}
 
 	return scopes, nil
+}
+
+func (m *MockDB) GetAllScopes(ctx context.Context) ([]*model.SysScope, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	var result []*model.SysScope
+	for _, scope := range m.scopes {
+		result = append(result, scope)
+	}
+	return result, nil
 }
 
 func (m *MockDB) GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error) {

@@ -78,5 +78,16 @@ func parseResource(r *http.Request) string {
 }
 
 func parseAction(r *http.Request) string {
-	return r.Method
+	switch r.Method {
+	case http.MethodGet:
+		return "READ"
+	case http.MethodPost:
+		return "CREATE"
+	case http.MethodPut:
+		return "UPDATE"
+	case http.MethodDelete:
+		return "DELETE"
+	default:
+		return ""
+	}
 }

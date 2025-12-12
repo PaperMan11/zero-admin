@@ -29,12 +29,12 @@ func NewUpdateRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 	}
 }
 
+// 全量更新
 func (l *UpdateRolePermsLogic) UpdateRolePerms(req *types.UpdateRolePermsRequest) (resp *types.RoleInfo, err error) {
 	uid := utils.GetOperateID(l.ctx)
 	roleScopes := make([]*roleservice.RoleScope, 0, len(req.RoleScopes))
 	for _, v := range req.RoleScopes {
 		roleScopes = append(roleScopes, &roleservice.RoleScope{
-			Id:        v.Id,
 			RoleCode:  v.RoleCode,
 			ScopeCode: v.ScopeCode,
 			Perms:     v.Perms,
@@ -64,9 +64,11 @@ func (l *UpdateRolePermsLogic) UpdateRolePerms(req *types.UpdateRolePermsRequest
 	for _, v := range res.Scopes {
 		rules = append(rules, utils.ConvertToCasbinRule(res.Role.RoleCode, v.Scope.ScopeCode, v.Perms))
 	}
-	ok, err := l.svcCtx.CasbinEnforcer.AddNamedPoliciesEx("p", rules)
-	if err != nil || !ok {
-		logc.Errorf(l.ctx, "更新casbin权限失败: %v", err)
+	if len(rules) > 0 {
+		ok, err := l.svcCtx.CasbinEnforcer.AddNamedPoliciesEx("p", rules)
+		if err != nil || !ok {
+			logc.Errorf(l.ctx, "更新casbin权限失败: %v", err)
+		}
 	}
 
 	return &types.RoleInfo{

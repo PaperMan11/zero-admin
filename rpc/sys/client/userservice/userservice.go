@@ -33,6 +33,8 @@ type (
 	DeleteScopeRequest         = sysclient.DeleteScopeRequest
 	DeleteUserRequest          = sysclient.DeleteUserRequest
 	Empty                      = sysclient.Empty
+	GetAllRolesRequest         = sysclient.GetAllRolesRequest
+	GetAllRolesResponse        = sysclient.GetAllRolesResponse
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest

@@ -44,6 +44,19 @@ func BuildMenuTree(menus []*model.SysMenu, parentID int64) (menuTree []*sysclien
 	return
 }
 
+func BuildMenuTreeWithPerms(menus []*model.SysMenu, parentID int64, permissionMap map[int64][]string) (menuTree []*sysclient.Menu) {
+	menuTree = make([]*sysclient.Menu, 0)
+	for _, menu := range menus {
+		if menu.ParentID == parentID && menu.Status == 1 {
+			m := ConvertToRpcMenu(menu)
+			m.Perms = permissionMap[menu.ScopeID]
+			menuTree = append(menuTree, m)
+			m.Children = BuildMenuTreeWithPerms(menus, menu.ID, permissionMap)
+		}
+	}
+	return
+}
+
 func ConvertToRpcMenu(menu *model.SysMenu) *sysclient.Menu {
 	m := &sysclient.Menu{
 		Id:        menu.ID,

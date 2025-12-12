@@ -7,7 +7,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
-	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/internal/svc"
 	"zero-admin/rpc/sys/sysclient"
@@ -39,7 +38,7 @@ func (l *DeleteRoleLogic) DeleteRole(in *sysclient.DeleteRoleRequest) (*sysclien
 	role, err := l.svcCtx.DB.GetRoleByCode(l.ctx, in.RoleCode)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, xerr.NewErrCode(xerr.ErrorRoleNotExist)
+			return nil, status.Error(codes.NotFound, "角色不存在")
 		}
 		logc.Errorf(l.ctx, "查询角色失败, 角色ID：%s, 错误：%s", in.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "删除角色失败")

@@ -56,7 +56,14 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 	userPermMap := make(map[int64][]string)
 	var menus []*model.SysMenu
 	if isSuperuser {
-		menus, _ = l.svcCtx.DB.GetAllMenus(l.ctx)
+		scopes, _ := l.svcCtx.DB.GetAllScopes(l.ctx)
+		if len(scopes) > 0 {
+			scopeIDs := make([]int64, 0, len(scopes))
+			for _, scope := range scopes {
+				scopeIDs = append(scopeIDs, scope.ID)
+			}
+			menus, _ = l.svcCtx.DB.GetMenusByScopeIDs(l.ctx, scopeIDs)
+		}
 		for _, menu := range menus {
 			userPermMap[menu.ScopeID] = common.PermissionMap[common.PERM_ALL]
 		}
@@ -69,11 +76,7 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 		}
 	}
 
-	menuTree := logic.BuildMenuTree(menus, 0)
-	// 添加菜单权限
-	for _, menu := range menuTree {
-		menu.Perms = userPermMap[menu.ScopeId]
-	}
+	menuTree := logic.BuildMenuTreeWithPerms(menus, 0, userPermMap)
 
 	resp := &sysclient.UserInfo{
 		Id:       user.ID,

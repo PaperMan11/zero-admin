@@ -23,6 +23,12 @@ func NewRoleServiceServer(svcCtx *svc.ServiceContext) *RoleServiceServer {
 	}
 }
 
+// 全部角色
+func (s *RoleServiceServer) GetAllRoles(ctx context.Context, in *sysclient.GetAllRolesRequest) (*sysclient.GetAllRolesResponse, error) {
+	l := roleservicelogic.NewGetAllRolesLogic(ctx, s.svcCtx)
+	return l.GetAllRoles(in)
+}
+
 // 角色列表
 func (s *RoleServiceServer) GetRoleList(ctx context.Context, in *sysclient.RoleListRequest) (*sysclient.RoleListResponse, error) {
 	l := roleservicelogic.NewGetRoleListLogic(ctx, s.svcCtx)

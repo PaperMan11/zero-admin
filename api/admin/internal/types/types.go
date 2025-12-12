@@ -125,6 +125,13 @@ type DeleteUserRequest struct {
 type Empty struct {
 }
 
+type GetAllRolesRequest struct {
+}
+
+type GetAllRolesResponse struct {
+	Roles []Role `json:"roles"`
+}
+
 type IdValue struct {
 	Id int64 `path:"id"`
 }
@@ -278,7 +285,6 @@ type RoleListResponse struct {
 }
 
 type RoleScope struct {
-	Id        int64    `json:"id"`
 	RoleCode  string   `json:"role_code"`
 	ScopeCode string   `json:"scope_code"`
 	Perms     []string `json:"perms"`

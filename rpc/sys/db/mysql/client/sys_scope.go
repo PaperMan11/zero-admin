@@ -50,6 +50,10 @@ func (m *MysqlDB) GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.Sys
 	return m.q.SysScope.WithContext(ctx).Where(m.q.SysScope.ID.In(scopeIDs...)).Find()
 }
 
+func (m *MysqlDB) GetAllScopes(ctx context.Context) ([]*model.SysScope, error) {
+	return m.q.SysScope.WithContext(ctx).Find()
+}
+
 func (m *MysqlDB) GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error) {
 	return m.q.SysScope.WithContext(ctx).Where(m.q.SysScope.ScopeCode.In(scopeCodes...)).Find()
 }

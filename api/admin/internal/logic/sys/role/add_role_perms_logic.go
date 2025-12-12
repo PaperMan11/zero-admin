@@ -29,12 +29,11 @@ func NewAddRolePermsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddR
 	}
 }
 
-// 全量更新
+// 废弃
 func (l *AddRolePermsLogic) AddRolePerms(req *types.AddRolePermsRequest) (resp *types.RoleInfo, err error) {
 	roleScopes := make([]*roleservice.RoleScope, 0, len(req.RoleScopes))
 	for _, roleScope := range req.RoleScopes {
 		roleScopes = append(roleScopes, &roleservice.RoleScope{
-			Id:        roleScope.Id,
 			Perms:     roleScope.Perms,
 			RoleCode:  roleScope.RoleCode,
 			ScopeCode: roleScope.ScopeCode,

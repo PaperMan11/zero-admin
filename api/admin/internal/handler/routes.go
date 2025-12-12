@@ -99,11 +99,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/batch-delete",
-					Handler: sysrole.BatchDeleteRolesHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
 					Path:    "/list",
 					Handler: sysrole.GetRoleListHandler(serverCtx),
 				},
@@ -126,6 +121,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodGet,
 					Path:    "/perms/:value",
 					Handler: sysrole.GetRolePermsHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/roles",
+					Handler: sysrole.GetAllRolesHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/roles",
+					Handler: sysrole.BatchDeleteRolesHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPut,
