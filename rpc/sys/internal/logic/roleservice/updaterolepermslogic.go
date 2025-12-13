@@ -60,6 +60,9 @@ func (l *UpdateRolePermsLogic) UpdateRolePerms(in *sysclient.UpdateRolePermsRequ
 	now := time.Now()
 	updates := make([]model.SysRoleScope, 0, len(in.RoleScopes))
 	for _, roleScope := range in.RoleScopes {
+		if len(roleScope.Perms) == 0 {
+			continue
+		}
 		updates = append(updates, model.SysRoleScope{
 			RoleCode:   in.RoleCode,
 			ScopeCode:  roleScope.ScopeCode,

@@ -35,6 +35,7 @@ type (
 	Empty                      = sysclient.Empty
 	GetAllRolesRequest         = sysclient.GetAllRolesRequest
 	GetAllRolesResponse        = sysclient.GetAllRolesResponse
+	GetAllScopesResponse       = sysclient.GetAllScopesResponse
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest

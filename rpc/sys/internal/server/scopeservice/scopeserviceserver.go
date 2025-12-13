@@ -24,6 +24,11 @@ func NewScopeServiceServer(svcCtx *svc.ServiceContext) *ScopeServiceServer {
 }
 
 // 安全范围管理
+func (s *ScopeServiceServer) GetAllScopes(ctx context.Context, in *sysclient.Empty) (*sysclient.GetAllScopesResponse, error) {
+	l := scopeservicelogic.NewGetAllScopesLogic(ctx, s.svcCtx)
+	return l.GetAllScopes(in)
+}
+
 func (s *ScopeServiceServer) GetScopeList(ctx context.Context, in *sysclient.ScopeListRequest) (*sysclient.ScopeListResponse, error) {
 	l := scopeservicelogic.NewGetScopeListLogic(ctx, s.svcCtx)
 	return l.GetScopeList(in)

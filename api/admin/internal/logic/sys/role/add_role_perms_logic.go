@@ -35,7 +35,7 @@ func (l *AddRolePermsLogic) AddRolePerms(req *types.AddRolePermsRequest) (resp *
 	for _, roleScope := range req.RoleScopes {
 		roleScopes = append(roleScopes, &roleservice.RoleScope{
 			Perms:     roleScope.Perms,
-			RoleCode:  roleScope.RoleCode,
+			RoleCode:  req.RoleCode,
 			ScopeCode: roleScope.ScopeCode,
 		})
 	}

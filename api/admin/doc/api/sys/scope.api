@@ -149,6 +149,14 @@ type DeleteScopeMenusRequest {
 	DeleteAll bool    `json:"delete_all,default=false"`
 }
 
+// 全部安全范围请求
+type GetAllScopeRequest {}
+
+// 全部安全范围响应
+type GetAllScopeResponse {
+	Scopes []Scope `json:"scopes"`
+}
+
 // 安全范围服务
 @server (
 	jwt:        Auth
@@ -157,6 +165,10 @@ type DeleteScopeMenusRequest {
 	prefix:     /api/sys/scope
 )
 service admin-api {
+	// 全部安全范围
+	@handler GetAllScope
+	get /all (GetAllScopeRequest) returns (GetAllScopeResponse)
+
 	// 安全范围管理
 	@handler GetScopeList
 	post /list (ScopeListRequest) returns (ScopeListResponse)

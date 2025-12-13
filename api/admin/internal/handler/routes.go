@@ -168,6 +168,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: sysscope.GetScopeByIdHandler(serverCtx),
 				},
 				{
+					Method:  http.MethodGet,
+					Path:    "/all",
+					Handler: sysscope.GetAllScopeHandler(serverCtx),
+				},
+				{
 					Method:  http.MethodPost,
 					Path:    "/list",
 					Handler: sysscope.GetScopeListHandler(serverCtx),

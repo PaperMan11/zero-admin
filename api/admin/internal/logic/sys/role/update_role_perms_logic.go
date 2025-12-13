@@ -35,7 +35,7 @@ func (l *UpdateRolePermsLogic) UpdateRolePerms(req *types.UpdateRolePermsRequest
 	roleScopes := make([]*roleservice.RoleScope, 0, len(req.RoleScopes))
 	for _, v := range req.RoleScopes {
 		roleScopes = append(roleScopes, &roleservice.RoleScope{
-			RoleCode:  v.RoleCode,
+			RoleCode:  req.RoleCode,
 			ScopeCode: v.ScopeCode,
 			Perms:     v.Perms,
 		})

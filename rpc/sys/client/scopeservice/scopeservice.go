@@ -35,6 +35,7 @@ type (
 	Empty                      = sysclient.Empty
 	GetAllRolesRequest         = sysclient.GetAllRolesRequest
 	GetAllRolesResponse        = sysclient.GetAllRolesResponse
+	GetAllScopesResponse       = sysclient.GetAllScopesResponse
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest
@@ -81,6 +82,7 @@ type (
 
 	ScopeService interface {
 		// 安全范围管理
+		GetAllScopes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllScopesResponse, error)
 		GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error)
 		GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Scope, error)
 		CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*Scope, error)
@@ -109,6 +111,11 @@ func NewScopeService(cli zrpc.Client) ScopeService {
 }
 
 // 安全范围管理
+func (m *defaultScopeService) GetAllScopes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllScopesResponse, error) {
+	client := sysclient.NewScopeServiceClient(m.cli.Conn())
+	return client.GetAllScopes(ctx, in, opts...)
+}
+
 func (m *defaultScopeService) GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error) {
 	client := sysclient.NewScopeServiceClient(m.cli.Conn())
 	return client.GetScopeList(ctx, in, opts...)

@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 	"zero-admin/pkg/response/xerr"
 	"zero-admin/rpc/sys/db/common"
+	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/internal/logic"
 
 	"zero-admin/rpc/sys/internal/svc"
@@ -42,7 +43,32 @@ func (l *GetRolePermsLogic) GetRolePerms(in *sysclient.GetRolePermsRequest) (*sy
 		return nil, status.Error(codes.Internal, "获取角色权限失败")
 	}
 
-	roleScopeInfos, err := l.svcCtx.DB.GetRoleScopesPerm(l.ctx, role.RoleCode)
+	var roleScopeInfos []model.RoleScopeInfo
+	if common.IsSuperUser(role.RoleCode) {
+		scopes, _ := l.svcCtx.DB.GetAllScopes(l.ctx)
+		for _, scope := range scopes {
+			roleScopeInfos = append(roleScopeInfos, model.RoleScopeInfo{
+				RoleID:   role.ID,
+				RoleName: role.RoleName,
+				RoleCode: role.RoleCode,
+				Perm:     common.PERM_ALL,
+				SysScope: model.SysScope{
+					ID:          scope.ID,
+					ScopeName:   scope.ScopeName,
+					ScopeCode:   scope.ScopeCode,
+					Description: scope.Description,
+					Sort:        scope.Sort,
+					Creator:     scope.Creator,
+					CreateTime:  scope.CreateTime,
+					Updater:     scope.Updater,
+					UpdateTime:  scope.UpdateTime,
+					DelFlag:     scope.DelFlag,
+				},
+			})
+		}
+	} else {
+		roleScopeInfos, err = l.svcCtx.DB.GetRoleScopesPerm(l.ctx, role.RoleCode)
+	}
 	if err != nil {
 		logc.Errorf(l.ctx, "查询角色权限失败, 角色ID：%s, 错误：%s", in.RoleCode, err.Error())
 		return nil, status.Error(codes.Internal, "查询角色权限失败")

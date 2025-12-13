@@ -132,6 +132,13 @@ type GetAllRolesResponse struct {
 	Roles []Role `json:"roles"`
 }
 
+type GetAllScopeRequest struct {
+}
+
+type GetAllScopeResponse struct {
+	Scopes []Scope `json:"scopes"`
+}
+
 type IdValue struct {
 	Id int64 `path:"id"`
 }
@@ -285,7 +292,6 @@ type RoleListResponse struct {
 }
 
 type RoleScope struct {
-	RoleCode  string   `json:"role_code"`
 	ScopeCode string   `json:"scope_code"`
 	Perms     []string `json:"perms"`
 }

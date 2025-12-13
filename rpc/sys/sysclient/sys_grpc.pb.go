@@ -977,6 +977,7 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	ScopeService_GetAllScopes_FullMethodName     = "/sysclient.ScopeService/GetAllScopes"
 	ScopeService_GetScopeList_FullMethodName     = "/sysclient.ScopeService/GetScopeList"
 	ScopeService_GetScopeById_FullMethodName     = "/sysclient.ScopeService/GetScopeById"
 	ScopeService_CreateScope_FullMethodName      = "/sysclient.ScopeService/CreateScope"
@@ -997,6 +998,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ScopeServiceClient interface {
 	// 安全范围管理
+	GetAllScopes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllScopesResponse, error)
 	GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error)
 	GetScopeById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Scope, error)
 	CreateScope(ctx context.Context, in *CreateScopeRequest, opts ...grpc.CallOption) (*Scope, error)
@@ -1019,6 +1021,16 @@ type scopeServiceClient struct {
 
 func NewScopeServiceClient(cc grpc.ClientConnInterface) ScopeServiceClient {
 	return &scopeServiceClient{cc}
+}
+
+func (c *scopeServiceClient) GetAllScopes(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllScopesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllScopesResponse)
+	err := c.cc.Invoke(ctx, ScopeService_GetAllScopes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *scopeServiceClient) GetScopeList(ctx context.Context, in *ScopeListRequest, opts ...grpc.CallOption) (*ScopeListResponse, error) {
@@ -1156,6 +1168,7 @@ func (c *scopeServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 // for forward compatibility.
 type ScopeServiceServer interface {
 	// 安全范围管理
+	GetAllScopes(context.Context, *Empty) (*GetAllScopesResponse, error)
 	GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error)
 	GetScopeById(context.Context, *Int64Value) (*Scope, error)
 	CreateScope(context.Context, *CreateScopeRequest) (*Scope, error)
@@ -1180,6 +1193,9 @@ type ScopeServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedScopeServiceServer struct{}
 
+func (UnimplementedScopeServiceServer) GetAllScopes(context.Context, *Empty) (*GetAllScopesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllScopes not implemented")
+}
 func (UnimplementedScopeServiceServer) GetScopeList(context.Context, *ScopeListRequest) (*ScopeListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScopeList not implemented")
 }
@@ -1238,6 +1254,24 @@ func RegisterScopeServiceServer(s grpc.ServiceRegistrar, srv ScopeServiceServer)
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&ScopeService_ServiceDesc, srv)
+}
+
+func _ScopeService_GetAllScopes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetAllScopes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetAllScopes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetAllScopes(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ScopeService_GetScopeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1481,6 +1515,10 @@ var ScopeService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "sysclient.ScopeService",
 	HandlerType: (*ScopeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetAllScopes",
+			Handler:    _ScopeService_GetAllScopes_Handler,
+		},
 		{
 			MethodName: "GetScopeList",
 			Handler:    _ScopeService_GetScopeList_Handler,

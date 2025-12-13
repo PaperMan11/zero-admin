@@ -20,7 +20,7 @@ type Role {
 }
 
 type RoleScope {
-	RoleCode  string   `json:"role_code"`
+//	RoleCode  string   `json:"role_code"`
 	ScopeCode string   `json:"scope_code"`
 	Perms     []string `json:"perms"`
 }

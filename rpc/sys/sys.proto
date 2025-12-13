@@ -446,9 +446,13 @@ message DeleteScopeMenusRequest {
   bool delete_all = 4;
 }
 
+message GetAllScopesResponse {
+  repeated Scope scopes = 1;
+}
 
 service ScopeService {
   // 安全范围管理
+  rpc GetAllScopes(Empty) returns (GetAllScopesResponse);
   rpc GetScopeList(ScopeListRequest) returns (ScopeListResponse);
   rpc GetScopeById(Int64Value) returns (Scope);
   rpc CreateScope(CreateScopeRequest) returns (Scope);
