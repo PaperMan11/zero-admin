@@ -67,7 +67,7 @@ func (l *UpdateRolePermsLogic) UpdateRolePerms(req *types.UpdateRolePermsRequest
 	if len(rules) > 0 {
 		ok, err := l.svcCtx.CasbinEnforcer.AddNamedPoliciesEx("p", rules)
 		if err != nil || !ok {
-			logc.Errorf(l.ctx, "更新casbin权限失败: %v", err)
+			logc.Errorf(l.ctx, "更新casbin权限失败: %v, role: %s", err, req.RoleCode)
 		}
 	}
 

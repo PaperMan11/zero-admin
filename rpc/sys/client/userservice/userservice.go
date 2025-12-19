@@ -18,6 +18,8 @@ type (
 	AddOperateLogResp          = sysclient.AddOperateLogResp
 	AddRolePermsRequest        = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest       = sysclient.AddScopeMenusRequest
+	AssignScopeMenuMeta        = sysclient.AssignScopeMenuMeta
+	AssignScopeMenusRequest    = sysclient.AssignScopeMenusRequest
 	AssignUserRoleRequest      = sysclient.AssignUserRoleRequest
 	BatchDeleteRolesRequest    = sysclient.BatchDeleteRolesRequest
 	CreateMenuRequest          = sysclient.CreateMenuRequest
@@ -39,6 +41,7 @@ type (
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest
+	GetRolesByScopeCodeRequest = sysclient.GetRolesByScopeCodeRequest
 	GetUserInfoRequest         = sysclient.GetUserInfoRequest
 	Int64Value                 = sysclient.Int64Value
 	LoginRequest               = sysclient.LoginRequest
@@ -67,7 +70,9 @@ type (
 	ScopeListRequest           = sysclient.ScopeListRequest
 	ScopeListResponse          = sysclient.ScopeListResponse
 	ToggleRoleStatusRequest    = sysclient.ToggleRoleStatusRequest
+	ToggleScopeStatusRequest   = sysclient.ToggleScopeStatusRequest
 	ToggleUserStatusRequest    = sysclient.ToggleUserStatusRequest
+	UnassignedMenusResponse    = sysclient.UnassignedMenusResponse
 	UpdateMenuRequest          = sysclient.UpdateMenuRequest
 	UpdatePasswordRequest      = sysclient.UpdatePasswordRequest
 	UpdateRolePermsRequest     = sysclient.UpdateRolePermsRequest

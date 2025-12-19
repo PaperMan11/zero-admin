@@ -435,18 +435,18 @@ var OperateLogService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	RoleService_GetAllRoles_FullMethodName          = "/sysclient.RoleService/GetAllRoles"
-	RoleService_GetRoleList_FullMethodName          = "/sysclient.RoleService/GetRoleList"
-	RoleService_CreateRole_FullMethodName           = "/sysclient.RoleService/CreateRole"
-	RoleService_UpdateRole_FullMethodName           = "/sysclient.RoleService/UpdateRole"
-	RoleService_ToggleRoleStatus_FullMethodName     = "/sysclient.RoleService/ToggleRoleStatus"
-	RoleService_DeleteRole_FullMethodName           = "/sysclient.RoleService/DeleteRole"
-	RoleService_BatchDeleteRoles_FullMethodName     = "/sysclient.RoleService/BatchDeleteRoles"
-	RoleService_AddRolePerms_FullMethodName         = "/sysclient.RoleService/AddRolePerms"
-	RoleService_UpdateRolePerms_FullMethodName      = "/sysclient.RoleService/UpdateRolePerms"
-	RoleService_DeleteRolePerms_FullMethodName      = "/sysclient.RoleService/DeleteRolePerms"
-	RoleService_GetRolePerms_FullMethodName         = "/sysclient.RoleService/GetRolePerms"
-	RoleService_GetRoleListByRoleIDs_FullMethodName = "/sysclient.RoleService/GetRoleListByRoleIDs"
+	RoleService_GetAllRoles_FullMethodName            = "/sysclient.RoleService/GetAllRoles"
+	RoleService_GetRoleList_FullMethodName            = "/sysclient.RoleService/GetRoleList"
+	RoleService_CreateRole_FullMethodName             = "/sysclient.RoleService/CreateRole"
+	RoleService_UpdateRole_FullMethodName             = "/sysclient.RoleService/UpdateRole"
+	RoleService_ToggleRoleStatus_FullMethodName       = "/sysclient.RoleService/ToggleRoleStatus"
+	RoleService_DeleteRole_FullMethodName             = "/sysclient.RoleService/DeleteRole"
+	RoleService_BatchDeleteRoles_FullMethodName       = "/sysclient.RoleService/BatchDeleteRoles"
+	RoleService_AddRolePerms_FullMethodName           = "/sysclient.RoleService/AddRolePerms"
+	RoleService_UpdateRolePerms_FullMethodName        = "/sysclient.RoleService/UpdateRolePerms"
+	RoleService_DeleteRolePerms_FullMethodName        = "/sysclient.RoleService/DeleteRolePerms"
+	RoleService_GetRolePerms_FullMethodName           = "/sysclient.RoleService/GetRolePerms"
+	RoleService_GetRoleListByScopeCode_FullMethodName = "/sysclient.RoleService/GetRoleListByScopeCode"
 )
 
 // RoleServiceClient is the client API for RoleService service.
@@ -474,8 +474,8 @@ type RoleServiceClient interface {
 	DeleteRolePerms(ctx context.Context, in *DeleteRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 	// 获取角色权限
 	GetRolePerms(ctx context.Context, in *GetRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
-	// 获取角色列表
-	GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error)
+	// 获取关联给定安全范围的角色
+	GetRoleListByScopeCode(ctx context.Context, in *GetRolesByScopeCodeRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error)
 }
 
 type roleServiceClient struct {
@@ -596,10 +596,10 @@ func (c *roleServiceClient) GetRolePerms(ctx context.Context, in *GetRolePermsRe
 	return out, nil
 }
 
-func (c *roleServiceClient) GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error) {
+func (c *roleServiceClient) GetRoleListByScopeCode(ctx context.Context, in *GetRolesByScopeCodeRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetRoleByRoleCodesResponse)
-	err := c.cc.Invoke(ctx, RoleService_GetRoleListByRoleIDs_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, RoleService_GetRoleListByScopeCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -631,8 +631,8 @@ type RoleServiceServer interface {
 	DeleteRolePerms(context.Context, *DeleteRolePermsRequest) (*RoleInfo, error)
 	// 获取角色权限
 	GetRolePerms(context.Context, *GetRolePermsRequest) (*RoleInfo, error)
-	// 获取角色列表
-	GetRoleListByRoleIDs(context.Context, *GetRoleByRoleCodesRequest) (*GetRoleByRoleCodesResponse, error)
+	// 获取关联给定安全范围的角色
+	GetRoleListByScopeCode(context.Context, *GetRolesByScopeCodeRequest) (*GetRoleByRoleCodesResponse, error)
 	mustEmbedUnimplementedRoleServiceServer()
 }
 
@@ -676,8 +676,8 @@ func (UnimplementedRoleServiceServer) DeleteRolePerms(context.Context, *DeleteRo
 func (UnimplementedRoleServiceServer) GetRolePerms(context.Context, *GetRolePermsRequest) (*RoleInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRolePerms not implemented")
 }
-func (UnimplementedRoleServiceServer) GetRoleListByRoleIDs(context.Context, *GetRoleByRoleCodesRequest) (*GetRoleByRoleCodesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRoleListByRoleIDs not implemented")
+func (UnimplementedRoleServiceServer) GetRoleListByScopeCode(context.Context, *GetRolesByScopeCodeRequest) (*GetRoleByRoleCodesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleListByScopeCode not implemented")
 }
 func (UnimplementedRoleServiceServer) mustEmbedUnimplementedRoleServiceServer() {}
 func (UnimplementedRoleServiceServer) testEmbeddedByValue()                     {}
@@ -898,20 +898,20 @@ func _RoleService_GetRolePerms_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RoleService_GetRoleListByRoleIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRoleByRoleCodesRequest)
+func _RoleService_GetRoleListByScopeCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRolesByScopeCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RoleServiceServer).GetRoleListByRoleIDs(ctx, in)
+		return srv.(RoleServiceServer).GetRoleListByScopeCode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RoleService_GetRoleListByRoleIDs_FullMethodName,
+		FullMethod: RoleService_GetRoleListByScopeCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RoleServiceServer).GetRoleListByRoleIDs(ctx, req.(*GetRoleByRoleCodesRequest))
+		return srv.(RoleServiceServer).GetRoleListByScopeCode(ctx, req.(*GetRolesByScopeCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -968,8 +968,8 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RoleService_GetRolePerms_Handler,
 		},
 		{
-			MethodName: "GetRoleListByRoleIDs",
-			Handler:    _RoleService_GetRoleListByRoleIDs_Handler,
+			MethodName: "GetRoleListByScopeCode",
+			Handler:    _RoleService_GetRoleListByScopeCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -977,20 +977,23 @@ var RoleService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	ScopeService_GetAllScopes_FullMethodName     = "/sysclient.ScopeService/GetAllScopes"
-	ScopeService_GetScopeList_FullMethodName     = "/sysclient.ScopeService/GetScopeList"
-	ScopeService_GetScopeById_FullMethodName     = "/sysclient.ScopeService/GetScopeById"
-	ScopeService_CreateScope_FullMethodName      = "/sysclient.ScopeService/CreateScope"
-	ScopeService_UpdateScope_FullMethodName      = "/sysclient.ScopeService/UpdateScope"
-	ScopeService_DeleteScope_FullMethodName      = "/sysclient.ScopeService/DeleteScope"
-	ScopeService_AddScopeMenus_FullMethodName    = "/sysclient.ScopeService/AddScopeMenus"
-	ScopeService_DeleteScopeMenus_FullMethodName = "/sysclient.ScopeService/DeleteScopeMenus"
-	ScopeService_GetScopeMenus_FullMethodName    = "/sysclient.ScopeService/GetScopeMenus"
-	ScopeService_GetMenuTree_FullMethodName      = "/sysclient.ScopeService/GetMenuTree"
-	ScopeService_GetMenuById_FullMethodName      = "/sysclient.ScopeService/GetMenuById"
-	ScopeService_CreateMenu_FullMethodName       = "/sysclient.ScopeService/CreateMenu"
-	ScopeService_UpdateMenu_FullMethodName       = "/sysclient.ScopeService/UpdateMenu"
-	ScopeService_DeleteMenu_FullMethodName       = "/sysclient.ScopeService/DeleteMenu"
+	ScopeService_GetAllScopes_FullMethodName       = "/sysclient.ScopeService/GetAllScopes"
+	ScopeService_GetScopeList_FullMethodName       = "/sysclient.ScopeService/GetScopeList"
+	ScopeService_GetScopeById_FullMethodName       = "/sysclient.ScopeService/GetScopeById"
+	ScopeService_CreateScope_FullMethodName        = "/sysclient.ScopeService/CreateScope"
+	ScopeService_UpdateScope_FullMethodName        = "/sysclient.ScopeService/UpdateScope"
+	ScopeService_DeleteScope_FullMethodName        = "/sysclient.ScopeService/DeleteScope"
+	ScopeService_AddScopeMenus_FullMethodName      = "/sysclient.ScopeService/AddScopeMenus"
+	ScopeService_DeleteScopeMenus_FullMethodName   = "/sysclient.ScopeService/DeleteScopeMenus"
+	ScopeService_GetScopeMenus_FullMethodName      = "/sysclient.ScopeService/GetScopeMenus"
+	ScopeService_ToggleScopeStatus_FullMethodName  = "/sysclient.ScopeService/ToggleScopeStatus"
+	ScopeService_GetMenuTree_FullMethodName        = "/sysclient.ScopeService/GetMenuTree"
+	ScopeService_GetMenuById_FullMethodName        = "/sysclient.ScopeService/GetMenuById"
+	ScopeService_CreateMenu_FullMethodName         = "/sysclient.ScopeService/CreateMenu"
+	ScopeService_UpdateMenu_FullMethodName         = "/sysclient.ScopeService/UpdateMenu"
+	ScopeService_DeleteMenu_FullMethodName         = "/sysclient.ScopeService/DeleteMenu"
+	ScopeService_GetUnassignedMenus_FullMethodName = "/sysclient.ScopeService/GetUnassignedMenus"
+	ScopeService_AssignScopeMenus_FullMethodName   = "/sysclient.ScopeService/AssignScopeMenus"
 )
 
 // ScopeServiceClient is the client API for ScopeService service.
@@ -1007,12 +1010,15 @@ type ScopeServiceClient interface {
 	AddScopeMenus(ctx context.Context, in *AddScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 	DeleteScopeMenus(ctx context.Context, in *DeleteScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 	GetScopeMenus(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error)
+	ToggleScopeStatus(ctx context.Context, in *ToggleScopeStatusRequest, opts ...grpc.CallOption) (*Scope, error)
 	// 菜单管理
 	GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error)
 	GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error)
 	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error)
+	GetUnassignedMenus(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UnassignedMenusResponse, error)
+	AssignScopeMenus(ctx context.Context, in *AssignScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 }
 
 type scopeServiceClient struct {
@@ -1113,6 +1119,16 @@ func (c *scopeServiceClient) GetScopeMenus(ctx context.Context, in *Int64Value, 
 	return out, nil
 }
 
+func (c *scopeServiceClient) ToggleScopeStatus(ctx context.Context, in *ToggleScopeStatusRequest, opts ...grpc.CallOption) (*Scope, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Scope)
+	err := c.cc.Invoke(ctx, ScopeService_ToggleScopeStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *scopeServiceClient) GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MenuTreeResponse)
@@ -1163,6 +1179,26 @@ func (c *scopeServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 	return out, nil
 }
 
+func (c *scopeServiceClient) GetUnassignedMenus(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UnassignedMenusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UnassignedMenusResponse)
+	err := c.cc.Invoke(ctx, ScopeService_GetUnassignedMenus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scopeServiceClient) AssignScopeMenus(ctx context.Context, in *AssignScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ScopeInfo)
+	err := c.cc.Invoke(ctx, ScopeService_AssignScopeMenus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScopeServiceServer is the server API for ScopeService service.
 // All implementations must embed UnimplementedScopeServiceServer
 // for forward compatibility.
@@ -1177,12 +1213,15 @@ type ScopeServiceServer interface {
 	AddScopeMenus(context.Context, *AddScopeMenusRequest) (*ScopeInfo, error)
 	DeleteScopeMenus(context.Context, *DeleteScopeMenusRequest) (*ScopeInfo, error)
 	GetScopeMenus(context.Context, *Int64Value) (*ScopeInfo, error)
+	ToggleScopeStatus(context.Context, *ToggleScopeStatusRequest) (*Scope, error)
 	// 菜单管理
 	GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error)
 	GetMenuById(context.Context, *Int64Value) (*Menu, error)
 	CreateMenu(context.Context, *CreateMenuRequest) (*Menu, error)
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*Menu, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error)
+	GetUnassignedMenus(context.Context, *Empty) (*UnassignedMenusResponse, error)
+	AssignScopeMenus(context.Context, *AssignScopeMenusRequest) (*ScopeInfo, error)
 	mustEmbedUnimplementedScopeServiceServer()
 }
 
@@ -1220,6 +1259,9 @@ func (UnimplementedScopeServiceServer) DeleteScopeMenus(context.Context, *Delete
 func (UnimplementedScopeServiceServer) GetScopeMenus(context.Context, *Int64Value) (*ScopeInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScopeMenus not implemented")
 }
+func (UnimplementedScopeServiceServer) ToggleScopeStatus(context.Context, *ToggleScopeStatusRequest) (*Scope, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ToggleScopeStatus not implemented")
+}
 func (UnimplementedScopeServiceServer) GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuTree not implemented")
 }
@@ -1234,6 +1276,12 @@ func (UnimplementedScopeServiceServer) UpdateMenu(context.Context, *UpdateMenuRe
 }
 func (UnimplementedScopeServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (UnimplementedScopeServiceServer) GetUnassignedMenus(context.Context, *Empty) (*UnassignedMenusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUnassignedMenus not implemented")
+}
+func (UnimplementedScopeServiceServer) AssignScopeMenus(context.Context, *AssignScopeMenusRequest) (*ScopeInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AssignScopeMenus not implemented")
 }
 func (UnimplementedScopeServiceServer) mustEmbedUnimplementedScopeServiceServer() {}
 func (UnimplementedScopeServiceServer) testEmbeddedByValue()                      {}
@@ -1418,6 +1466,24 @@ func _ScopeService_GetScopeMenus_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScopeService_ToggleScopeStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ToggleScopeStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).ToggleScopeStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_ToggleScopeStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).ToggleScopeStatus(ctx, req.(*ToggleScopeStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ScopeService_GetMenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MenuListRequest)
 	if err := dec(in); err != nil {
@@ -1508,6 +1574,42 @@ func _ScopeService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScopeService_GetUnassignedMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetUnassignedMenus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetUnassignedMenus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetUnassignedMenus(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ScopeService_AssignScopeMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignScopeMenusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).AssignScopeMenus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_AssignScopeMenus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).AssignScopeMenus(ctx, req.(*AssignScopeMenusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ScopeService_ServiceDesc is the grpc.ServiceDesc for ScopeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1552,6 +1654,10 @@ var ScopeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ScopeService_GetScopeMenus_Handler,
 		},
 		{
+			MethodName: "ToggleScopeStatus",
+			Handler:    _ScopeService_ToggleScopeStatus_Handler,
+		},
+		{
 			MethodName: "GetMenuTree",
 			Handler:    _ScopeService_GetMenuTree_Handler,
 		},
@@ -1570,6 +1676,14 @@ var ScopeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMenu",
 			Handler:    _ScopeService_DeleteMenu_Handler,
+		},
+		{
+			MethodName: "GetUnassignedMenus",
+			Handler:    _ScopeService_GetUnassignedMenus_Handler,
+		},
+		{
+			MethodName: "AssignScopeMenus",
+			Handler:    _ScopeService_AssignScopeMenus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

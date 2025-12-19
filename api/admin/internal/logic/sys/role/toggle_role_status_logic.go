@@ -57,12 +57,12 @@ func (l *ToggleRoleStatusLogic) ToggleRoleStatus(req *types.ToggleRoleStatusRequ
 		// AddPoliciesEx将授权规则添加到当前策略。 如果规则已经存在，规则将不会被添加。 但与AddPolicies不同，其他不存在的规则会被添加，而不是直接返回false
 		ok, err = l.svcCtx.CasbinEnforcer.AddNamedPoliciesEx("p", rules)
 		if err != nil || !ok {
-			logc.Errorf(l.ctx, "添加casbin权限失败: %v", err)
+			logc.Errorf(l.ctx, "添加角色权限失败: %v, role: %v", err, req.RoleCode)
 		}
 	} else {
 		ok, err = l.svcCtx.CasbinEnforcer.RemoveFilteredNamedPolicy("p", 0, req.RoleCode)
 		if err != nil || !ok {
-			logc.Errorf(l.ctx, "删除角色权限失败: %v", err)
+			logc.Errorf(l.ctx, "删除角色权限失败: %v, role: %v", err, req.RoleCode)
 		}
 	}
 

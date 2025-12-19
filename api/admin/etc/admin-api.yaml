@@ -20,6 +20,7 @@ Log:
   Mode: file
   Encoding: plain
   Path: logs/admin
+  Level: debug
 
 Auth:
   AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d

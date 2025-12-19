@@ -41,6 +41,7 @@ type Scope {
 	ScopeCode   string `json:"scope_code"` // 范围编码
 	Description string `json:"description"` // 范围描述
 	Sort        int32  `json:"sort"` // 排序
+	Status      int32  `json:"status"`
 }
 
 type ScopeInfo {
@@ -105,6 +106,7 @@ type DeleteMenuRequest {
 // 安全范围列表请求
 type ScopeListRequest {
 	PageRequest
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 // 安全范围列表响应
@@ -157,6 +159,20 @@ type GetAllScopeResponse {
 	Scopes []Scope `json:"scopes"`
 }
 
+type ToggleScopeStatusRequest {
+	ScopeCode string `json:"scope_code"`
+	Status int32 `json:"status"` // 状态 (0-禁用, 1-正常)
+}
+
+type GetUnassignedMenusResponse {
+	Menus []Menu `json:"menus"`
+}
+
+type AssignScopeMenusRequest {
+	ScopeId int64 `json:"scope_id"`
+	Menus []Menu `json:"menus"` // 菜单
+}
+
 // 安全范围服务
 @server (
 	jwt:        Auth
@@ -185,6 +201,9 @@ service admin-api {
 	@handler DeleteScope
 	delete / (DeleteScopeRequest) returns (Empty)
 
+	@handler ToggleScopeStatus
+	put /status (ToggleScopeStatusRequest) returns (Scope)
+
 	@handler AddScopeMenus
 	post /menus (AddScopeMenusRequest) returns (ScopeInfo)
 
@@ -209,5 +228,13 @@ service admin-api {
 
 	@handler DeleteMenu
 	delete /menu (DeleteMenuRequest) returns (Empty)
+
+ 	// 获取全部未被分配的菜单
+	@handler GetUnassignedMenus
+	get /menus/unassigned (Empty) returns (GetUnassignedMenusResponse)
+
+	// 分配菜单给安全范围
+	@handler AssignScopeMenus
+	post /menus/assign (AssignScopeMenusRequest) returns (ScopeInfo);
 }
 

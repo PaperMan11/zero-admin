@@ -45,7 +45,7 @@ type GetAllRolesResponse {
 // 角色列表请求
 type RoleListRequest {
 	PageRequest PageRequest `json:"page_request"`
-	Status      int32       `json:"status"` // 状态过滤
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 // 角色列表响应

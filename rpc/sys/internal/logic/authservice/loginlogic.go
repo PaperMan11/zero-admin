@@ -49,6 +49,12 @@ func (l *LoginLogic) Login(in *sysclient.LoginRequest) (*sysclient.LoginResponse
 		return nil, status.Error(codes.Internal, "登录失败")
 	}
 
+	if user.Status == 0 {
+		logc.Errorf(l.ctx, "用户被禁用, 登录参数：%+v", in)
+		l.saveLoginLog(in, LoginStatusFail, "用户被禁用")
+		return nil, status.Error(codes.PermissionDenied, "用户被禁用")
+	}
+
 	// 2.判断密码是否正确
 	if !bcryptUtil.CheckPassword(in.Password+user.Salt, user.Password) {
 		l.saveLoginLog(in, LoginStatusFail, "密码错误")

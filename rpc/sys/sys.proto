@@ -279,7 +279,11 @@ message GetRoleByRoleCodesRequest {
 }
 
 message GetRoleByRoleCodesResponse {
-  repeated Role roles = 1;
+  repeated RoleScope role_perms = 1;
+}
+
+message GetRolesByScopeCodeRequest {
+  string scope_code = 1;
 }
 
 message GetRolePermsRequest {
@@ -315,8 +319,8 @@ service RoleService {
   rpc DeleteRolePerms(DeleteRolePermsRequest) returns (RoleInfo);
   // 获取角色权限
   rpc GetRolePerms(GetRolePermsRequest) returns (RoleInfo);
-  // 获取角色列表
-  rpc GetRoleListByRoleIDs(GetRoleByRoleCodesRequest) returns (GetRoleByRoleCodesResponse);
+  // 获取关联给定安全范围的角色
+  rpc GetRoleListByScopeCode(GetRolesByScopeCodeRequest) returns (GetRoleByRoleCodesResponse);
 }
 
 
@@ -385,6 +389,7 @@ message Scope {
   string scope_code = 3;  // 范围编码
   string description = 4; // 范围描述
   int32 sort = 5;         // 排序
+  int32 status = 6;
 }
 
 
@@ -397,6 +402,7 @@ message ScopeInfo {
 // 安全范围列表请求
 message ScopeListRequest {
   PageRequest page_request = 1;
+  int32 status = 2;
 }
 
 // 安全范围列表响应
@@ -450,6 +456,29 @@ message GetAllScopesResponse {
   repeated Scope scopes = 1;
 }
 
+message ToggleScopeStatusRequest {
+  string scope_code = 1;
+  int32 status = 2;          // 目标状态: 0=禁用, 1=启用
+  int64 operator_id = 3;
+}
+
+message UnassignedMenusResponse {
+  repeated Menu menus = 1;
+}
+
+message AssignScopeMenusRequest {
+  int64 scope_id = 1;
+  repeated AssignScopeMenuMeta menus = 2;
+  int64 operator_id = 3;
+}
+
+message AssignScopeMenuMeta {
+  int64 menu_id = 1;
+  int64 parent_id = 2;
+  repeated AssignScopeMenuMeta children = 3;
+}
+
+
 service ScopeService {
   // 安全范围管理
   rpc GetAllScopes(Empty) returns (GetAllScopesResponse);
@@ -461,12 +490,15 @@ service ScopeService {
   rpc AddScopeMenus(AddScopeMenusRequest) returns (ScopeInfo);
   rpc DeleteScopeMenus(DeleteScopeMenusRequest) returns (ScopeInfo);
   rpc GetScopeMenus(Int64Value) returns (ScopeInfo);
+  rpc ToggleScopeStatus(ToggleScopeStatusRequest) returns (Scope);
   // 菜单管理
   rpc GetMenuTree(MenuListRequest) returns (MenuTreeResponse);
   rpc GetMenuById(Int64Value) returns (Menu);
   rpc CreateMenu(CreateMenuRequest) returns (Menu);
   rpc UpdateMenu(UpdateMenuRequest) returns (Menu);
   rpc DeleteMenu(DeleteMenuRequest) returns (Empty);
+  rpc GetUnassignedMenus(Empty) returns (UnassignedMenusResponse);  // 获取全部未被分配的菜单
+  rpc AssignScopeMenus(AssignScopeMenusRequest) returns (ScopeInfo); // 分配菜单给安全范围
 }
 
 

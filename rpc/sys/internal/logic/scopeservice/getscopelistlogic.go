@@ -28,7 +28,7 @@ func NewGetScopeListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetS
 
 // 安全范围管理
 func (l *GetScopeListLogic) GetScopeList(in *sysclient.ScopeListRequest) (*sysclient.ScopeListResponse, error) {
-	scopes, err := l.svcCtx.DB.GetScopesPagination(l.ctx, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
+	scopes, err := l.svcCtx.DB.GetScopesPagination(l.ctx, in.Status, int(in.PageRequest.Page), int(in.PageRequest.PageSize))
 	if err != nil {
 		logc.Errorf(l.ctx, "获取安全范围列表失败: %v", err)
 		return nil, status.Error(codes.Internal, "获取安全范围列表失败")

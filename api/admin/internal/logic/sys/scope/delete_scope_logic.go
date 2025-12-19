@@ -30,6 +30,12 @@ func NewDeleteScopeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delet
 }
 
 func (l *DeleteScopeLogic) DeleteScope(req *types.DeleteScopeRequest) (resp *types.Empty, err error) {
+	scope, err := l.svcCtx.ScopeService.GetScopeById(l.ctx, &sysclient.Int64Value{Value: req.Id})
+	if err != nil {
+		logc.Errorf(l.ctx, "查询安全范围信息失败: %v", err)
+		return nil, err
+	}
+
 	_, err = l.svcCtx.ScopeService.DeleteScope(l.ctx, &sysclient.DeleteScopeRequest{
 		Id:         req.Id,
 		OperatorId: utils.GetOperateID(l.ctx),
@@ -37,6 +43,12 @@ func (l *DeleteScopeLogic) DeleteScope(req *types.DeleteScopeRequest) (resp *typ
 	if err != nil {
 		logc.Errorf(l.ctx, "删除安全范围失败: %v", err)
 		return nil, err
+	}
+
+	// casbin权限
+	ok, err := l.svcCtx.CasbinEnforcer.RemoveFilteredNamedPolicy("p", 1, utils.ConvertScopeCodeToUrl(scope.ScopeCode))
+	if err != nil || !ok {
+		logc.Errorf(l.ctx, "删除casbin权限失败: %v, scope: %s", err, scope.ScopeCode)
 	}
 
 	return &types.Empty{}, nil

@@ -23,7 +23,7 @@ CREATE TABLE `sys_operate_log` (
     `operation_url` varchar(50) NOT NULL COMMENT '操作方法',
     `operation_params` text NOT NULL COMMENT '请求参数',
     `operation_response` text NOT NULL COMMENT '响应参数',
-    `operation_status` tinyint(4) NOT NULL COMMENT '操作状态',
+    `operation_status` int(11) NOT NULL COMMENT '操作状态',
     `use_time` bigint(20) NOT NULL COMMENT '执行时长(毫秒)',
     `browser` varchar(64) NOT NULL COMMENT '浏览器',
     `os` varchar(64) NOT NULL COMMENT '操作系统',

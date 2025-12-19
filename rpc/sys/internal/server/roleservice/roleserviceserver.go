@@ -88,8 +88,8 @@ func (s *RoleServiceServer) GetRolePerms(ctx context.Context, in *sysclient.GetR
 	return l.GetRolePerms(in)
 }
 
-// 获取角色列表
-func (s *RoleServiceServer) GetRoleListByRoleIDs(ctx context.Context, in *sysclient.GetRoleByRoleCodesRequest) (*sysclient.GetRoleByRoleCodesResponse, error) {
-	l := roleservicelogic.NewGetRoleListByRoleIDsLogic(ctx, s.svcCtx)
-	return l.GetRoleListByRoleIDs(in)
+// 获取关联给定安全范围的角色
+func (s *RoleServiceServer) GetRoleListByScopeCode(ctx context.Context, in *sysclient.GetRolesByScopeCodeRequest) (*sysclient.GetRoleByRoleCodesResponse, error) {
+	l := roleservicelogic.NewGetRoleListByScopeCodeLogic(ctx, s.svcCtx)
+	return l.GetRoleListByScopeCode(in)
 }

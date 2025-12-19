@@ -47,6 +47,11 @@ func (l *ToggleRoleStatusLogic) ToggleRoleStatus(in *sysclient.ToggleRoleStatusR
 		return nil, status.Error(codes.Internal, "禁用角色失败")
 	}
 
+	if role.Status == 0 {
+		in.Status = 1
+	} else {
+		in.Status = 0
+	}
 	err = l.svcCtx.DB.ToggleRoleStatus(l.ctx, role.ID, in.Status, convert.ToString(in.OperatorId))
 	if err != nil {
 		logc.Errorf(l.ctx, "禁用角色失败, 角色ID：%d, 错误：%s", role.ID, err.Error())

@@ -18,6 +18,8 @@ type (
 	AddOperateLogResp          = sysclient.AddOperateLogResp
 	AddRolePermsRequest        = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest       = sysclient.AddScopeMenusRequest
+	AssignScopeMenuMeta        = sysclient.AssignScopeMenuMeta
+	AssignScopeMenusRequest    = sysclient.AssignScopeMenusRequest
 	AssignUserRoleRequest      = sysclient.AssignUserRoleRequest
 	BatchDeleteRolesRequest    = sysclient.BatchDeleteRolesRequest
 	CreateMenuRequest          = sysclient.CreateMenuRequest
@@ -39,6 +41,7 @@ type (
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest
+	GetRolesByScopeCodeRequest = sysclient.GetRolesByScopeCodeRequest
 	GetUserInfoRequest         = sysclient.GetUserInfoRequest
 	Int64Value                 = sysclient.Int64Value
 	LoginRequest               = sysclient.LoginRequest
@@ -67,7 +70,9 @@ type (
 	ScopeListRequest           = sysclient.ScopeListRequest
 	ScopeListResponse          = sysclient.ScopeListResponse
 	ToggleRoleStatusRequest    = sysclient.ToggleRoleStatusRequest
+	ToggleScopeStatusRequest   = sysclient.ToggleScopeStatusRequest
 	ToggleUserStatusRequest    = sysclient.ToggleUserStatusRequest
+	UnassignedMenusResponse    = sysclient.UnassignedMenusResponse
 	UpdateMenuRequest          = sysclient.UpdateMenuRequest
 	UpdatePasswordRequest      = sysclient.UpdatePasswordRequest
 	UpdateRolePermsRequest     = sysclient.UpdateRolePermsRequest
@@ -91,12 +96,15 @@ type (
 		AddScopeMenus(ctx context.Context, in *AddScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 		DeleteScopeMenus(ctx context.Context, in *DeleteScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 		GetScopeMenus(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*ScopeInfo, error)
+		ToggleScopeStatus(ctx context.Context, in *ToggleScopeStatusRequest, opts ...grpc.CallOption) (*Scope, error)
 		// 菜单管理
 		GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error)
 		GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error)
 		CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 		UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 		DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error)
+		GetUnassignedMenus(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UnassignedMenusResponse, error)
+		AssignScopeMenus(ctx context.Context, in *AssignScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error)
 	}
 
 	defaultScopeService struct {
@@ -156,6 +164,11 @@ func (m *defaultScopeService) GetScopeMenus(ctx context.Context, in *Int64Value,
 	return client.GetScopeMenus(ctx, in, opts...)
 }
 
+func (m *defaultScopeService) ToggleScopeStatus(ctx context.Context, in *ToggleScopeStatusRequest, opts ...grpc.CallOption) (*Scope, error) {
+	client := sysclient.NewScopeServiceClient(m.cli.Conn())
+	return client.ToggleScopeStatus(ctx, in, opts...)
+}
+
 // 菜单管理
 func (m *defaultScopeService) GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error) {
 	client := sysclient.NewScopeServiceClient(m.cli.Conn())
@@ -180,4 +193,14 @@ func (m *defaultScopeService) UpdateMenu(ctx context.Context, in *UpdateMenuRequ
 func (m *defaultScopeService) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*Empty, error) {
 	client := sysclient.NewScopeServiceClient(m.cli.Conn())
 	return client.DeleteMenu(ctx, in, opts...)
+}
+
+func (m *defaultScopeService) GetUnassignedMenus(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UnassignedMenusResponse, error) {
+	client := sysclient.NewScopeServiceClient(m.cli.Conn())
+	return client.GetUnassignedMenus(ctx, in, opts...)
+}
+
+func (m *defaultScopeService) AssignScopeMenus(ctx context.Context, in *AssignScopeMenusRequest, opts ...grpc.CallOption) (*ScopeInfo, error) {
+	client := sysclient.NewScopeServiceClient(m.cli.Conn())
+	return client.AssignScopeMenus(ctx, in, opts...)
 }

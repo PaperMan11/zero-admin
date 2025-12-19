@@ -60,11 +60,14 @@ type DB interface {
 	AddRoleScopes(ctx context.Context, roleScopes []*model.SysRoleScope) error
 	UpsertRoleScopes(ctx context.Context, roleScope model.SysRoleScope) error
 	ToggleRoleStatus(ctx context.Context, roleID int64, status int32, operator string) error
+	GetRolesByScopeCode(ctx context.Context, scopeCode string) ([]*model.SysRole, error)
+	GetRolePermsByScopeCode(ctx context.Context, scopeCode string) ([]*model.SysRoleScope, error)
 
 	// ---------------------菜单 & 权限---------------------
 	// 菜单
 	GetMenus(ctx context.Context, status int32, page, pageSize int) ([]*model.SysMenu, error)
 	GetAllMenus(ctx context.Context) ([]*model.SysMenu, error)
+	GetUnassignedMenus(ctx context.Context) ([]*model.SysMenu, error) // 未分配的菜单
 	// 根据id获取菜单
 	GetMenuByID(ctx context.Context, menuID int64) (*model.SysMenu, error)
 	// 根据角色获取有权限的菜单
@@ -91,13 +94,16 @@ type DB interface {
 	CountScopes(ctx context.Context) (int64, error)
 	SaveScope(ctx context.Context, scope model.SysScope) error
 	GetScopeByID(ctx context.Context, scopeID int64) (*model.SysScope, error)
+	GetScopeByCode(ctx context.Context, scopeCode string) (*model.SysScope, error)
 	GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysScope, error)
 	GetAllScopes(ctx context.Context) ([]*model.SysScope, error)
 	GetScopesByCodes(ctx context.Context, scopeCodes []string) ([]*model.SysScope, error)
-	GetScopesPagination(ctx context.Context, page, pageSize int) ([]*model.SysScope, error)
+	GetScopesPagination(ctx context.Context, status int32, page, pageSize int) ([]*model.SysScope, error)
 	AddScopeMenus(ctx context.Context, scopeID int64, menus []int64) error // 先删除再添加
-	DeleteScope(ctx context.Context, scopeID int64) error
+	DeleteScopeTx(ctx context.Context, scopeID int64) error
 	DeleteScopeMenus(ctx context.Context, scopeID int64) error
+	ToggleScopeStatus(ctx context.Context, scopeID int64, status int32, operator string) error
+	UpdateScopeMenusTx(ctx context.Context, scopeID int64, menus []*model.SysMenu) error // 全量更新安全范围的菜单树
 
 	// 获取用户安全范围权限
 	GetRoleScopesPerm(ctx context.Context, roleCode string) ([]model.RoleScopeInfo, error)

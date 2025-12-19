@@ -27,11 +27,11 @@ func (m *AddLogMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 
 		var uid int64
 		// 从上下文中获取 userName，并进行类型断言和 nil 检查
-		if uidRaw, ok := r.Context().Value("uid").(int64); !ok {
+		if uidRaw, ok := r.Context().Value("uid").(string); !ok {
 			next(w, r)
 			return
 		} else {
-			uid = uidRaw
+			uid = convert.ToInt64(uidRaw)
 		}
 
 		startTime := time.Now()

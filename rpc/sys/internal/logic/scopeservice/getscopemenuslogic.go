@@ -45,8 +45,10 @@ func (l *GetScopeMenusLogic) GetScopeMenus(in *sysclient.Int64Value) (*sysclient
 		return nil, status.Error(codes.Internal, "获取安全范围菜单列表失败")
 	}
 
+	menuTree := logic.BuildMenuTree(menus, 0)
+
 	return &sysclient.ScopeInfo{
 		Scope: logic.ConvertToRpcScope(scope),
-		Menus: logic.ConvertToRpcMenus(menus),
+		Menus: menuTree,
 	}, nil
 }

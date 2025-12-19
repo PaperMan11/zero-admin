@@ -49,6 +49,9 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 		if common.IsSuperUser(role.RoleCode) {
 			isSuperuser = true
 		}
+		if role.Status == 0 {
+			continue
+		}
 		roleCodes = append(roleCodes, role.RoleCode)
 	}
 
@@ -60,6 +63,9 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 		if len(scopes) > 0 {
 			scopeIDs := make([]int64, 0, len(scopes))
 			for _, scope := range scopes {
+				if scope.Status == 0 {
+					continue
+				}
 				scopeIDs = append(scopeIDs, scope.ID)
 			}
 			menus, _ = l.svcCtx.DB.GetMenusByScopeIDs(l.ctx, scopeIDs)
@@ -72,7 +78,7 @@ func (l *GetUserInfoLogic) GetUserInfo(in *sysclient.GetUserInfoRequest) (*syscl
 		menus, _ = l.svcCtx.DB.GetMenusByRoles(l.ctx, roleCodes)
 		userPerms, _ := l.svcCtx.DB.GetRolesScopesPerm(l.ctx, roleCodes)
 		for _, userPerm := range userPerms {
-			userPermMap[userPerm.ID] = common.PermissionMap[userPerm.Perm]
+			userPermMap[userPerm.SysScope.ID] = common.PermissionMap[userPerm.Perm]
 		}
 	}
 

@@ -56,6 +56,7 @@ func ConvertToTypesScope(scope *scopeservice.Scope) types.Scope {
 		ScopeCode:   scope.ScopeCode,
 		Description: scope.Description,
 		Sort:        scope.Sort,
+		Status:      scope.Status,
 	}
 }
 

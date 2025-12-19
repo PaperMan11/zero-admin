@@ -3,6 +3,7 @@ package logic
 import (
 	"time"
 	"zero-admin/pkg/convert"
+	"zero-admin/rpc/sys/db/common"
 	"zero-admin/rpc/sys/db/mysql/model"
 	"zero-admin/rpc/sys/sysclient"
 )
@@ -152,6 +153,22 @@ func ConvertToRpcRoles(roles []*model.SysRole) []*sysclient.Role {
 	return res
 }
 
+func ConvertToRpcRoleScope(roleScope *model.SysRoleScope) *sysclient.RoleScope {
+	return &sysclient.RoleScope{
+		RoleCode:  roleScope.RoleCode,
+		ScopeCode: roleScope.ScopeCode,
+		Perms:     common.PermissionMap[roleScope.Perm],
+	}
+}
+
+func ConvertToRpcRoleScopes(roleScopes []*model.SysRoleScope) []*sysclient.RoleScope {
+	res := make([]*sysclient.RoleScope, 0, len(roleScopes))
+	for _, rs := range roleScopes {
+		res = append(res, ConvertToRpcRoleScope(rs))
+	}
+	return res
+}
+
 // ----------------------------------------------scope----------------------------------------------
 
 func ConvertToRpcScope(scope *model.SysScope) *sysclient.Scope {
@@ -161,6 +178,7 @@ func ConvertToRpcScope(scope *model.SysScope) *sysclient.Scope {
 		ScopeCode:   scope.ScopeCode,
 		Description: scope.Description,
 		Sort:        scope.Sort,
+		Status:      scope.Status,
 	}
 }
 

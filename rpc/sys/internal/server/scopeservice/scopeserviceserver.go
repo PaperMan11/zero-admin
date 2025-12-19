@@ -69,6 +69,11 @@ func (s *ScopeServiceServer) GetScopeMenus(ctx context.Context, in *sysclient.In
 	return l.GetScopeMenus(in)
 }
 
+func (s *ScopeServiceServer) ToggleScopeStatus(ctx context.Context, in *sysclient.ToggleScopeStatusRequest) (*sysclient.Scope, error) {
+	l := scopeservicelogic.NewToggleScopeStatusLogic(ctx, s.svcCtx)
+	return l.ToggleScopeStatus(in)
+}
+
 // 菜单管理
 func (s *ScopeServiceServer) GetMenuTree(ctx context.Context, in *sysclient.MenuListRequest) (*sysclient.MenuTreeResponse, error) {
 	l := scopeservicelogic.NewGetMenuTreeLogic(ctx, s.svcCtx)
@@ -93,4 +98,14 @@ func (s *ScopeServiceServer) UpdateMenu(ctx context.Context, in *sysclient.Updat
 func (s *ScopeServiceServer) DeleteMenu(ctx context.Context, in *sysclient.DeleteMenuRequest) (*sysclient.Empty, error) {
 	l := scopeservicelogic.NewDeleteMenuLogic(ctx, s.svcCtx)
 	return l.DeleteMenu(in)
+}
+
+func (s *ScopeServiceServer) GetUnassignedMenus(ctx context.Context, in *sysclient.Empty) (*sysclient.UnassignedMenusResponse, error) {
+	l := scopeservicelogic.NewGetUnassignedMenusLogic(ctx, s.svcCtx)
+	return l.GetUnassignedMenus(in)
+}
+
+func (s *ScopeServiceServer) AssignScopeMenus(ctx context.Context, in *sysclient.AssignScopeMenusRequest) (*sysclient.ScopeInfo, error) {
+	l := scopeservicelogic.NewAssignScopeMenusLogic(ctx, s.svcCtx)
+	return l.AssignScopeMenus(in)
 }

@@ -17,6 +17,7 @@ type SysScope struct {
 	ScopeCode   string    `gorm:"column:scope_code;not null;comment:范围编码" json:"scope_code"`                             // 范围编码
 	Description string    `gorm:"column:description;not null;comment:范围描述" json:"description"`                           // 范围描述
 	Sort        int32     `gorm:"column:sort;not null;comment:排序" json:"sort"`                                           // 排序
+	Status      int32     `gorm:"column:status;not null;default:1;comment:0-禁用 1-启用" json:"status"`                      // 0-禁用 1-启用
 	Creator     string    `gorm:"column:creator;not null;comment:创建人" json:"creator"`                                    // 创建人
 	CreateTime  time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
 	Updater     string    `gorm:"column:updater;not null;comment:更新人" json:"updater"`                                    // 更新人

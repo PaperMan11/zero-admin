@@ -104,7 +104,11 @@ message GetRoleByRoleCodesRequest {
 }
 
 message GetRoleByRoleCodesResponse {
-  repeated Role roles = 1;
+  repeated RoleScope role_perms = 1;
+}
+
+message GetRolesByScopeCodeRequest {
+  string scope_code = 1;
 }
 
 message GetRolePermsRequest {
@@ -140,7 +144,7 @@ service RoleService {
   rpc DeleteRolePerms(DeleteRolePermsRequest) returns (RoleInfo);
   // 获取角色权限
   rpc GetRolePerms(GetRolePermsRequest) returns (RoleInfo);
-  // 获取角色列表
-  rpc GetRoleListByRoleIDs(GetRoleByRoleCodesRequest) returns (GetRoleByRoleCodesResponse);
+  // 获取关联给定安全范围的角色
+  rpc GetRoleListByScopeCode(GetRolesByScopeCodeRequest) returns (GetRoleByRoleCodesResponse);
 }
 

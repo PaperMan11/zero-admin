@@ -124,3 +124,9 @@ Authorization: Bearer {{token}}
 {
   "id": {{menuId}}
 }
+
+
+### 未分配的菜单
+GET {{host}}/api/sys/scope/menus/unassigned
+Content-Type: application/json
+Authorization: Bearer {{token}}

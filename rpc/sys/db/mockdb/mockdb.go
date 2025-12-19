@@ -487,6 +487,18 @@ func (m *MockDB) GetMenus(ctx context.Context, status int32, page, pageSize int)
 	return result, nil
 }
 
+func (m *MockDB) GetUnassignedMenus(ctx context.Context) ([]*model.SysMenu, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	res := make([]*model.SysMenu, 0)
+	for _, menu := range m.menus {
+		if menu.ScopeID == 0 {
+			res = append(res, menu)
+		}
+	}
+	return res, nil
+}
+
 func (m *MockDB) GetAllMenus(ctx context.Context) ([]*model.SysMenu, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
@@ -733,6 +745,12 @@ func (m *MockDB) GetScopeByID(ctx context.Context, scopeID int64) (*model.SysSco
 	return nil, nil
 }
 
+func (m *MockDB) GetScopeByCode(ctx context.Context, scopeCode string) (*model.SysScope, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return m.scopes[m.scopeCodes[scopeCode]], nil
+}
+
 func (m *MockDB) GetScopes(ctx context.Context, scopeIDs []int64) ([]*model.SysScope, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
@@ -789,7 +807,7 @@ func (m *MockDB) UpsertRoleScopes(ctx context.Context, roleScope model.SysRoleSc
 	return nil
 }
 
-func (m *MockDB) GetScopesPagination(ctx context.Context, page, pageSize int) ([]*model.SysScope, error) {
+func (m *MockDB) GetScopesPagination(ctx context.Context, status int32, page, pageSize int) ([]*model.SysScope, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
@@ -807,6 +825,16 @@ func (m *MockDB) GetScopesPagination(ctx context.Context, page, pageSize int) ([
 	return result, nil
 }
 
+func (m *MockDB) ToggleScopeStatus(ctx context.Context, scopeID int64, status int32, operator string) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if scope, exists := m.scopes[scopeID]; exists {
+		scope.Status = status
+		scope.Updater = operator
+	}
+	return nil
+}
+
 func (m *MockDB) AddScopeMenus(ctx context.Context, scopeID int64, menus []int64) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -821,13 +849,17 @@ func (m *MockDB) AddScopeMenus(ctx context.Context, scopeID int64, menus []int64
 	return nil
 }
 
-func (m *MockDB) DeleteScope(ctx context.Context, scopeID int64) error {
+func (m *MockDB) DeleteScopeTx(ctx context.Context, scopeID int64) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	if scope, exists := m.scopes[scopeID]; exists {
-		delete(m.scopeCodes, scope.ScopeCode)
+	if _, exists := m.scopes[scopeID]; exists {
 		delete(m.scopes, scopeID)
+		for menuID, menu := range m.menus {
+			if menu.ParentID == scopeID {
+				delete(m.menus, menuID)
+			}
+		}
 	}
 
 	return nil
@@ -861,6 +893,41 @@ func (m *MockDB) GetRolesScopesPerm(ctx context.Context, roleCodes []string) ([]
 
 	// Return empty slice for mock
 	return []model.RoleScopeInfo{}, nil
+}
+
+func (m *MockDB) GetRolesByScopeCode(ctx context.Context, scopeCode string) ([]*model.SysRole, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	res := make([]*model.SysRole, 0)
+	for _, roleScope := range m.roleScopes[scopeCode] {
+		if roleScope.ScopeCode == scopeCode {
+			for _, role := range m.roles {
+				if role.RoleCode == roleScope.RoleCode {
+					res = append(res, role)
+				}
+			}
+		}
+	}
+	return res, nil
+}
+
+func (m *MockDB) GetRolePermsByScopeCode(ctx context.Context, scopeCode string) ([]*model.SysRoleScope, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	res := make([]*model.SysRoleScope, 0)
+	for _, roleScope := range m.roleScopes[scopeCode] {
+		if roleScope.ScopeCode == scopeCode {
+			res = append(res, roleScope)
+		}
+	}
+	return res, nil
+}
+
+// 全量更新安全范围的菜单树
+func (m *MockDB) UpdateScopeMenusTx(ctx context.Context, scopeID int64, menus []*model.SysMenu) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return nil
 }
 
 // ---------------------登录日志 & 操作日志---------------------

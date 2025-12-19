@@ -18,6 +18,8 @@ type (
 	AddOperateLogResp          = sysclient.AddOperateLogResp
 	AddRolePermsRequest        = sysclient.AddRolePermsRequest
 	AddScopeMenusRequest       = sysclient.AddScopeMenusRequest
+	AssignScopeMenuMeta        = sysclient.AssignScopeMenuMeta
+	AssignScopeMenusRequest    = sysclient.AssignScopeMenusRequest
 	AssignUserRoleRequest      = sysclient.AssignUserRoleRequest
 	BatchDeleteRolesRequest    = sysclient.BatchDeleteRolesRequest
 	CreateMenuRequest          = sysclient.CreateMenuRequest
@@ -39,6 +41,7 @@ type (
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest
+	GetRolesByScopeCodeRequest = sysclient.GetRolesByScopeCodeRequest
 	GetUserInfoRequest         = sysclient.GetUserInfoRequest
 	Int64Value                 = sysclient.Int64Value
 	LoginRequest               = sysclient.LoginRequest
@@ -67,7 +70,9 @@ type (
 	ScopeListRequest           = sysclient.ScopeListRequest
 	ScopeListResponse          = sysclient.ScopeListResponse
 	ToggleRoleStatusRequest    = sysclient.ToggleRoleStatusRequest
+	ToggleScopeStatusRequest   = sysclient.ToggleScopeStatusRequest
 	ToggleUserStatusRequest    = sysclient.ToggleUserStatusRequest
+	UnassignedMenusResponse    = sysclient.UnassignedMenusResponse
 	UpdateMenuRequest          = sysclient.UpdateMenuRequest
 	UpdatePasswordRequest      = sysclient.UpdatePasswordRequest
 	UpdateRolePermsRequest     = sysclient.UpdateRolePermsRequest
@@ -102,8 +107,8 @@ type (
 		DeleteRolePerms(ctx context.Context, in *DeleteRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
 		// 获取角色权限
 		GetRolePerms(ctx context.Context, in *GetRolePermsRequest, opts ...grpc.CallOption) (*RoleInfo, error)
-		// 获取角色列表
-		GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error)
+		// 获取关联给定安全范围的角色
+		GetRoleListByScopeCode(ctx context.Context, in *GetRolesByScopeCodeRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error)
 	}
 
 	defaultRoleService struct {
@@ -182,8 +187,8 @@ func (m *defaultRoleService) GetRolePerms(ctx context.Context, in *GetRolePermsR
 	return client.GetRolePerms(ctx, in, opts...)
 }
 
-// 获取角色列表
-func (m *defaultRoleService) GetRoleListByRoleIDs(ctx context.Context, in *GetRoleByRoleCodesRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error) {
+// 获取关联给定安全范围的角色
+func (m *defaultRoleService) GetRoleListByScopeCode(ctx context.Context, in *GetRolesByScopeCodeRequest, opts ...grpc.CallOption) (*GetRoleByRoleCodesResponse, error) {
 	client := sysclient.NewRoleServiceClient(m.cli.Conn())
-	return client.GetRoleListByRoleIDs(ctx, in, opts...)
+	return client.GetRoleListByScopeCode(ctx, in, opts...)
 }

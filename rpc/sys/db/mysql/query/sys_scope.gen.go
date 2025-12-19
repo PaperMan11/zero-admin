@@ -33,6 +33,7 @@ func newSysScope(db *gorm.DB, opts ...gen.DOOption) sysScope {
 	_sysScope.ScopeCode = field.NewString(tableName, "scope_code")
 	_sysScope.Description = field.NewString(tableName, "description")
 	_sysScope.Sort = field.NewInt32(tableName, "sort")
+	_sysScope.Status = field.NewInt32(tableName, "status")
 	_sysScope.Creator = field.NewString(tableName, "creator")
 	_sysScope.CreateTime = field.NewTime(tableName, "create_time")
 	_sysScope.Updater = field.NewString(tableName, "updater")
@@ -54,6 +55,7 @@ type sysScope struct {
 	ScopeCode   field.String // 范围编码
 	Description field.String // 范围描述
 	Sort        field.Int32  // 排序
+	Status      field.Int32  // 0-禁用 1-启用
 	Creator     field.String // 创建人
 	CreateTime  field.Time   // 创建时间
 	Updater     field.String // 更新人
@@ -80,6 +82,7 @@ func (s *sysScope) updateTableName(table string) *sysScope {
 	s.ScopeCode = field.NewString(table, "scope_code")
 	s.Description = field.NewString(table, "description")
 	s.Sort = field.NewInt32(table, "sort")
+	s.Status = field.NewInt32(table, "status")
 	s.Creator = field.NewString(table, "creator")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.Updater = field.NewString(table, "updater")
@@ -109,12 +112,13 @@ func (s *sysScope) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysScope) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 10)
+	s.fieldMap = make(map[string]field.Expr, 11)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["scope_name"] = s.ScopeName
 	s.fieldMap["scope_code"] = s.ScopeCode
 	s.fieldMap["description"] = s.Description
 	s.fieldMap["sort"] = s.Sort
+	s.fieldMap["status"] = s.Status
 	s.fieldMap["creator"] = s.Creator
 	s.fieldMap["create_time"] = s.CreateTime
 	s.fieldMap["updater"] = s.Updater

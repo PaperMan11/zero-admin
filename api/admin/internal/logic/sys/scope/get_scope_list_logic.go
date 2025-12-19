@@ -36,6 +36,7 @@ func (l *GetScopeListLogic) GetScopeList(req *types.ScopeListRequest) (resp *typ
 			PageSize: int32(req.PageSize),
 			Keyword:  req.Keyword,
 		},
+		Status: req.Status,
 	})
 	if err != nil {
 		logc.Errorf(l.ctx, "查询安全范围列表失败: %v", err)

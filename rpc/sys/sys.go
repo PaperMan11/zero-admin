@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"zero-admin/rpc/sys/internal/config"
 	authserviceServer "zero-admin/rpc/sys/internal/server/authservice"
+	operateserviceServer "zero-admin/rpc/sys/internal/server/operatelogservice"
 	roleserviceServer "zero-admin/rpc/sys/internal/server/roleservice"
 	scopeserviceServer "zero-admin/rpc/sys/internal/server/scopeservice"
 	userserviceServer "zero-admin/rpc/sys/internal/server/userservice"
@@ -33,6 +33,7 @@ func main() {
 		sysclient.RegisterRoleServiceServer(grpcServer, roleserviceServer.NewRoleServiceServer(ctx))
 		sysclient.RegisterScopeServiceServer(grpcServer, scopeserviceServer.NewScopeServiceServer(ctx))
 		sysclient.RegisterUserServiceServer(grpcServer, userserviceServer.NewUserServiceServer(ctx))
+		sysclient.RegisterOperateLogServiceServer(grpcServer, operateserviceServer.NewOperateLogServiceServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

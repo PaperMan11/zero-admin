@@ -14,7 +14,7 @@ info (
 // 用户列表请求
 type UserListRequest {
 	PageRequest
-	Status int32 `json:"status"` // 状态过滤
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 // 用户列表响应
@@ -31,7 +31,7 @@ type CreateUserRequest {
 	Email    string  `json:"email,optional"` // 邮箱
 	Mobile   string  `json:"mobile,optional"` // 手机号
 	RealName string  `json:"real_name,optional"` // 真实姓名
-	Gender   int32   `json:"gender,optional"` // 性别 (0-未知, 1-男, 2-女)
+	Gender   int32   `json:"gender,default=0"` // 性别 (0-未知, 1-男, 2-女)
 	Status   int32   `json:"status,optional"` // 状态 (0-禁用, 1-正常)
 	RoleIds  []int64 `json:"role_ids,optional"` // 角色ID列表
 }

@@ -217,6 +217,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/menus/:id",
 					Handler: sysscope.GetScopeMenusHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/menus/assign",
+					Handler: sysscope.AssignScopeMenusHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/menus/unassigned",
+					Handler: sysscope.GetUnassignedMenusHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/status",
+					Handler: sysscope.ToggleScopeStatusHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

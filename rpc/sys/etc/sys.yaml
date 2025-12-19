@@ -11,6 +11,7 @@ Log:
   Mode: file
   Encoding: plain
   Path: logs/sys
+  Level: debug
 
 Prometheus:
   Host: 0.0.0.0

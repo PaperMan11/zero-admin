@@ -74,3 +74,14 @@ func (m *MysqlDB) GetRolesScopesPerm(ctx context.Context, roleCodes []string) (r
 		Scan(&res)
 	return res, err
 }
+
+func (m *MysqlDB) GetRolesByScopeCode(ctx context.Context, scopeCode string) ([]*model.SysRole, error) {
+	roleM := m.q.SysRole
+	roleScopeM := m.q.SysRoleScope
+	subQuery := roleScopeM.WithContext(ctx).Where(roleScopeM.ScopeCode.Eq(scopeCode)).Select(roleScopeM.RoleCode)
+	return roleM.WithContext(ctx).Where(roleM.Columns(roleM.RoleCode).In(subQuery)).Find()
+}
+
+func (m *MysqlDB) GetRolePermsByScopeCode(ctx context.Context, scopeCode string) ([]*model.SysRoleScope, error) {
+	return m.q.SysRoleScope.WithContext(ctx).Where(m.q.SysRoleScope.ScopeCode.Eq(scopeCode)).Find()
+}

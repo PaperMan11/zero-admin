@@ -29,7 +29,7 @@ func NewGetMenuTreeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMe
 
 // 菜单管理
 func (l *GetMenuTreeLogic) GetMenuTree(in *sysclient.MenuListRequest) (*sysclient.MenuTreeResponse, error) {
-	menus, err := l.svcCtx.DB.GetMenus(l.ctx, in.Status, 0, -1)
+	menus, err := l.svcCtx.DB.GetAllMenus(l.ctx)
 	if err != nil {
 		logc.Errorf(l.ctx, "查询菜单信息, 参数：%+v, 错误：%v", in, err)
 		return nil, status.Error(codes.Internal, "查询菜单信息异常")

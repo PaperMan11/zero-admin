@@ -33,6 +33,11 @@ type AddScopeMenusRequest struct {
 	MenuIds []int64 `json:"menu_ids"`
 }
 
+type AssignScopeMenusRequest struct {
+	ScopeId int64  `json:"scope_id"`
+	Menus   []Menu `json:"menus"` // 菜单
+}
+
 type AssignUserRoleRequest struct {
 	UserId    int64    `json:"user_id"`
 	RoleCodes []string `json:"role_codes"`
@@ -82,7 +87,7 @@ type CreateUserRequest struct {
 	Email    string  `json:"email,optional"`     // 邮箱
 	Mobile   string  `json:"mobile,optional"`    // 手机号
 	RealName string  `json:"real_name,optional"` // 真实姓名
-	Gender   int32   `json:"gender,optional"`    // 性别 (0-未知, 1-男, 2-女)
+	Gender   int32   `json:"gender,default=0"`   // 性别 (0-未知, 1-男, 2-女)
 	Status   int32   `json:"status,optional"`    // 状态 (0-禁用, 1-正常)
 	RoleIds  []int64 `json:"role_ids,optional"`  // 角色ID列表
 }
@@ -137,6 +142,10 @@ type GetAllScopeRequest struct {
 
 type GetAllScopeResponse struct {
 	Scopes []Scope `json:"scopes"`
+}
+
+type GetUnassignedMenusResponse struct {
+	Menus []Menu `json:"menus"`
 }
 
 type IdValue struct {
@@ -283,7 +292,7 @@ type RoleInfo struct {
 
 type RoleListRequest struct {
 	PageRequest PageRequest `json:"page_request"`
-	Status      int32       `json:"status"` // 状态过滤
+	Status      int32       `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 type RoleListResponse struct {
@@ -307,6 +316,7 @@ type Scope struct {
 	ScopeCode   string `json:"scope_code"`  // 范围编码
 	Description string `json:"description"` // 范围描述
 	Sort        int32  `json:"sort"`        // 排序
+	Status      int32  `json:"status"`
 }
 
 type ScopeInfo struct {
@@ -316,6 +326,7 @@ type ScopeInfo struct {
 
 type ScopeListRequest struct {
 	PageRequest
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 type ScopeListResponse struct {
@@ -330,6 +341,11 @@ type StringValue struct {
 type ToggleRoleStatusRequest struct {
 	RoleCode string `json:"role_code"`
 	Status   int32  `json:"status"` // 目标状态: 0=禁用, 1=启用
+}
+
+type ToggleScopeStatusRequest struct {
+	ScopeCode string `json:"scope_code"`
+	Status    int32  `json:"status"` // 状态 (0-禁用, 1-正常)
 }
 
 type ToggleUserStatusRequest struct {
@@ -413,7 +429,7 @@ type UserInfo struct {
 
 type UserListRequest struct {
 	PageRequest
-	Status int32 `json:"status"` // 状态过滤
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 type UserListResponse struct {
