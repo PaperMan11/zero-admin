@@ -59,9 +59,13 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// casbin
 	enforcer := casbinUtil.MustNewCasbinEnforcer("", casbinUtil.MustNewGormAdapter(c.Mysql.DSN))
 	wather := casbinUtil.MustNewRedisWatcher(&c.Redis, func(data string) {
-		logx.Infof("casbin watcher: %s", data)
+		logx.Debugf("casbin watcher: %s", data)
+		enforcer.LoadPolicy()
 	})
-	enforcer.SetWatcher(wather)
+	err = enforcer.SetWatcher(wather)
+	if err != nil {
+		logx.Errorf("set casbin watcher error: %v", err)
+	}
 	enforcer.EnableAutoSave(true)
 
 	return &ServiceContext{

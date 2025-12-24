@@ -173,6 +173,18 @@ type AssignScopeMenusRequest {
 	Menus []Menu `json:"menus"` // 菜单
 }
 
+type GetMenuListRequest {
+	PageRequest
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
+}
+
+// 用户列表响应
+type GetMenuListResponse {
+	PageResponse
+	Menus []Menu `json:"menus"`
+}
+
+
 // 安全范围服务
 @server (
 	jwt:        Auth
@@ -216,6 +228,9 @@ service admin-api {
 	// 菜单管理
 	@handler GetMenuTree
 	post /menu/tree (MenuListRequest) returns (MenuTreeResponse)
+
+	@handler GetMenuList
+	post /menu/list (GetMenuListRequest) returns (GetMenuListResponse)
 
 	@handler GetMenuById
 	get /menu/:id (IdValue) returns (Menu)

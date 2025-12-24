@@ -51,7 +51,7 @@ func (m *MysqlDB) GetRoleByName(ctx context.Context, roleName string) (*model.Sy
 
 // 判断角色是否存在
 func (m *MysqlDB) ExistsRoleByName(ctx context.Context, roleName string) (bool, error) {
-	count, err := m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.RoleName.Eq(roleName)).Count()
+	count, err := m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0), m.q.SysRole.RoleName.Eq(roleName)).Count()
 	if err != nil {
 		return false, err
 	}
@@ -59,7 +59,7 @@ func (m *MysqlDB) ExistsRoleByName(ctx context.Context, roleName string) (bool, 
 }
 
 func (m *MysqlDB) ExistsRoleByCode(ctx context.Context, roleCode string) (bool, error) {
-	count, err := m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.RoleCode.Eq(roleCode)).Count()
+	count, err := m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0), m.q.SysRole.RoleCode.Eq(roleCode)).Count()
 	if err != nil {
 		return false, err
 	}
@@ -67,7 +67,7 @@ func (m *MysqlDB) ExistsRoleByCode(ctx context.Context, roleCode string) (bool, 
 }
 
 func (m *MysqlDB) ExistsRoleByID(ctx context.Context, roleID int64) (bool, error) {
-	count, err := m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.ID.Eq(roleID)).Count()
+	count, err := m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0), m.q.SysRole.ID.Eq(roleID)).Count()
 	if err != nil {
 		return false, err
 	}
@@ -85,6 +85,9 @@ func (m *MysqlDB) GetRolesPagination(ctx context.Context, status int32, page, pa
 
 // 角色总数量
 func (m *MysqlDB) CountRoles(ctx context.Context, status int32) (int64, error) {
+	if status == 2 {
+		return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0)).Count()
+	}
 	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0), m.q.SysRole.Status.Eq(status)).Count()
 }
 
@@ -101,5 +104,5 @@ func (m *MysqlDB) ToggleRoleStatus(ctx context.Context, roleID int64, status int
 }
 
 func (m *MysqlDB) GetAllRoles(ctx context.Context) ([]*model.SysRole, error) {
-	return m.q.SysRole.WithContext(ctx).Find()
+	return m.q.SysRole.WithContext(ctx).Where(m.q.SysRole.DelFlag.Eq(0)).Find()
 }

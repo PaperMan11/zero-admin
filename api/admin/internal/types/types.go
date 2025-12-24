@@ -144,6 +144,16 @@ type GetAllScopeResponse struct {
 	Scopes []Scope `json:"scopes"`
 }
 
+type GetMenuListRequest struct {
+	PageRequest
+	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
+}
+
+type GetMenuListResponse struct {
+	PageResponse
+	Menus []Menu `json:"menus"`
+}
+
 type GetUnassignedMenusResponse struct {
 	Menus []Menu `json:"menus"`
 }

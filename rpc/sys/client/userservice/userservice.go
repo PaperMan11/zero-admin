@@ -38,6 +38,8 @@ type (
 	GetAllRolesRequest         = sysclient.GetAllRolesRequest
 	GetAllRolesResponse        = sysclient.GetAllRolesResponse
 	GetAllScopesResponse       = sysclient.GetAllScopesResponse
+	GetMenuListRequest         = sysclient.GetMenuListRequest
+	GetMenuListResponse        = sysclient.GetMenuListResponse
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest

@@ -5,10 +5,12 @@ package scope
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logc"
+	"github.com/zeromicro/go-zero/core/logx"
 	"zero-admin/api/admin/internal/svc"
 	"zero-admin/api/admin/internal/types"
-
-	"github.com/zeromicro/go-zero/core/logx"
+	"zero-admin/api/admin/internal/utils"
+	"zero-admin/rpc/sys/client/scopeservice"
 )
 
 type AssignScopeMenusLogic struct {
@@ -26,8 +28,34 @@ func NewAssignScopeMenusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *AssignScopeMenusLogic) AssignScopeMenus(req *types.AssignScopeMenusRequest) (resp *types.ScopeInfo, err error) {
-	//menus := make([]*scopeservice.AssignScopeMenuMeta, 0)
-	//l.svcCtx.ScopeService.AssignScopeMenus(l.ctx, req.ScopeId, req.Menus)
+	menus := make([]*scopeservice.AssignScopeMenuMeta, 0)
+	for _, menu := range req.Menus {
+		menus = append(menus, convertToRpcAssignScopeMenuMeta(&menu))
+	}
+	scopeMenus, err := l.svcCtx.ScopeService.AssignScopeMenus(l.ctx, &scopeservice.AssignScopeMenusRequest{
+		ScopeId:    req.ScopeId,
+		Menus:      menus,
+		OperatorId: utils.GetOperateID(l.ctx),
+	})
+	if err != nil {
+		logc.Errorf(l.ctx, "分配菜单失败，安全范围：%d，错误：%v", req.ScopeId, err)
+		return
+	}
 
-	return
+	return &types.ScopeInfo{
+		Scope: utils.ConvertToTypesScope(scopeMenus.Scope),
+		Menus: utils.ConvertToTypesMenus(scopeMenus.Menus),
+	}, nil
+}
+
+func convertToRpcAssignScopeMenuMeta(menu *types.Menu) *scopeservice.AssignScopeMenuMeta {
+	res := &scopeservice.AssignScopeMenuMeta{
+		MenuId:   menu.Id,
+		ParentId: menu.ParentId,
+		Children: make([]*scopeservice.AssignScopeMenuMeta, 0),
+	}
+	for _, child := range menu.Children {
+		res.Children = append(res.Children, convertToRpcAssignScopeMenuMeta(&child))
+	}
+	return res
 }

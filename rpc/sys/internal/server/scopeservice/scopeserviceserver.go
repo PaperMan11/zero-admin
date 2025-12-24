@@ -80,6 +80,11 @@ func (s *ScopeServiceServer) GetMenuTree(ctx context.Context, in *sysclient.Menu
 	return l.GetMenuTree(in)
 }
 
+func (s *ScopeServiceServer) GetMenuList(ctx context.Context, in *sysclient.GetMenuListRequest) (*sysclient.GetMenuListResponse, error) {
+	l := scopeservicelogic.NewGetMenuListLogic(ctx, s.svcCtx)
+	return l.GetMenuList(in)
+}
+
 func (s *ScopeServiceServer) GetMenuById(ctx context.Context, in *sysclient.Int64Value) (*sysclient.Menu, error) {
 	l := scopeservicelogic.NewGetMenuByIdLogic(ctx, s.svcCtx)
 	return l.GetMenuById(in)

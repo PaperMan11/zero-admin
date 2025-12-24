@@ -85,6 +85,7 @@ type DB interface {
 	ExistsMenuByName(ctx context.Context, menuName string) (bool, error)
 	ExistsMenuByPath(ctx context.Context, menuPath string) (bool, error)
 	ExistsMenu(ctx context.Context, menuID int64) (bool, error)
+	CountMenus(ctx context.Context, status int32) (int64, error)
 
 	// 安全范围
 	CreateScope(ctx context.Context, scope model.SysScope) (int64, error)

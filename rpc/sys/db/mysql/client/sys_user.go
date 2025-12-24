@@ -49,6 +49,9 @@ func (m *MysqlDB) GetUsersPagination(ctx context.Context, status int32, page, pa
 }
 
 func (m *MysqlDB) CountUsers(ctx context.Context, status int32) (int64, error) {
+	if status == 2 {
+		return m.q.SysUser.WithContext(ctx).Where(m.q.SysUser.DelFlag.Eq(0)).Count()
+	}
 	return m.q.SysUser.WithContext(ctx).Where(m.q.SysUser.DelFlag.Eq(0), m.q.SysUser.Status.Eq(status)).Count()
 }
 

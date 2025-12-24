@@ -157,6 +157,15 @@ message AssignScopeMenuMeta {
   repeated AssignScopeMenuMeta children = 3;
 }
 
+message GetMenuListRequest {
+  PageRequest page_request = 1;
+  int32 status = 2;
+}
+
+message GetMenuListResponse {
+  PageResponse page_response = 1;
+  repeated Menu menus = 2;
+}
 
 service ScopeService {
   // 安全范围管理
@@ -172,6 +181,7 @@ service ScopeService {
   rpc ToggleScopeStatus(ToggleScopeStatusRequest) returns (Scope);
   // 菜单管理
   rpc GetMenuTree(MenuListRequest) returns (MenuTreeResponse);
+  rpc GetMenuList(GetMenuListRequest) returns (GetMenuListResponse);
   rpc GetMenuById(Int64Value) returns (Menu);
   rpc CreateMenu(CreateMenuRequest) returns (Menu);
   rpc UpdateMenu(UpdateMenuRequest) returns (Menu);

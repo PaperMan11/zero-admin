@@ -988,6 +988,7 @@ const (
 	ScopeService_GetScopeMenus_FullMethodName      = "/sysclient.ScopeService/GetScopeMenus"
 	ScopeService_ToggleScopeStatus_FullMethodName  = "/sysclient.ScopeService/ToggleScopeStatus"
 	ScopeService_GetMenuTree_FullMethodName        = "/sysclient.ScopeService/GetMenuTree"
+	ScopeService_GetMenuList_FullMethodName        = "/sysclient.ScopeService/GetMenuList"
 	ScopeService_GetMenuById_FullMethodName        = "/sysclient.ScopeService/GetMenuById"
 	ScopeService_CreateMenu_FullMethodName         = "/sysclient.ScopeService/CreateMenu"
 	ScopeService_UpdateMenu_FullMethodName         = "/sysclient.ScopeService/UpdateMenu"
@@ -1013,6 +1014,7 @@ type ScopeServiceClient interface {
 	ToggleScopeStatus(ctx context.Context, in *ToggleScopeStatusRequest, opts ...grpc.CallOption) (*Scope, error)
 	// 菜单管理
 	GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error)
+	GetMenuList(ctx context.Context, in *GetMenuListRequest, opts ...grpc.CallOption) (*GetMenuListResponse, error)
 	GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error)
 	CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
@@ -1139,6 +1141,16 @@ func (c *scopeServiceClient) GetMenuTree(ctx context.Context, in *MenuListReques
 	return out, nil
 }
 
+func (c *scopeServiceClient) GetMenuList(ctx context.Context, in *GetMenuListRequest, opts ...grpc.CallOption) (*GetMenuListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMenuListResponse)
+	err := c.cc.Invoke(ctx, ScopeService_GetMenuList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *scopeServiceClient) GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Menu)
@@ -1216,6 +1228,7 @@ type ScopeServiceServer interface {
 	ToggleScopeStatus(context.Context, *ToggleScopeStatusRequest) (*Scope, error)
 	// 菜单管理
 	GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error)
+	GetMenuList(context.Context, *GetMenuListRequest) (*GetMenuListResponse, error)
 	GetMenuById(context.Context, *Int64Value) (*Menu, error)
 	CreateMenu(context.Context, *CreateMenuRequest) (*Menu, error)
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*Menu, error)
@@ -1264,6 +1277,9 @@ func (UnimplementedScopeServiceServer) ToggleScopeStatus(context.Context, *Toggl
 }
 func (UnimplementedScopeServiceServer) GetMenuTree(context.Context, *MenuListRequest) (*MenuTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuTree not implemented")
+}
+func (UnimplementedScopeServiceServer) GetMenuList(context.Context, *GetMenuListRequest) (*GetMenuListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMenuList not implemented")
 }
 func (UnimplementedScopeServiceServer) GetMenuById(context.Context, *Int64Value) (*Menu, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuById not implemented")
@@ -1502,6 +1518,24 @@ func _ScopeService_GetMenuTree_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScopeService_GetMenuList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMenuListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScopeServiceServer).GetMenuList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ScopeService_GetMenuList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScopeServiceServer).GetMenuList(ctx, req.(*GetMenuListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ScopeService_GetMenuById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Int64Value)
 	if err := dec(in); err != nil {
@@ -1660,6 +1694,10 @@ var ScopeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMenuTree",
 			Handler:    _ScopeService_GetMenuTree_Handler,
+		},
+		{
+			MethodName: "GetMenuList",
+			Handler:    _ScopeService_GetMenuList_Handler,
 		},
 		{
 			MethodName: "GetMenuById",

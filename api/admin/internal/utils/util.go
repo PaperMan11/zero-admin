@@ -25,6 +25,9 @@ func ConvertToTypesMenus(menus []*scopeservice.Menu) []types.Menu {
 }
 
 func ConvertToTypesMenu(menu *scopeservice.Menu) types.Menu {
+	if menu.Perms == nil {
+		menu.Perms = []string{}
+	}
 	return types.Menu{
 		Id:        menu.Id,
 		ParentId:  menu.ParentId,

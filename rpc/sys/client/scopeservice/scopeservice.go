@@ -38,6 +38,8 @@ type (
 	GetAllRolesRequest         = sysclient.GetAllRolesRequest
 	GetAllRolesResponse        = sysclient.GetAllRolesResponse
 	GetAllScopesResponse       = sysclient.GetAllScopesResponse
+	GetMenuListRequest         = sysclient.GetMenuListRequest
+	GetMenuListResponse        = sysclient.GetMenuListResponse
 	GetRoleByRoleCodesRequest  = sysclient.GetRoleByRoleCodesRequest
 	GetRoleByRoleCodesResponse = sysclient.GetRoleByRoleCodesResponse
 	GetRolePermsRequest        = sysclient.GetRolePermsRequest
@@ -99,6 +101,7 @@ type (
 		ToggleScopeStatus(ctx context.Context, in *ToggleScopeStatusRequest, opts ...grpc.CallOption) (*Scope, error)
 		// 菜单管理
 		GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error)
+		GetMenuList(ctx context.Context, in *GetMenuListRequest, opts ...grpc.CallOption) (*GetMenuListResponse, error)
 		GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error)
 		CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
 		UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*Menu, error)
@@ -173,6 +176,11 @@ func (m *defaultScopeService) ToggleScopeStatus(ctx context.Context, in *ToggleS
 func (m *defaultScopeService) GetMenuTree(ctx context.Context, in *MenuListRequest, opts ...grpc.CallOption) (*MenuTreeResponse, error) {
 	client := sysclient.NewScopeServiceClient(m.cli.Conn())
 	return client.GetMenuTree(ctx, in, opts...)
+}
+
+func (m *defaultScopeService) GetMenuList(ctx context.Context, in *GetMenuListRequest, opts ...grpc.CallOption) (*GetMenuListResponse, error) {
+	client := sysclient.NewScopeServiceClient(m.cli.Conn())
+	return client.GetMenuList(ctx, in, opts...)
 }
 
 func (m *defaultScopeService) GetMenuById(ctx context.Context, in *Int64Value, opts ...grpc.CallOption) (*Menu, error) {

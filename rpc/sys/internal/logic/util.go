@@ -71,6 +71,7 @@ func ConvertToRpcMenu(menu *model.SysMenu) *sysclient.Menu {
 		Redirect:  menu.Redirect,
 		Icon:      menu.Icon,
 		Sort:      menu.Sort,
+		Perms:     make([]string, 0),
 	}
 	if menu.NoCache == 1 {
 		m.NoCache = true

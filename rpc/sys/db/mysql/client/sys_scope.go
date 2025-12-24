@@ -125,3 +125,10 @@ func (m *MysqlDB) UpdateScopeMenusTx(ctx context.Context, scopeID int64, menus [
 		return nil
 	})
 }
+
+func (m *MysqlDB) CountMenus(ctx context.Context, status int32) (int64, error) {
+	if status == 2 {
+		return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.DelFlag.Eq(0)).Count()
+	}
+	return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.DelFlag.Eq(0), m.q.SysMenu.Status.Eq(status)).Count()
+}

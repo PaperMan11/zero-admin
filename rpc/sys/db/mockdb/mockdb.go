@@ -564,6 +564,18 @@ func (m *MockDB) CreateMenu(ctx context.Context, menu model.SysMenu) (int64, err
 	return menu.ID, nil
 }
 
+func (m *MockDB) CountMenus(ctx context.Context, status int32) (int64, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	count := int64(0)
+	for _, menu := range m.menus {
+		if menu.Status == status {
+			count++
+		}
+	}
+	return count, nil
+}
+
 func (m *MockDB) CreateMenus(ctx context.Context, menus []*model.SysMenu) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
