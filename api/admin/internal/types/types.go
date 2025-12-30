@@ -48,6 +48,11 @@ type BatchDeleteRolesRequest struct {
 	OperatorId int64    `json:"operator_id"`
 }
 
+type CaptchaResponse struct {
+	CaptchaId    string `json:"captcha_id"`    // 验证码ID
+	CaptchaImage string `json:"captcha_image"` // 验证码图片
+}
+
 type CreateMenuRequest struct {
 	ParentId  int64  `json:"parent_id"`              // 父菜单ID
 	MenuName  string `json:"menu_name"`              // 菜单名称
@@ -163,8 +168,10 @@ type IdValue struct {
 }
 
 type LoginRequest struct {
-	Username string `json:"username"` // 用户名
-	Password string `json:"password"` // 密码
+	Username  string `json:"username"`   // 用户名
+	Password  string `json:"password"`   // 密码
+	CaptchaId string `json:"captcha_id"` // 验证码ID
+	Captcha   string `json:"captcha"`    // 验证码
 }
 
 type LoginResponse struct {

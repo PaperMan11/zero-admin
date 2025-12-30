@@ -8,9 +8,9 @@ import (
 // 菜单
 func (m *MysqlDB) GetMenus(ctx context.Context, status int32, page, pageSize int) ([]*model.SysMenu, error) {
 	if status == 2 {
-		return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.DelFlag.Eq(0)).Order(m.q.SysMenu.Sort.Desc()).Limit(pageSize).Offset((page - 1) * pageSize).Find()
+		return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.DelFlag.Eq(0)).Order(m.q.SysMenu.ID.Desc()).Limit(pageSize).Offset((page - 1) * pageSize).Find()
 	}
-	return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.Status.Eq(status), m.q.SysMenu.DelFlag.Eq(0)).Order(m.q.SysMenu.Sort.Desc()).Limit(pageSize).Offset((page - 1) * pageSize).Find()
+	return m.q.SysMenu.WithContext(ctx).Where(m.q.SysMenu.Status.Eq(status), m.q.SysMenu.DelFlag.Eq(0)).Order(m.q.SysMenu.ID.Desc()).Limit(pageSize).Offset((page - 1) * pageSize).Find()
 }
 
 func (m *MysqlDB) GetAllMenus(ctx context.Context) ([]*model.SysMenu, error) {

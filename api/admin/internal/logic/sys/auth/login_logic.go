@@ -5,6 +5,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logc"
 	"time"
 	"zero-admin/api/admin/internal/utils"
@@ -31,6 +32,10 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginRequest, ip, os, browser string) (resp *types.LoginResponse, err error) {
+	if !l.svcCtx.Captcha.Verify(req.CaptchaId, req.Captcha, true) {
+		return nil, errors.New("验证码错误")
+	}
+
 	res, err := l.svcCtx.AuthService.Login(l.ctx, &authservice.LoginRequest{
 		Username:  req.Username,
 		Password:  req.Password,

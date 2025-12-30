@@ -5,6 +5,7 @@ package svc
 
 import (
 	"github.com/casbin/casbin/v2"
+	"github.com/mojocn/base64Captcha"
 	"github.com/zeromicro/go-zero/core/collection"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/redis"
@@ -14,6 +15,7 @@ import (
 	"time"
 	"zero-admin/api/admin/internal/config"
 	"zero-admin/api/admin/internal/middleware"
+	captchaUtil "zero-admin/pkg/captcha"
 	casbinUtil "zero-admin/pkg/casbin"
 	"zero-admin/rpc/sys/client/authservice"
 	"zero-admin/rpc/sys/client/operatelogservice"
@@ -33,6 +35,7 @@ type ServiceContext struct {
 	Barrier syncx.SingleFlight
 	// casbin
 	CasbinEnforcer *casbin.SyncedCachedEnforcer
+	Captcha        *base64Captcha.Captcha
 
 	// 系统相关
 	AuthService       authservice.AuthService
@@ -68,12 +71,16 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 	enforcer.EnableAutoSave(true)
 
+	// captcha
+	captcha := captchaUtil.NewCaptchaDriverWithStore(captchaUtil.String, captchaUtil.NewRedisStore(redisCli, captchaUtil.RedisPrefix, captchaUtil.RedisExpire))
+
 	return &ServiceContext{
 		Config:         c,
 		Redis:          redisCli,
 		LocalCache:     localCache,
 		CasbinEnforcer: enforcer,
 		Barrier:        barrier,
+		Captcha:        captcha,
 
 		JwtExpireAuth:    middleware.NewJwtExpireAuthMiddleware(redisCli, localCache).Handle,
 		VerifyPermission: middleware.NewVerifyPermissionMiddleware(enforcer, c.Auth.ExcludeUrl...).Handle,
