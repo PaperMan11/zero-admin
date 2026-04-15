@@ -1,0 +1,15 @@
+syntax = "v1"
+
+import "article_category.api"
+import "article.api"
+import "comment.api"
+import "user.api"
+import "welcome.api"
+import "home.api"
+
+info (
+	desc:   "blog"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+

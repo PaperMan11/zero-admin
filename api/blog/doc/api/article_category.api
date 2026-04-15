@@ -1,0 +1,73 @@
+syntax = "v1"
+
+info (
+	desc:   "article-category"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+import "common.api"
+import "article.api"
+
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      articleCategory
+	prefix:     /api/blog/article/category
+)
+service blog-api {
+	@handler GetArticleCategory
+	get /:id/articles (IdValue) returns (ArticleCategory)
+
+	@handler ListArticleCategory
+	get / (ListArticleCategoryReq) returns (ListArticleCategoryResp)
+
+	@handler GetAllArticleCategories
+	get /categories/all (Empty) returns ([]ArticleCategory)
+
+	@handler CreateArticleCategory
+	post / (CreateArticleCategoryReq) returns (CreateArticleCategoryResp)
+
+	@handler UpdateArticleCategory
+	put / (UpdateArticleCategoryReq) returns (Empty)
+
+	@handler DeleteArticleCategory
+	delete / (DeleteArticleCategoryReq) returns (Empty)
+}
+
+type ArticleCategory {
+	Id           int64     `json:"id" gorm:"column:id"` // 分类ID
+	Name         string    `json:"name" gorm:"name"` // 分类名称
+	Description  string    `json:"description,optional" gorm:"description"`
+	Articles     []Article `json:"articles,omitempty" gorm:"-"` // 文章
+	ArticleCount int64     `json:"article_count,omitempty" gorm:"-"` // 文章数量
+}
+
+type CreateArticleCategoryReq {
+	Name        string `json:"name"`
+	Description string `json:"description,optional"`
+}
+
+type CreateArticleCategoryResp {
+	Id int64 `json:"id"`
+}
+
+type UpdateArticleCategoryReq {
+	Id          int64  `json:"id""` // 分类ID
+	Name        string `json:"name,optional"` // 分类名称
+	Description string `json:"description,optional"` // 分类描述
+}
+
+type DeleteArticleCategoryReq {
+	Id int64 `json:"id"`
+}
+
+type ListArticleCategoryReq {
+	PageRequest
+}
+
+type ListArticleCategoryResp {
+	PageResponse
+	Categories []ArticleCategory `json:"categories"`
+}
+

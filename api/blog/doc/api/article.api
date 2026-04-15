@@ -1,0 +1,111 @@
+syntax = "v1"
+
+info (
+	desc:   "article"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+import "common.api"
+
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      article
+	prefix:     /api/blog/article
+)
+service blog-api {
+	@handler GetArticle
+	get /:id (IdValue) returns (Article)
+
+	@handler CreateArticle
+	post / (CreateArticleReq) returns (CreateArticleResp)
+
+	@handler UpdateArticle
+	put / (UpdateArticleReq) returns (Article)
+
+	@handler DeleteArticle
+	delete / (DeleteArticleReq) returns (Empty)
+
+	@handler ListArticleTags
+	get /tags (ListArticleTagsReq) returns (ListArticleTagsResp)
+
+	@handler ListArticleByTags
+	get /tags/article (ListArticleByTagsReq) returns (ListArticleByTagsResp)
+
+	@handler ListArticleByCategory
+	get /category/articles (ListArticleByCategoryReq) returns (ListArticleByCategoryResp)
+}
+
+type Article {
+	Id          int64    `json:"id"`
+	AuthorId    int64    `json:"authorId"`
+	AuthorName  string   `json:"authorName"`
+	Title       string   `json:"title"`
+	Summary     string   `json:"summary"`
+	Content     string   `json:"content,omitempty"`
+	Views       int64    `json:"views"`
+	Likes       int64    `json:"likes"`
+	Comments    int64    `json:"comments"`
+	Tags        []string `json:"tags"`
+	Cover       string   `json:"cover"`
+	CreatedTime int64    `json:"createdTime"`
+	UpdatedTime int64    `json:"updatedTime"`
+}
+
+type CreateArticleReq {
+	Title      string   `json:"title"`
+	Summary    string   `json:"summary"`
+	Content    string   `json:"content"`
+	Tags       []string `json:"tags"`
+	CategoryId int64    `json:"categoryId"`
+	Cover      string   `json:"cover,optional"`
+}
+
+type CreateArticleResp {
+	Id int64 `json:"id"`
+}
+
+type ListArticleTagsReq {
+	PageRequest
+}
+
+type ListArticleTagsResp {
+	PageResponse
+	Articles []Article `json:"articles"`
+}
+
+type UpdateArticleReq {
+	Id         int64    `json:"id"`
+	Title      string   `json:"title,optional"`
+	Summary    string   `json:"summary,optional"`
+	Content    string   `json:"content,optional"`
+	Tags       []string `json:"tags,optional"`
+	CategoryId int64    `json:"categoryId,optional"`
+	Cover      string   `json:"cover,optional"`
+}
+
+type DeleteArticleReq {
+	Id int64 `json:"id"`
+}
+
+type ListArticleByTagsReq {
+	PageRequest
+	Tag string `json:"tag"`
+}
+
+type ListArticleByTagsResp {
+	PageResponse
+	Articles []Article `json:"articles"`
+}
+
+type ListArticleByCategoryReq {
+	PageRequest
+	CategoryId int64 `json:"category_id"`
+}
+
+type ListArticleByCategoryResp {
+	PageResponse
+	Articles []Article `json:"articles"`
+}
+

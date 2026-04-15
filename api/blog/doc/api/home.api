@@ -1,0 +1,95 @@
+syntax = "v1"
+
+info (
+	desc:   "home"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+import "common.api"
+import "article.api"
+
+@server (
+	group:  home
+	prefix: /api/blog/home
+)
+service blog-api {
+	// 首页文章
+	@handler ListHomeArticle
+	get /articles (HomeArticleReq) returns (HomeArticleResp)
+
+	// 文章推荐
+	@handler ListRecommendArticle
+	get /recommend (Empty) returns ([]Article)
+
+	// 公告
+	@handler GetNotice
+	get /notice (Empty) returns (Notice)
+
+	// 搜索文章/标签/分类
+	@handler Search
+	get /search (SearchReq) returns (SearchResp)
+
+	// 搜索联想
+	@handler SearchSuggest
+	post /search/suggest (SearchSuggestReq) returns (SearchSuggestResp)
+
+	// 获取热门搜索
+	@handler GetHotSearch
+	get /search/hot (Empty) returns (SearchSuggestResp)
+}
+
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      home
+	prefix:     /api/blog/home
+)
+service blog-api {
+	// 个人信息统计
+	@handler GetArticleStats
+	get /stats (Empty) returns (ArticleStats)
+}
+
+type Notice {
+	Id        int64  `json:"id"`
+	Content   string `json:"content"`
+	CreatedAt int64  `json:"createdAt"`
+	UpdatedAt int64  `json:"updatedAt"`
+}
+
+type HomeArticleReq {
+	PageRequest
+	Tab string `form:"tab,options=recent|vote|hot"`
+}
+
+type HomeArticleResp {
+	PageResponse
+	Articles []Article `json:"articles"`
+}
+
+type ArticleStats {
+	ArticleNum  int64 `json:"articleNum"`
+	CategoryNum int64 `json:"categoryNum"`
+	CommentNum  int64 `json:"commentNum"`
+}
+
+type SearchReq {
+	PageRequest
+	Type string `form:"type,default=all"`
+}
+
+type SearchResp {
+	PageResponse
+	Results []Article `json:"results"`
+}
+
+type SearchSuggestReq {
+	Keyword string `json:"keyword"`
+	Limit   int32  `json:"limit,default=10"`
+}
+
+type SearchSuggestResp {
+	Keywords []string `json:"keywords"`
+}
+

@@ -1,0 +1,77 @@
+syntax = "v1"
+
+info (
+	desc:   "welcome"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+import "common.api"
+
+@server (
+	group:  welcome
+	prefix: /api/blog/welcome
+)
+service blog-api {
+	@handler Register
+	post /register (RegisterReq) returns (RegisterResp)
+
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+
+	@handler GetCaptcha
+	get /captcha (Empty) returns (CaptchaResp)
+}
+
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      welcome
+	prefix:     /api/blog/welcome
+)
+service blog-api {
+	@handler Logoff
+	post /logoff (Empty) returns (Empty)
+
+	@handler Deregistration
+	post /deregistration (Empty) returns (Empty)
+}
+
+type RegisterReq {
+	Username     string `json:"username"` // 用户名
+	Password     string `json:"password"` // 密码
+	Nickname     string `json:"nickname,optional"`
+	Email        string `json:"email,optional"` // 邮箱
+	Mobile       string `json:"mobile,optional"` // 手机号
+	Gender       int32  `json:"gender,optional"` // 性别
+	Avatar       string `json:"avatar,optional"` // 头像
+	Introduction string `json:"introduction,optional"`
+	Birthday     string `json:"birthday,optional"`
+}
+
+type RegisterResp {
+	userId       int64  `json:"userId"` // 用户ID
+	AccessToken  string `json:"accessToken"` // JWT令牌
+	RefreshToken string `json:"refreshToken"` // 刷新令牌
+}
+
+// 用户登录请求
+type LoginReq {
+	Username  string `json:"username"` // 用户名
+	Password  string `json:"password"` // 密码
+	CaptchaId string `json:"captchaId"` // 验证码ID
+	Captcha   string `json:"captcha"` // 验证码
+}
+
+// 用户登录响应
+type LoginResp {
+	UserId       int64  `json:"userId"` // 用户ID
+	AccessToken  string `json:"accessToken"` // JWT令牌
+	RefreshToken string `json:"refreshToken"` // 刷新令牌
+}
+
+type CaptchaResp {
+	CaptchaId    string `json:"captcha_id"` // 验证码ID
+	CaptchaImage string `json:"captcha_image"` // 验证码图片
+}
+

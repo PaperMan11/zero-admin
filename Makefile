@@ -10,6 +10,7 @@ GOCLEAN=$(GOCMD) clean
 GOGET=$(GOCMD) mod tidy
 
 GOCTL=$(GOBIN)/goctl ## goctl
+GORMGEN=$(GOBIN)/gorm gen
 
 # 安装goctl代码生成工具
 $(shell if [ ! -d $(GOCTL) ]; then \
@@ -31,19 +32,26 @@ deps: ## 安装依赖目标
 
 copy_config:
 	mkdir -p target/sys-rpc && cp rpc/sys/etc/sys.yaml target/sys-rpc/sys-rpc.yaml
+
 	mkdir -p target/admin-api && cp api/admin/etc/admin-api.yaml target/admin-api/admin-api.yaml
+	mkdir -p target/blog-api && cp api/blog/etc/blog-api.yaml target/blog-api/blog-api.yaml
 
 build: copy_config ## 构建目标
 	$(GOBUILD) -o target/sys-rpc/sys-rpc -v ./rpc/sys/sys.go
+
 	$(GOBUILD) -o target/admin-api/admin-api -v ./api/admin/admin.go
+	$(GOBUILD) -o target/blog-api/blog-api -v ./api/blog/blog.go
 
 
 start: ## 运行目标
 	nohup ./target/sys-rpc/sys-rpc -f ./target/sys-rpc/sys-rpc.yaml  > /dev/null 2>&1 &
+
 	nohup ./target/admin-api/admin-api -f ./target/admin-api/admin-api.yaml > /dev/null 2>&1 &
+	nohup ./target/blog-api/blog-api -f ./target/blog-api/blog-api.yaml > /dev/null 2>&1 &
 
 
 stop: ## 停止目标
+	-pkill -f blog-api
 	-pkill -f admin-api
 	-pkill -f sys-rpc
 	@for i in 3 2 1; do\
@@ -59,11 +67,11 @@ restart: stop start ## 重启项目
 
 format: ## 格式化代码
 	$(GOCTL) api format --dir api/admin/doc/api
-	$(GOCTL) api format --dir api/front/doc/api
-	$(GOCTL) api format --dir api/web/doc/api
+	$(GOCTL) api format --dir api/blog/doc/api
 
 gen:	## 生成所有模块代码
 	$(GOCTL) api go -api ./api/admin/doc/api/admin.api -dir ./api/admin/ -home ./script/.goctl -style go_zero
+	$(GOCTL) api go -api ./api/blog/doc/api/blog.api -dir ./api/blog/ -home ./script/.goctl -style go_zero
 
 	# 合并rpc代码 & 生成sys-rpc代码
 	$(GOCMD) run rpc/sys/proto/main.go
@@ -71,6 +79,7 @@ gen:	## 生成所有模块代码
 
 model: ## 生成model代码
 	$(GOCMD) run rpc/sys/db/mysql/generator.go
+	$(GORMGEN) -i ./api/blog/internal/models -o ./api/blog/internal/models/generated --typed=false
 
 help: ## show help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[$$()% 0-9a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)

@@ -20,7 +20,7 @@ type Role {
 }
 
 type RoleScope {
-//	RoleCode  string   `json:"role_code"`
+	//        RoleCode  string   `json:"role_code"`
 	ScopeCode string   `json:"scope_code"`
 	Perms     []string `json:"perms"`
 }
@@ -35,8 +35,7 @@ type RoleInfo {
 	Scopes []RoleScopeInfo `json:"scopes"`
 }
 
-type GetAllRolesRequest {
-}
+type GetAllRolesRequest {}
 
 type GetAllRolesResponse {
 	Roles []Role `json:"roles"`
@@ -45,7 +44,7 @@ type GetAllRolesResponse {
 // 角色列表请求
 type RoleListRequest {
 	PageRequest PageRequest `json:"page_request"`
-	Status int32 `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
+	Status      int32       `json:"status,default=2"` // 状态过滤 0-禁用, 1-正常, 2-所有
 }
 
 // 角色列表响应
@@ -93,13 +92,13 @@ type DeleteRolePermsRequest {
 // 启用/禁用角色请求
 type ToggleRoleStatusRequest {
 	RoleCode string `json:"role_code"`
-	Status int32 `json:"status"` // 目标状态: 0=禁用, 1=启用
+	Status   int32  `json:"status"` // 目标状态: 0=禁用, 1=启用
 }
 
 // 批量删除角色
 type BatchDeleteRolesRequest {
-	RoleCodes    []string `json:"role_codes"`
-	OperatorId int64   `json:"operator_id"`
+	RoleCodes  []string `json:"role_codes"`
+	OperatorId int64    `json:"operator_id"`
 }
 
 // 角色服务

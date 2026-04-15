@@ -27,11 +27,11 @@ type Menu {
 }
 
 type MenuMeta {
-	Title string `json:"title"` // 菜单标题
-	Icon     string `json:"icon"` // 菜单图标
-	NoCache  bool   `json:"noCache"` // 是否缓存
-	Affix    bool   `json:"affix"` // 是否固定在标签栏
-	Perms     []string `json:"perms"`
+	Title   string   `json:"title"` // 菜单标题
+	Icon    string   `json:"icon"` // 菜单图标
+	NoCache bool     `json:"noCache"` // 是否缓存
+	Affix   bool     `json:"affix"` // 是否固定在标签栏
+	Perms   []string `json:"perms"`
 }
 
 // 安全范围
@@ -161,7 +161,7 @@ type GetAllScopeResponse {
 
 type ToggleScopeStatusRequest {
 	ScopeCode string `json:"scope_code"`
-	Status int32 `json:"status"` // 状态 (0-禁用, 1-正常)
+	Status    int32  `json:"status"` // 状态 (0-禁用, 1-正常)
 }
 
 type GetUnassignedMenusResponse {
@@ -169,8 +169,8 @@ type GetUnassignedMenusResponse {
 }
 
 type AssignScopeMenusRequest {
-	ScopeId int64 `json:"scope_id"`
-	Menus []Menu `json:"menus"` // 菜单
+	ScopeId int64  `json:"scope_id"`
+	Menus   []Menu `json:"menus"` // 菜单
 }
 
 type GetMenuListRequest {
@@ -183,7 +183,6 @@ type GetMenuListResponse {
 	PageResponse
 	Menus []Menu `json:"menus"`
 }
-
 
 // 安全范围服务
 @server (
@@ -244,12 +243,12 @@ service admin-api {
 	@handler DeleteMenu
 	delete /menu (DeleteMenuRequest) returns (Empty)
 
- 	// 获取全部未被分配的菜单
+	// 获取全部未被分配的菜单
 	@handler GetUnassignedMenus
 	get /menus/unassigned (Empty) returns (GetUnassignedMenusResponse)
 
 	// 分配菜单给安全范围
 	@handler AssignScopeMenus
-	post /menus/assign (AssignScopeMenusRequest) returns (ScopeInfo);
+	post /menus/assign (AssignScopeMenusRequest) returns (ScopeInfo)
 }
 

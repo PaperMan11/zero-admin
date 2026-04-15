@@ -1,0 +1,57 @@
+syntax = "v1"
+
+info (
+	desc:   "user"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+import "common.api"
+import "article.api"
+
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      user
+	prefix:     /api/blog/user
+)
+service blog-api {
+	@handler GetUserInfo
+	get / (Empty) returns (UserInfo)
+
+	@handler UpdateUserInfo
+	put / (UpdateUserInfoReq) returns (UserInfo)
+
+	@handler ChangePassword
+	post /changepassword (ChangePasswordReq) returns (Empty)
+
+	@handler GetUserArticleTimeline
+	get /article/timeline (Empty) returns ([]Article)
+}
+
+type UserInfo {
+	Id           int64  `json:"id"`
+	Username     string `json:"username"`
+	Nickname     string `json:"nickname"`
+	Avatar       string `json:"avatar"`
+	Gender       int    `json:"gender"`
+	Introduction string `json:"introduction"`
+	Birthday     string `json:"birthday"`
+	Mobile       string `json:"mobile"`
+	Email        string `json:"email"`
+}
+
+type UpdateUserInfoReq {
+	Nickname     string `json:"nickname,optional"`
+	Avatar       string `json:"avatar,optional"`
+	Introduction string `json:"introduction,optional"`
+	Birthday     string `json:"birthday,optional"`
+	Mobile       string `json:"mobile,optional"`
+	Email        string `json:"email,optional"`
+}
+
+type ChangePasswordReq {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+

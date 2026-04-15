@@ -1,0 +1,32 @@
+syntax = "v1"
+
+info (
+	desc:   "common"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+type PageRequest {
+	Page      int64  `form:"page,default=1""`
+	PageSize  int64  `form:"pageSize,default=10"`
+	Keyword   string `form:"keyword,optional"`
+	FullQuery bool   `form:"fullQuery,default=false"`
+}
+
+type PageResponse {
+	Total     int64 `json:"total"`
+	Page      int64 `json:"page"`
+	PageSize  int64 `json:"pageSize"`
+	TotalPage int64 `json:"totalPage"`
+}
+
+type IdValue {
+	Id int64 `path:"id"`
+}
+
+type StringValue {
+	Value string `path:"value"`
+}
+
+type Empty {}
+

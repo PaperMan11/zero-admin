@@ -1,0 +1,110 @@
+syntax = "v1"
+
+info (
+	desc:   "article-comments"
+	author: "tzq"
+	email:  "1327899605@qq.com"
+)
+
+import "common.api"
+
+@server (
+	jwt:        Auth
+	middleware: JwtExpireAuth
+	group:      articleComments
+	prefix:     /api/blog/article/comments
+)
+service blog-api {
+	@handler GetArticleComments
+	get / (GetArticleCommentsReq) returns (GetArtcileCommentsResp)
+
+	@handler CreateArticleComment
+	post / (CreateArticleCommentReq) returns (CreateArticleCommentResp)
+
+	@handler DeleteArticleComment
+	delete / (DeleteArticleCommentReq) returns (Empty)
+
+	@handler GetReplyComments
+	get /reply (GetReplyCommentsReq) returns (GetReplyCommentsResp)
+
+	@handler GetUnreadComments
+	get /unread (GetUnreadCommentsReq) returns (GetUnreadCommentsResp)
+}
+
+type Comment {
+	Id         int64    `json:"id"`
+	UserId     int64    `json:"userId"`
+	UserName   string   `json:"userName"`
+	UserAvatar string   `json:"userAvatar"`
+	Content    string   `json:"content"`
+	Images     []string `json:"images"`
+	Replies    []Reply  `json:"replies"`
+	ReplyCount int64    `json:"replyCount"`
+	CreatedAt  int64    `json:"createdAt"`
+	Read       int      `json:"read"`
+}
+
+type Reply {
+	Id              int64  `json:"id"`
+	UserId          int64  `json:"userId"`
+	UserName        string `json:"userName"`
+	UserAvatar      string `json:"userAvatar"`
+	Content         string `json:"content"`
+	ReplyUserId     int64  `json:"replyUserId"`
+	ReplyUserName   string `json:"replyUserName"`
+	ReplyUserAvatar string `json:"replyUser"`
+	CreatedAt       int64  `json:"createdAt"`
+	Read            int    `json:"read"`
+}
+
+type GetArticleCommentsReq {
+	PageRequest
+	ArticleId       int64  `form:"articleId"`
+	Tab             string `form:"tab,options=latest|hot"`
+	TargetCommentId int64  `form:"targetCommentId,optional"` // 回复评论，跳转时传参
+}
+
+type GetArtcileCommentsResp {
+	PageResponse
+	Comments []Comment `json:"comments"`
+}
+
+type CreateArticleCommentReq {
+	ArticleId       int64    `json:"articleId"` // 文章id
+	ParentCommentId int64    `json:"parentCommentId,optional"` // 回复评论的父评论id
+	ReplyCommentId  int64    `json:"replyCommentId,optional"` // 回复评论id
+	UserId          int64    `json:"userId"`
+	ReplyTo         int64    `json:"replyTo"`
+	Content         string   `json:"content"`
+	Imgs            []string `json:"imgs"`
+}
+
+type CreateArticleCommentResp {
+	Id int64 `json:"id"`
+}
+
+type DeleteArticleCommentReq {
+	ArticleId int64 `json:"articleId"`
+	CommentId int64 `json:"commentId"`
+}
+
+type GetReplyCommentsReq {
+	PageRequest
+	ArticleId int64 `form:"articleId"`
+	CommentId int64 `form:"commentId"`
+}
+
+type GetReplyCommentsResp {
+	PageResponse
+	Replies []Reply `json:"replies"`
+}
+
+type GetUnreadCommentsReq {
+	PageRequest
+}
+
+type GetUnreadCommentsResp {
+	PageResponse
+	Replies []Reply `json:"replies"`
+}
+
